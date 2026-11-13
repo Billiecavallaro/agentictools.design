@@ -1,0 +1,334 @@
+# agentictools.design
+
+> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 26 agents, 6 categories, 6 workflows. Last updated 2026-11-12.
+
+Machine-readable data: https://agentictools.design/agents.json (fields: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added).
+
+## Design
+
+### Figma agent (by Figma)
+- Profile: https://agentictools.design/agents/figma-agent/
+- Official site: https://www.figma.com/solutions/ai-design-agent/
+- What it does: An AI agent inside Figma Design that plans and carries out multi-step design tasks on your canvas.
+- For: Product designers and design teams on paid Figma plans
+- Best at: Builds and refines screens from your own library components, tokens and variables instead of placeholder UI.
+- Pricing: Included on paid Figma plans
+- Tags: figma, design-systems, canvas-agent
+- Checked on its own site: 2026-11-12
+
+### Wonder (by Aquila Labs)
+- Profile: https://agentictools.design/agents/wonder/
+- Official site: https://wonder.design/
+- What it does: A design canvas where you and your coding agents work on the real product, and the design stays as code.
+- For: Designers and engineers shipping together
+- Best at: Runs Claude Code or Codex on your own subscription, each in its own git worktree, beside the design.
+- Pricing: See site
+- Tags: design-to-code, mcp, coding-agents
+- Checked on its own site: 2026-11-12
+
+### Figma Make (by Figma)
+- Profile: https://agentictools.design/agents/figma-make/
+- Official site: https://www.figma.com/make/
+- What it does: Turns prompts, frames and design kits into working, editable prototypes inside Figma.
+- For: Product designers and product teams
+- Best at: Click any element in the live preview to restyle or re-prompt it, then copy it to canvas.
+- Pricing: See site
+- Tags: prototyping, figma, prompt-to-app
+- Checked on its own site: 2026-11-12
+
+### Stitch (by Google Labs)
+- Profile: https://agentictools.design/agents/google-stitch/
+- Official site: https://developers.googleblog.com/en/stitch-a-new-way-to-design-uis/
+- What it does: Generates mobile and web UI screens plus front-end code from text or sketches.
+- For: Designers and developers exploring early UI
+- Best at: Upload a whiteboard sketch or screenshot and get a digital design you can paste into Figma.
+- Pricing: See site
+- Tags: ui-generation, sketch-to-ui, figma
+- Checked on its own site: 2026-11-12
+
+### Uizard (by Uizard)
+- Profile: https://agentictools.design/agents/uizard/
+- Official site: https://uizard.io/
+- What it does: AI UI design tool that generates screens, themes and prototypes from prompts.
+- For: PMs, founders and non-specialist designers
+- Best at: Scan a hand-drawn wireframe or app screenshot and turn it into an editable mockup.
+- Pricing: Free plan; Pro $12/mo billed annually
+- Tags: wireframes, mockups, screenshot-to-design
+- Checked on its own site: 2026-11-12
+
+
+## Prototyping
+
+### Lovable (by Lovable)
+- Profile: https://agentictools.design/agents/lovable/
+- Official site: https://lovable.dev/
+- What it does: Builds and hosts full apps from plain-language chat, backend included.
+- For: Non-developers building products and internal tools
+- Best at: Go from a described idea to a deployed app with hosting, auth and payments handled.
+- Pricing: Free plan (daily build credits); paid plans, see site
+- Tags: prompt-to-app, full-stack, hosting
+- Checked on its own site: 2026-11-12
+
+### Bolt (by Bolt)
+- Profile: https://agentictools.design/agents/bolt/
+- Official site: https://bolt.new/
+- What it does: Chat-based builder for websites, apps, slides and prototypes with built-in hosting.
+- For: PMs, founders, marketers and agencies
+- Best at: Start a build from an existing Figma design or GitHub repo and keep your design system.
+- Pricing: Free plan; Pro $25/mo
+- Tags: prompt-to-app, figma-import, hosting
+- Checked on its own site: 2026-11-12
+
+### v0 (by Vercel)
+- Profile: https://agentictools.design/agents/v0/
+- Official site: https://v0.app/
+- What it does: Prompt-to-web-app builder that plans, codes and deploys full-stack sites.
+- For: Designers and developers shipping web apps
+- Best at: Tweak generated UI visually in Design Mode, sync to GitHub, deploy to Vercel in one click.
+- Pricing: Free plan (7 messages/day); Plus $30/user/mo
+- Tags: prompt-to-app, react, deploy
+- Checked on its own site: 2026-11-12
+
+### Replit Agent (by Replit)
+- Profile: https://agentictools.design/agents/replit-agent/
+- Official site: https://replit.com/ai
+- What it does: Chat agent that writes, tests, fixes and publishes apps for you.
+- For: Founders, PMs and designers without coding skills
+- Best at: Tests the app in a browser while it builds, reports bugs and fixes them itself.
+- Pricing: Free to start; Core from $20/mo ($18 billed annually)
+- Tags: prompt-to-app, self-testing, database
+- Checked on its own site: 2026-11-12
+
+### Magic Patterns (by Magic Patterns)
+- Profile: https://agentictools.design/agents/magic-patterns/
+- Official site: https://www.magicpatterns.com/
+- What it does: AI design workspace that turns prompts and PRDs into high-fidelity UI.
+- For: Product teams, designers and engineers
+- Best at: Import your component library so generated concepts match your design system, then hand off to a coding agent.
+- Pricing: See site
+- Tags: prototyping, design-system, handoff
+- Checked on its own site: 2026-11-12
+
+
+## Research
+
+### Dovetail (by Dovetail)
+- Profile: https://agentictools.design/agents/dovetail/
+- Official site: https://dovetail.com/
+- What it does: Pulls customer feedback from many sources into cited insights, chat and agents.
+- For: Researchers, designers and PMs at larger orgs
+- Best at: Agents automate recurring stakeholder updates and route ranked customer needs to Jira, Linear or Cursor.
+- Pricing: Paid; from $4,800/yr plus credits; 30-day free trial
+- Tags: synthesis, feedback, agents
+- Checked on its own site: 2026-11-12
+
+### Maze (by Maze)
+- Profile: https://agentictools.design/agents/maze/
+- Official site: https://maze.co/
+- What it does: Recruit participants, run tests and interviews, and get AI-assisted analysis.
+- For: UX researchers, designers and PMs
+- Best at: Run unmoderated prototype tests with a 6M+ participant panel and auto-generated reports.
+- Pricing: Free trial; plans, see site
+- Tags: usability-testing, ai-moderator, recruiting
+- Checked on its own site: 2026-11-12
+
+### Listen Labs (by Listen Labs)
+- Profile: https://agentictools.design/agents/listen-labs/
+- Official site: https://listenlabs.ai/
+- What it does: AI-moderated customer interviews at scale, from study design to slides.
+- For: UX researchers, PMs and insights teams
+- Best at: An AI moderator interviews participants in 120+ languages and every finding links back to its interview.
+- Pricing: See site (demo)
+- Tags: ai-interviews, recruiting, synthesis
+- Checked on its own site: 2026-11-12
+
+### Outset (by Outset)
+- Profile: https://agentictools.design/agents/outset/
+- Official site: https://outset.ai/
+- What it does: Runs hundreds of AI-moderated video, voice or text interviews at once.
+- For: UX and market researchers
+- Best at: Generates the interview guide from your goals, then delivers themes, highlight reels and decks.
+- Pricing: See site (demo)
+- Tags: ai-interviews, digital-twins, synthesis
+- Checked on its own site: 2026-11-12
+
+
+## Product & specs
+
+### ChatPRD (by ChatPRD)
+- Profile: https://agentictools.design/agents/chatprd/
+- Official site: https://www.chatprd.ai/
+- What it does: AI product-management assistant that drafts, reviews and prototypes specs.
+- For: Product managers and their teams
+- Best at: Turns meeting notes into a PRD, scores it, then opens it in v0, Lovable or Cursor.
+- Pricing: Free plan; Pro $15/mo
+- Tags: prd, specs, mcp
+- Checked on its own site: 2026-11-12
+
+### Linear Agent (by Linear)
+- Profile: https://agentictools.design/agents/linear-agents/
+- Official site: https://linear.app/agents
+- What it does: Issue tracker where AI agents are workspace members you can assign work to.
+- For: Product and engineering teams
+- Best at: Delegate an issue to Cursor, Codex or ChatPRD and watch each change and its reasoning.
+- Pricing: Free plan includes agents; paid from $10/user/mo billed yearly
+- Tags: issues, delegation, triage
+- Checked on its own site: 2026-11-12
+
+### Notion Agent (by Notion)
+- Profile: https://agentictools.design/agents/notion-agent/
+- Official site: https://www.notion.com/product/ai
+- What it does: Workspace agent that builds and edits pages and databases across connected apps.
+- For: PMs and teams documenting work in Notion
+- Best at: Custom Agents run on a schedule to answer Slack questions, route tasks and post updates.
+- Pricing: Trial on Free; full agent on Business, $20/seat/mo
+- Tags: docs, automation, meeting-notes
+- Checked on its own site: 2026-11-12
+
+### Rovo (by Atlassian)
+- Profile: https://agentictools.design/agents/atlassian-rovo/
+- Official site: https://www.atlassian.com/software/rovo
+- What it does: Search, chat and agents across Jira, Confluence and connected tools.
+- For: Teams already on Atlassian Cloud
+- Best at: Agents use links between people, projects and code to draft roadmaps and route backlog work.
+- Pricing: Included with Atlassian Cloud Standard, Premium or Enterprise (usage credits)
+- Tags: jira, confluence, knowledge
+- Checked on its own site: 2026-11-12
+
+
+## Build
+
+### Claude Code (by Anthropic)
+- Profile: https://agentictools.design/agents/claude-code/
+- Official site: https://claude.com/product/claude-code
+- What it does: Agentic coding tool that reads your codebase, edits files and runs commands.
+- For: Developers and design engineers
+- Best at: Kick off a task from Slack or GitHub and get back a pull request.
+- Pricing: Included with paid Claude plans; Team $20/seat/mo billed annually
+- Tags: coding-agent, terminal, pull-requests
+- Checked on its own site: 2026-11-12
+
+### Cursor (by Cursor)
+- Profile: https://agentictools.design/agents/cursor/
+- Official site: https://cursor.com/
+- What it does: AI code editor whose agents plan, build and test features.
+- For: Developers and technical designers
+- Best at: Launch cloud agents in parallel that build, test and demo features on their own machines.
+- Pricing: Free plan; paid plans on site
+- Tags: code-editor, cloud-agents, ide
+- Checked on its own site: 2026-11-12
+
+### GitHub Copilot (by GitHub)
+- Profile: https://agentictools.design/agents/github-copilot/
+- Official site: https://github.com/features/copilot
+- What it does: Coding agent that picks up GitHub issues and returns reviewed pull requests.
+- For: Developers and teams on GitHub
+- Best at: Hand an issue to the cloud agent and get a pull request back for review.
+- Pricing: Free tier; Pro $10/user/mo
+- Tags: coding-agent, github, code-review
+- Checked on its own site: 2026-11-12
+
+### Codex (by OpenAI)
+- Profile: https://agentictools.design/agents/openai-codex/
+- Official site: https://openai.com/codex/
+- What it does: Coding agent running in the cloud, desktop app, IDE and terminal.
+- For: Developers and engineering teams
+- Best at: Runs tasks in the cloud while your laptop is closed and checks work with browser tools.
+- Pricing: Included with ChatGPT Plus, Pro and Business
+- Tags: coding-agent, cloud, code-review
+- Checked on its own site: 2026-11-12
+
+### Devin Desktop (by Cognition)
+- Profile: https://agentictools.design/agents/devin-desktop/
+- Official site: https://devin.ai/desktop
+- What it does: AI IDE, formerly Windsurf, with a command center for many agents.
+- For: Developers managing several coding agents
+- Best at: A lead agent splits long tasks among subagents that each open their own pull requests.
+- Pricing: Free plan; Pro $20/mo
+- Tags: ide, multi-agent, windsurf
+- Checked on its own site: 2026-11-12
+
+
+## General
+
+### Claude (by Anthropic)
+- Profile: https://agentictools.design/agents/claude/
+- Official site: https://claude.com/pricing
+- What it does: General AI assistant on web, desktop and mobile for writing, analysis and research.
+- For: Designers, PMs and anyone doing knowledge work
+- Best at: Paid plans also include Claude Code, so one subscription covers thinking and building.
+- Pricing: Free plan; Pro $20/mo ($17 billed annually)
+- Tags: assistant, writing, analysis
+- Checked on its own site: 2026-11-12
+
+### ChatGPT agent (by OpenAI)
+- Profile: https://agentictools.design/agents/chatgpt-agent/
+- Official site: https://chatgpt.com/features/agent/
+- What it does: ChatGPT mode that uses its own browser to complete multi-step tasks.
+- For: Anyone delegating web research and busywork
+- Best at: Researches across sites and builds a slideshow or spreadsheet, asking before important steps.
+- Pricing: Included with ChatGPT Plus, Pro, Business and Enterprise
+- Tags: browser-agent, research, connectors
+- Checked on its own site: 2026-11-12
+
+### Comet (by Perplexity)
+- Profile: https://agentictools.design/agents/perplexity-comet/
+- Official site: https://www.perplexity.ai/comet
+- What it does: AI browser with a built-in assistant that researches and acts on pages.
+- For: People who live in the browser
+- Best at: Compare how different sources cover a topic, or draft an email reply, without leaving the page.
+- Pricing: See site
+- Tags: ai-browser, research, assistant
+- Checked on its own site: 2026-11-12
+
+
+## Workflows
+
+### Library-true screen to shipped code
+- Page: https://agentictools.design/workflows/canvas-to-shipped-code/
+- Tools: Figma agent, Wonder, Claude Code
+1. Draft the screen with the Figma agent using your own components
+2. Bring it into Wonder and explore variations on the canvas
+3. Have Claude Code build the chosen version in its own worktree
+- Result: A reviewed preview built from your design system, ready to merge
+
+### Idea to tested prototype in a day
+- Page: https://agentictools.design/workflows/idea-to-tested-prototype/
+- Tools: ChatPRD, v0, Maze
+1. Draft the PRD from meeting notes in ChatPRD
+2. Open the spec in v0 to build a clickable app
+3. Run an unmoderated prototype test with Maze participants
+- Result: A working prototype with real user feedback attached
+
+### Interviews straight into the roadmap
+- Page: https://agentictools.design/workflows/interviews-to-roadmap/
+- Tools: Listen Labs, Dovetail, Linear Agent
+1. Run AI-moderated interviews at scale with Listen Labs
+2. Bring transcripts and feedback into Dovetail for cited themes
+3. Route ranked needs to Linear as issues
+- Result: Customer evidence linked to every roadmap issue
+
+### Whiteboard sketch to Figma prototype
+- Page: https://agentictools.design/workflows/sketch-to-figma-prototype/
+- Tools: Stitch, Figma Make
+1. Photograph the sketch and generate screens in Stitch
+2. Paste the designs into Figma for cleanup
+3. Turn the frames into a working prototype with Figma Make
+- Result: An interactive prototype built from a rough sketch
+
+### Hand UI fixes to a coding agent
+- Page: https://agentictools.design/workflows/design-fix-to-pr/
+- Tools: Linear Agent, Cursor, Codex, GitHub Copilot
+1. Log design QA issues in Linear
+2. Delegate each issue to Cursor or Codex from Linear
+3. Review the returned pull requests with GitHub Copilot code review
+- Result: Design polish shipped as reviewed pull requests
+
+### Competitive scan to product brief
+- Page: https://agentictools.design/workflows/competitive-scan-to-brief/
+- Tools: ChatGPT agent, Claude, Notion Agent
+1. Have ChatGPT agent browse competitor sites and build a comparison
+2. Summarize gaps and opportunities with Claude
+3. Save the brief and next steps in Notion with Notion Agent
+- Result: A sourced competitor brief your team can act on
+
