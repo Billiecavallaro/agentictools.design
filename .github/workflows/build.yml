@@ -1,0 +1,67 @@
+# Rebuilds the crawlable HTML, sitemap and llms.txt whenever agents.json
+# (or the page template) changes on main, then commits the result back.
+# The daily refresh only pushes agents.json; this does the rest.
+name: Build static pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - agents.json
+      - index.html
+      - scripts/build.py
+      - .github/workflows/build.yml
+  workflow_dispatch:
+
+permissions:
+  contents: write
+  pages: write
+
+concurrency:
+  group: build-static-pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: main
+
+      - name: Build pages from agents.json
+        run: python3 scripts/build.py
+
+      - name: Commit and push if anything changed
+        id: commit
+        run: |
+          if [ -z "$(git status --porcelain)" ]; then
+            echo "Nothing to rebuild."
+            echo "pushed=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898283+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Rebuild static pages from agents.json"
+          for i in 1 2 3 4; do
+            if git push origin HEAD:main; then
+              echo "pushed=true" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+            sleep $((i * 5))
+            git pull --rebase origin main
+          done
+          echo "Could not push the rebuilt pages." >&2
+          exit 1
+
+      - name: Ask GitHub Pages to publish the rebuilt files
+        if: steps.commit.outputs.pushed == 'true'
+        continue-on-error: true
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          curl -sS -X POST \
+            -H "Authorization: Bearer $GH_TOKEN" \
+            -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${{ github.repository }}/pages/builds"

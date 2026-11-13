@@ -1,0 +1,63 @@
+# agentictools.design
+
+> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 26 agents, 6 categories, 6 workflows. Last updated 2026-11-12.
+
+Machine-readable data: https://agentictools.design/agents.json (fields: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added).
+
+## Design
+
+- [Figma agent](https://agentictools.design/agents/figma-agent/): An AI agent inside Figma Design that plans and carries out multi-step design tasks on your canvas. (by Figma)
+- [Wonder](https://agentictools.design/agents/wonder/): A design canvas where you and your coding agents work on the real product, and the design stays as code. (by Aquila Labs)
+- [Figma Make](https://agentictools.design/agents/figma-make/): Turns prompts, frames and design kits into working, editable prototypes inside Figma. (by Figma)
+- [Stitch](https://agentictools.design/agents/google-stitch/): Generates mobile and web UI screens plus front-end code from text or sketches. (by Google Labs)
+- [Uizard](https://agentictools.design/agents/uizard/): AI UI design tool that generates screens, themes and prototypes from prompts. (by Uizard)
+
+## Prototyping
+
+- [Lovable](https://agentictools.design/agents/lovable/): Builds and hosts full apps from plain-language chat, backend included. (by Lovable)
+- [Bolt](https://agentictools.design/agents/bolt/): Chat-based builder for websites, apps, slides and prototypes with built-in hosting. (by Bolt)
+- [v0](https://agentictools.design/agents/v0/): Prompt-to-web-app builder that plans, codes and deploys full-stack sites. (by Vercel)
+- [Replit Agent](https://agentictools.design/agents/replit-agent/): Chat agent that writes, tests, fixes and publishes apps for you. (by Replit)
+- [Magic Patterns](https://agentictools.design/agents/magic-patterns/): AI design workspace that turns prompts and PRDs into high-fidelity UI. (by Magic Patterns)
+
+## Research
+
+- [Dovetail](https://agentictools.design/agents/dovetail/): Pulls customer feedback from many sources into cited insights, chat and agents. (by Dovetail)
+- [Maze](https://agentictools.design/agents/maze/): Recruit participants, run tests and interviews, and get AI-assisted analysis. (by Maze)
+- [Listen Labs](https://agentictools.design/agents/listen-labs/): AI-moderated customer interviews at scale, from study design to slides. (by Listen Labs)
+- [Outset](https://agentictools.design/agents/outset/): Runs hundreds of AI-moderated video, voice or text interviews at once. (by Outset)
+
+## Product & specs
+
+- [ChatPRD](https://agentictools.design/agents/chatprd/): AI product-management assistant that drafts, reviews and prototypes specs. (by ChatPRD)
+- [Linear Agent](https://agentictools.design/agents/linear-agents/): Issue tracker where AI agents are workspace members you can assign work to. (by Linear)
+- [Notion Agent](https://agentictools.design/agents/notion-agent/): Workspace agent that builds and edits pages and databases across connected apps. (by Notion)
+- [Rovo](https://agentictools.design/agents/atlassian-rovo/): Search, chat and agents across Jira, Confluence and connected tools. (by Atlassian)
+
+## Build
+
+- [Claude Code](https://agentictools.design/agents/claude-code/): Agentic coding tool that reads your codebase, edits files and runs commands. (by Anthropic)
+- [Cursor](https://agentictools.design/agents/cursor/): AI code editor whose agents plan, build and test features. (by Cursor)
+- [GitHub Copilot](https://agentictools.design/agents/github-copilot/): Coding agent that picks up GitHub issues and returns reviewed pull requests. (by GitHub)
+- [Codex](https://agentictools.design/agents/openai-codex/): Coding agent running in the cloud, desktop app, IDE and terminal. (by OpenAI)
+- [Devin Desktop](https://agentictools.design/agents/devin-desktop/): AI IDE, formerly Windsurf, with a command center for many agents. (by Cognition)
+
+## General
+
+- [Claude](https://agentictools.design/agents/claude/): General AI assistant on web, desktop and mobile for writing, analysis and research. (by Anthropic)
+- [ChatGPT agent](https://agentictools.design/agents/chatgpt-agent/): ChatGPT mode that uses its own browser to complete multi-step tasks. (by OpenAI)
+- [Comet](https://agentictools.design/agents/perplexity-comet/): AI browser with a built-in assistant that researches and acts on pages. (by Perplexity)
+
+## Workflows
+
+- [Library-true screen to shipped code](https://agentictools.design/workflows/canvas-to-shipped-code/): A reviewed preview built from your design system, ready to merge, using Figma agent, Wonder, Claude Code
+- [Idea to tested prototype in a day](https://agentictools.design/workflows/idea-to-tested-prototype/): A working prototype with real user feedback attached, using ChatPRD, v0, Maze
+- [Interviews straight into the roadmap](https://agentictools.design/workflows/interviews-to-roadmap/): Customer evidence linked to every roadmap issue, using Listen Labs, Dovetail, Linear Agent
+- [Whiteboard sketch to Figma prototype](https://agentictools.design/workflows/sketch-to-figma-prototype/): An interactive prototype built from a rough sketch, using Stitch, Figma Make
+- [Hand UI fixes to a coding agent](https://agentictools.design/workflows/design-fix-to-pr/): Design polish shipped as reviewed pull requests, using Linear Agent, Cursor, Codex, GitHub Copilot
+- [Competitive scan to product brief](https://agentictools.design/workflows/competitive-scan-to-brief/): A sourced competitor brief your team can act on, using ChatGPT agent, Claude, Notion Agent
+
+## Optional
+
+- [Full text of every listing](https://agentictools.design/llms-full.txt)
+- [Directory data as JSON](https://agentictools.design/agents.json)
