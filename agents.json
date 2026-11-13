@@ -1,0 +1,569 @@
+{
+ "schema": 1,
+ "updated": "2026-11-12",
+ "updates": [
+  {
+   "date": "2026-11-12",
+   "text": "Added Figma agent, the on-canvas design agent in Figma"
+  },
+  {
+   "date": "2026-11-12",
+   "text": "Added Wonder, a design canvas that works with coding agents"
+  },
+  {
+   "date": "2026-11-12",
+   "text": "New workflow: library-true screen to shipped code"
+  },
+  {
+   "date": "2026-11-12",
+   "text": "Launched with 24 agents across 6 categories"
+  },
+  {
+   "date": "2026-11-12",
+   "text": "Windsurf is now listed as Devin Desktop"
+  },
+  {
+   "date": "2026-11-12",
+   "text": "Added 5 workflows that chain these tools"
+  }
+ ],
+ "agents": [
+  {
+   "id": "figma-agent",
+   "name": "Figma agent",
+   "maker": "Figma",
+   "category": "design",
+   "url": "https://www.figma.com/solutions/ai-design-agent/",
+   "oneLiner": "An AI agent inside Figma Design that plans and carries out multi-step design tasks on your canvas.",
+   "forWho": "Product designers and design teams on paid Figma plans",
+   "standout": "Builds and refines screens from your own library components, tokens and variables instead of placeholder UI.",
+   "pricing": "Included on paid Figma plans",
+   "tags": [
+    "figma",
+    "design-systems",
+    "canvas-agent"
+   ],
+   "verified": "2026-11-12",
+   "added": "2026-11-12"
+  },
+  {
+   "id": "wonder",
+   "name": "Wonder",
+   "maker": "Aquila Labs",
+   "category": "design",
+   "url": "https://wonder.design/",
+   "oneLiner": "A design canvas where you and your coding agents work on the real product, and the design stays as code.",
+   "forWho": "Designers and engineers shipping together",
+   "standout": "Runs Claude Code or Codex on your own subscription, each in its own git worktree, beside the design.",
+   "pricing": "See site",
+   "tags": [
+    "design-to-code",
+    "mcp",
+    "coding-agents"
+   ],
+   "verified": "2026-11-12",
+   "added": "2026-11-12"
+  },
+  {
+   "id": "figma-make",
+   "name": "Figma Make",
+   "maker": "Figma",
+   "category": "design",
+   "url": "https://www.figma.com/make/",
+   "oneLiner": "Turns prompts, frames and design kits into working, editable prototypes inside Figma.",
+   "forWho": "Product designers and product teams",
+   "standout": "Click any element in the live preview to restyle or re-prompt it, then copy it to canvas.",
+   "pricing": "See site",
+   "tags": [
+    "prototyping",
+    "figma",
+    "prompt-to-app"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "google-stitch",
+   "name": "Stitch",
+   "maker": "Google Labs",
+   "category": "design",
+   "url": "https://developers.googleblog.com/en/stitch-a-new-way-to-design-uis/",
+   "oneLiner": "Generates mobile and web UI screens plus front-end code from text or sketches.",
+   "forWho": "Designers and developers exploring early UI",
+   "standout": "Upload a whiteboard sketch or screenshot and get a digital design you can paste into Figma.",
+   "pricing": "See site",
+   "tags": [
+    "ui-generation",
+    "sketch-to-ui",
+    "figma"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "uizard",
+   "name": "Uizard",
+   "maker": "Uizard",
+   "category": "design",
+   "url": "https://uizard.io/",
+   "oneLiner": "AI UI design tool that generates screens, themes and prototypes from prompts.",
+   "forWho": "PMs, founders and non-specialist designers",
+   "standout": "Scan a hand-drawn wireframe or app screenshot and turn it into an editable mockup.",
+   "pricing": "Free plan; Pro $12/mo billed annually",
+   "tags": [
+    "wireframes",
+    "mockups",
+    "screenshot-to-design"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "lovable",
+   "name": "Lovable",
+   "maker": "Lovable",
+   "category": "prototype",
+   "url": "https://lovable.dev/",
+   "oneLiner": "Builds and hosts full apps from plain-language chat, backend included.",
+   "forWho": "Non-developers building products and internal tools",
+   "standout": "Go from a described idea to a deployed app with hosting, auth and payments handled.",
+   "pricing": "Free plan (daily build credits); paid plans, see site",
+   "tags": [
+    "prompt-to-app",
+    "full-stack",
+    "hosting"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "bolt",
+   "name": "Bolt",
+   "maker": "Bolt",
+   "category": "prototype",
+   "url": "https://bolt.new/",
+   "oneLiner": "Chat-based builder for websites, apps, slides and prototypes with built-in hosting.",
+   "forWho": "PMs, founders, marketers and agencies",
+   "standout": "Start a build from an existing Figma design or GitHub repo and keep your design system.",
+   "pricing": "Free plan; Pro $25/mo",
+   "tags": [
+    "prompt-to-app",
+    "figma-import",
+    "hosting"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "v0",
+   "name": "v0",
+   "maker": "Vercel",
+   "category": "prototype",
+   "url": "https://v0.app/",
+   "oneLiner": "Prompt-to-web-app builder that plans, codes and deploys full-stack sites.",
+   "forWho": "Designers and developers shipping web apps",
+   "standout": "Tweak generated UI visually in Design Mode, sync to GitHub, deploy to Vercel in one click.",
+   "pricing": "Free plan (7 messages/day); Plus $30/user/mo",
+   "tags": [
+    "prompt-to-app",
+    "react",
+    "deploy"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "replit-agent",
+   "name": "Replit Agent",
+   "maker": "Replit",
+   "category": "prototype",
+   "url": "https://replit.com/ai",
+   "oneLiner": "Chat agent that writes, tests, fixes and publishes apps for you.",
+   "forWho": "Founders, PMs and designers without coding skills",
+   "standout": "Tests the app in a browser while it builds, reports bugs and fixes them itself.",
+   "pricing": "Free to start; Core from $20/mo ($18 billed annually)",
+   "tags": [
+    "prompt-to-app",
+    "self-testing",
+    "database"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "magic-patterns",
+   "name": "Magic Patterns",
+   "maker": "Magic Patterns",
+   "category": "prototype",
+   "url": "https://www.magicpatterns.com/",
+   "oneLiner": "AI design workspace that turns prompts and PRDs into high-fidelity UI.",
+   "forWho": "Product teams, designers and engineers",
+   "standout": "Import your component library so generated concepts match your design system, then hand off to a coding agent.",
+   "pricing": "See site",
+   "tags": [
+    "prototyping",
+    "design-system",
+    "handoff"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "dovetail",
+   "name": "Dovetail",
+   "maker": "Dovetail",
+   "category": "research",
+   "url": "https://dovetail.com/",
+   "oneLiner": "Pulls customer feedback from many sources into cited insights, chat and agents.",
+   "forWho": "Researchers, designers and PMs at larger orgs",
+   "standout": "Agents automate recurring stakeholder updates and route ranked customer needs to Jira, Linear or Cursor.",
+   "pricing": "Paid; from $4,800/yr plus credits; 30-day free trial",
+   "tags": [
+    "synthesis",
+    "feedback",
+    "agents"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "maze",
+   "name": "Maze",
+   "maker": "Maze",
+   "category": "research",
+   "url": "https://maze.co/",
+   "oneLiner": "Recruit participants, run tests and interviews, and get AI-assisted analysis.",
+   "forWho": "UX researchers, designers and PMs",
+   "standout": "Run unmoderated prototype tests with a 6M+ participant panel and auto-generated reports.",
+   "pricing": "Free trial; plans, see site",
+   "tags": [
+    "usability-testing",
+    "ai-moderator",
+    "recruiting"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "listen-labs",
+   "name": "Listen Labs",
+   "maker": "Listen Labs",
+   "category": "research",
+   "url": "https://listenlabs.ai/",
+   "oneLiner": "AI-moderated customer interviews at scale, from study design to slides.",
+   "forWho": "UX researchers, PMs and insights teams",
+   "standout": "An AI moderator interviews participants in 120+ languages and every finding links back to its interview.",
+   "pricing": "See site (demo)",
+   "tags": [
+    "ai-interviews",
+    "recruiting",
+    "synthesis"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "outset",
+   "name": "Outset",
+   "maker": "Outset",
+   "category": "research",
+   "url": "https://outset.ai/",
+   "oneLiner": "Runs hundreds of AI-moderated video, voice or text interviews at once.",
+   "forWho": "UX and market researchers",
+   "standout": "Generates the interview guide from your goals, then delivers themes, highlight reels and decks.",
+   "pricing": "See site (demo)",
+   "tags": [
+    "ai-interviews",
+    "digital-twins",
+    "synthesis"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "chatprd",
+   "name": "ChatPRD",
+   "maker": "ChatPRD",
+   "category": "pm",
+   "url": "https://www.chatprd.ai/",
+   "oneLiner": "AI product-management assistant that drafts, reviews and prototypes specs.",
+   "forWho": "Product managers and their teams",
+   "standout": "Turns meeting notes into a PRD, scores it, then opens it in v0, Lovable or Cursor.",
+   "pricing": "Free plan; Pro $15/mo",
+   "tags": [
+    "prd",
+    "specs",
+    "mcp"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "linear-agents",
+   "name": "Linear Agent",
+   "maker": "Linear",
+   "category": "pm",
+   "url": "https://linear.app/agents",
+   "oneLiner": "Issue tracker where AI agents are workspace members you can assign work to.",
+   "forWho": "Product and engineering teams",
+   "standout": "Delegate an issue to Cursor, Codex or ChatPRD and watch each change and its reasoning.",
+   "pricing": "Free plan includes agents; paid from $10/user/mo billed yearly",
+   "tags": [
+    "issues",
+    "delegation",
+    "triage"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "notion-agent",
+   "name": "Notion Agent",
+   "maker": "Notion",
+   "category": "pm",
+   "url": "https://www.notion.com/product/ai",
+   "oneLiner": "Workspace agent that builds and edits pages and databases across connected apps.",
+   "forWho": "PMs and teams documenting work in Notion",
+   "standout": "Custom Agents run on a schedule to answer Slack questions, route tasks and post updates.",
+   "pricing": "Trial on Free; full agent on Business, $20/seat/mo",
+   "tags": [
+    "docs",
+    "automation",
+    "meeting-notes"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "atlassian-rovo",
+   "name": "Rovo",
+   "maker": "Atlassian",
+   "category": "pm",
+   "url": "https://www.atlassian.com/software/rovo",
+   "oneLiner": "Search, chat and agents across Jira, Confluence and connected tools.",
+   "forWho": "Teams already on Atlassian Cloud",
+   "standout": "Agents use links between people, projects and code to draft roadmaps and route backlog work.",
+   "pricing": "Included with Atlassian Cloud Standard, Premium or Enterprise (usage credits)",
+   "tags": [
+    "jira",
+    "confluence",
+    "knowledge"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "claude-code",
+   "name": "Claude Code",
+   "maker": "Anthropic",
+   "category": "build",
+   "url": "https://claude.com/product/claude-code",
+   "oneLiner": "Agentic coding tool that reads your codebase, edits files and runs commands.",
+   "forWho": "Developers and design engineers",
+   "standout": "Kick off a task from Slack or GitHub and get back a pull request.",
+   "pricing": "Included with paid Claude plans; Team $20/seat/mo billed annually",
+   "tags": [
+    "coding-agent",
+    "terminal",
+    "pull-requests"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "cursor",
+   "name": "Cursor",
+   "maker": "Cursor",
+   "category": "build",
+   "url": "https://cursor.com/",
+   "oneLiner": "AI code editor whose agents plan, build and test features.",
+   "forWho": "Developers and technical designers",
+   "standout": "Launch cloud agents in parallel that build, test and demo features on their own machines.",
+   "pricing": "Free plan; paid plans on site",
+   "tags": [
+    "code-editor",
+    "cloud-agents",
+    "ide"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "github-copilot",
+   "name": "GitHub Copilot",
+   "maker": "GitHub",
+   "category": "build",
+   "url": "https://github.com/features/copilot",
+   "oneLiner": "Coding agent that picks up GitHub issues and returns reviewed pull requests.",
+   "forWho": "Developers and teams on GitHub",
+   "standout": "Hand an issue to the cloud agent and get a pull request back for review.",
+   "pricing": "Free tier; Pro $10/user/mo",
+   "tags": [
+    "coding-agent",
+    "github",
+    "code-review"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "openai-codex",
+   "name": "Codex",
+   "maker": "OpenAI",
+   "category": "build",
+   "url": "https://openai.com/codex/",
+   "oneLiner": "Coding agent running in the cloud, desktop app, IDE and terminal.",
+   "forWho": "Developers and engineering teams",
+   "standout": "Runs tasks in the cloud while your laptop is closed and checks work with browser tools.",
+   "pricing": "Included with ChatGPT Plus, Pro and Business",
+   "tags": [
+    "coding-agent",
+    "cloud",
+    "code-review"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "devin-desktop",
+   "name": "Devin Desktop",
+   "maker": "Cognition",
+   "category": "build",
+   "url": "https://devin.ai/desktop",
+   "oneLiner": "AI IDE, formerly Windsurf, with a command center for many agents.",
+   "forWho": "Developers managing several coding agents",
+   "standout": "A lead agent splits long tasks among subagents that each open their own pull requests.",
+   "pricing": "Free plan; Pro $20/mo",
+   "tags": [
+    "ide",
+    "multi-agent",
+    "windsurf"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "claude",
+   "name": "Claude",
+   "maker": "Anthropic",
+   "category": "general",
+   "url": "https://claude.com/pricing",
+   "oneLiner": "General AI assistant on web, desktop and mobile for writing, analysis and research.",
+   "forWho": "Designers, PMs and anyone doing knowledge work",
+   "standout": "Paid plans also include Claude Code, so one subscription covers thinking and building.",
+   "pricing": "Free plan; Pro $20/mo ($17 billed annually)",
+   "tags": [
+    "assistant",
+    "writing",
+    "analysis"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "chatgpt-agent",
+   "name": "ChatGPT agent",
+   "maker": "OpenAI",
+   "category": "general",
+   "url": "https://chatgpt.com/features/agent/",
+   "oneLiner": "ChatGPT mode that uses its own browser to complete multi-step tasks.",
+   "forWho": "Anyone delegating web research and busywork",
+   "standout": "Researches across sites and builds a slideshow or spreadsheet, asking before important steps.",
+   "pricing": "Included with ChatGPT Plus, Pro, Business and Enterprise",
+   "tags": [
+    "browser-agent",
+    "research",
+    "connectors"
+   ],
+   "verified": "2026-11-12"
+  },
+  {
+   "id": "perplexity-comet",
+   "name": "Comet",
+   "maker": "Perplexity",
+   "category": "general",
+   "url": "https://www.perplexity.ai/comet",
+   "oneLiner": "AI browser with a built-in assistant that researches and acts on pages.",
+   "forWho": "People who live in the browser",
+   "standout": "Compare how different sources cover a topic, or draft an email reply, without leaving the page.",
+   "pricing": "See site",
+   "tags": [
+    "ai-browser",
+    "research",
+    "assistant"
+   ],
+   "verified": "2026-11-12"
+  }
+ ],
+ "workflows": [
+  {
+   "id": "canvas-to-shipped-code",
+   "title": "Library-true screen to shipped code",
+   "steps": [
+    "Draft the screen with the Figma agent using your own components",
+    "Bring it into Wonder and explore variations on the canvas",
+    "Have Claude Code build the chosen version in its own worktree"
+   ],
+   "tools": [
+    "figma-agent",
+    "wonder",
+    "claude-code"
+   ],
+   "outcome": "A reviewed preview built from your design system, ready to merge",
+   "added": "2026-11-12"
+  },
+  {
+   "id": "idea-to-tested-prototype",
+   "title": "Idea to tested prototype in a day",
+   "steps": [
+    "Draft the PRD from meeting notes in ChatPRD",
+    "Open the spec in v0 to build a clickable app",
+    "Run an unmoderated prototype test with Maze participants"
+   ],
+   "tools": [
+    "chatprd",
+    "v0",
+    "maze"
+   ],
+   "outcome": "A working prototype with real user feedback attached"
+  },
+  {
+   "id": "interviews-to-roadmap",
+   "title": "Interviews straight into the roadmap",
+   "steps": [
+    "Run AI-moderated interviews at scale with Listen Labs",
+    "Bring transcripts and feedback into Dovetail for cited themes",
+    "Route ranked needs to Linear as issues"
+   ],
+   "tools": [
+    "listen-labs",
+    "dovetail",
+    "linear-agents"
+   ],
+   "outcome": "Customer evidence linked to every roadmap issue"
+  },
+  {
+   "id": "sketch-to-figma-prototype",
+   "title": "Whiteboard sketch to Figma prototype",
+   "steps": [
+    "Photograph the sketch and generate screens in Stitch",
+    "Paste the designs into Figma for cleanup",
+    "Turn the frames into a working prototype with Figma Make"
+   ],
+   "tools": [
+    "google-stitch",
+    "figma-make"
+   ],
+   "outcome": "An interactive prototype built from a rough sketch"
+  },
+  {
+   "id": "design-fix-to-pr",
+   "title": "Hand UI fixes to a coding agent",
+   "steps": [
+    "Log design QA issues in Linear",
+    "Delegate each issue to Cursor or Codex from Linear",
+    "Review the returned pull requests with GitHub Copilot code review"
+   ],
+   "tools": [
+    "linear-agents",
+    "cursor",
+    "openai-codex",
+    "github-copilot"
+   ],
+   "outcome": "Design polish shipped as reviewed pull requests"
+  },
+  {
+   "id": "competitive-scan-to-brief",
+   "title": "Competitive scan to product brief",
+   "steps": [
+    "Have ChatGPT agent browse competitor sites and build a comparison",
+    "Summarize gaps and opportunities with Claude",
+    "Save the brief and next steps in Notion with Notion Agent"
+   ],
+   "tools": [
+    "chatgpt-agent",
+    "claude",
+    "notion-agent"
+   ],
+   "outcome": "A sourced competitor brief your team can act on"
+  }
+ ]
+}
