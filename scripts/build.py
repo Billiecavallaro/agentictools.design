@@ -180,7 +180,7 @@ def blk_detail(D):
          e(a.get("oneLiner", "")), e(a.get("forWho", "")), e(a.get("standout", "")), e(a.get("pricing") or "See site"),
          "".join('<span class="tag">%s</span>' % e(t) for t in a.get("tags") or []),
          e(fmt_date(a.get("verified") or D["updated"])),
-         ('<a class="pill" href="%s" target="_blank" rel="noopener noreferrer">Visit site ↗</a>' % e(u)) if u else "")
+         ('<a class="pill" href="%s" target="_blank" rel="noopener noreferrer" data-agent="%s">Visit site ↗</a>' % (e(u), e(a["name"]))) if u else "")
 
 
 def blk_log(D):
@@ -231,7 +231,7 @@ def blk_table(D):
             % (mark(a), e(a["name"]), new_badge(D, a), e(a.get("maker", "")), e(a.get("oneLiner", "")),
                e(CATS.get(a.get("category"), "")), e(a.get("pricing") or "See site"), CHEV,
                e(a.get("forWho", "")), e(a.get("standout", "")), e(a["id"]),
-               ('<a class="pill" href="%s" target="_blank" rel="noopener noreferrer">Visit site ↗</a>' % e(u)) if u else ""))
+               ('<a class="pill" href="%s" target="_blank" rel="noopener noreferrer" data-agent="%s">Visit site ↗</a>' % (e(u), e(a["name"]))) if u else ""))
     return "".join(out)
 
 
@@ -396,7 +396,7 @@ def blk_head(D):
                           for q, _, t in faq_items(D)]}
     graph = {"@context": "https://schema.org", "@graph": [website, org, page, faq]}
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
-    return "\n".join(m)
+    return GA_HEAD + "\n" + "\n".join(m)
 
 
 # ---------------------------------------------------------------- subpages
@@ -429,6 +429,16 @@ FONT_LINKS = """<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
 <link rel="stylesheet" href="/assets/site.css">"""
 
+# Google Analytics 4. Goes at the top of <head> on every page (home page via
+# blk_head, subpages via page_shell), so every rebuild keeps it.
+# /assets/track.js adds the click events (outbound, subscribe, sponsor copy).
+GA_ID = "G-976LM8B3MJ"
+GA_HEAD = ("<!-- Google tag (gtag.js) -->\n"
+           '<script async src="https://www.googletagmanager.com/gtag/js?id=%s"></script>\n'
+           "<script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}"
+           "gtag('js',new Date());gtag('config','%s');</script>\n"
+           '<script defer src="/assets/track.js"></script>' % (GA_ID, GA_ID))
+
 
 def nav():
     return ('<nav class="top" aria-label="Main"><a class="brand" href="/">%s%s</a>'
@@ -453,7 +463,7 @@ def page_shell(D, head_meta, body):
     return ("<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n%s\n%s\n</head>\n<body>\n"
             "<div class=\"wrap\">\n%s\n<main>\n%s\n</main>\n%s\n</div>\n</body>\n</html>\n"
-            % ("\n".join(head_meta), FONT_LINKS, nav(), body, footer(D)))
+            % (GA_HEAD + "\n" + "\n".join(head_meta), FONT_LINKS, nav(), body, footer(D)))
 
 
 def row_link(a, D):
@@ -497,7 +507,7 @@ def build_agent_page(D, a):
          e(a.get("forWho", "")), e(a.get("standout", "")), e(a.get("pricing") or "See site"), e(cat), e(a.get("maker", "")),
          "".join('<span class="tag">%s</span>' % e(t) for t in a.get("tags") or []),
          e(fmt_date(a.get("verified") or D["updated"])),
-         ('<a class="pill dark" href="%s" target="_blank" rel="noopener noreferrer">Visit %s ↗</a>' % (e(u), e(a["name"]))) if u else "")
+         ('<a class="pill dark" href="%s" target="_blank" rel="noopener noreferrer" data-agent="%s">Visit %s ↗</a>' % (e(u), e(a["name"]), e(a["name"]))) if u else "")
 
     body = ['<div class="crumbs"><a href="/">Directory</a><span>/</span><a href="/#all">%s</a><span>/</span><span>%s</span></div>'
             % (e(cat), e(a["name"])),
