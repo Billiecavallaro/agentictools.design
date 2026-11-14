@@ -6,9 +6,12 @@ refresh only has to change agents.json. It is a pure function of agents.json
 and index.html: running it twice gives the same files.
 
 It writes:
-  index.html            the directory, workflows and FAQ baked into the page
-                        between <!--b:NAME--> markers, plus meta tags and JSON-LD
-  agents/<id>/index.html  one profile page per agent
+  index.html            use cases, the directory, workflows and FAQ baked into the
+                        page between <!--b:NAME--> markers, plus meta tags and JSON-LD
+  use-cases/index.html  the hub: which agents to use for what
+  use-cases/<id>/index.html  one page per use case (question H1, answer first,
+                        the setup in order, alternatives, HowTo and FAQ JSON-LD)
+  agents/<id>/index.html  one profile page per agent, listing its use cases
   workflows/<id>/index.html  one page per workflow
   assets/site.css       the page's own styles, shared by the subpages
   sitemap.xml, robots.txt, llms.txt, llms-full.txt, 404.html
@@ -37,7 +40,11 @@ APP_CAT = {"design": "DesignApplication", "prototype": "DesignApplication",
            "research": "BusinessApplication", "pm": "BusinessApplication",
            "build": "DeveloperApplication", "general": "BusinessApplication"}
 
-HOME_TITLE = "AI Agents for Designers and Product Managers, Updated Daily | agentictools.design"
+# Use cases are grouped by where they sit in the product work, in this order.
+STAGES = {"discover": "Understand users", "define": "Decide what to build",
+          "design": "Design and prototype", "ship": "Build and ship"}
+
+HOME_TITLE = "Which AI Agents to Use for What: Setups for Designers and PMs | agentictools.design"
 CHEV = ('<span class="chev" aria-hidden="true"><svg width="10" height="10" viewBox="0 0 10 10">'
         '<path d="M3 1.5L6.5 5 3 8.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></span>')
 ICON = ('<svg width="12" height="12" viewBox="0 0 12 12" aria-hidden="true"><circle cx="6" cy="6" r="5" fill="none" '
@@ -118,13 +125,40 @@ def load():
             seen.add(a["id"])
             uniq.append(a)
     wfs = [w for w in d.get("workflows", []) if isinstance(w, dict) and ID_OK.match(str(w.get("id", ""))) and w.get("title")]
+    by_id = {a["id"]: a for a in uniq}
+    wf_ids = {w["id"] for w in wfs}
+
+    # Use cases are editorial and reference agents by id. Anything that points
+    # at a missing agent or workflow is dropped quietly, and a use case with no
+    # usable setup step is skipped, so new or odd data can never break the build.
+    ucs, seen_uc = [], set()
+    for u in d.get("usecases", []) or []:
+        if not isinstance(u, dict) or not ID_OK.match(str(u.get("id", ""))) or not str(u.get("job") or "").strip():
+            continue
+        if u["id"] in seen_uc:
+            continue
+        setup = [s for s in u.get("setup") or [] if isinstance(s, dict) and s.get("tool") in by_id]
+        if not setup:
+            continue
+        in_setup = {s["tool"] for s in setup}
+        alts, seen_alt = [], set()
+        for s in u.get("alternatives") or []:
+            if isinstance(s, dict) and s.get("tool") in by_id and s["tool"] not in in_setup and s["tool"] not in seen_alt:
+                seen_alt.add(s["tool"])
+                alts.append(s)
+        seen_uc.add(u["id"])
+        ucs.append(dict(u, setup=setup, alternatives=alts,
+                        workflows=[w for w in u.get("workflows") or [] if w in wf_ids],
+                        stage=u.get("stage") if u.get("stage") in STAGES else "design"))
+    ucs = [u for k in STAGES for u in ucs if u["stage"] == k]
     return {
         "updated": updated,
         "updates": [u for u in d.get("updates", []) if isinstance(u, dict)],
         "agents": ordered(uniq),
         "workflows": ordered(wfs),
+        "usecases": ucs,
         "is_new": is_new,
-        "by_id": {a["id"]: a for a in uniq},
+        "by_id": by_id,
     }
 
 
@@ -138,6 +172,50 @@ def agent_page(a):
 
 def wf_page(w):
     return "%s/workflows/%s/" % (SITE, w["id"])
+
+
+def uc_page(u):
+    return "%s/use-cases/%s/" % (SITE, u["id"])
+
+
+UC_HUB = SITE + "/use-cases/"
+
+
+def lower_first(s):
+    s = str(s or "").strip().rstrip(".?")
+    if len(s) > 1 and s[1].isupper():   # keeps "AI ..." or "PRD ..." intact
+        return s
+    return s[:1].lower() + s[1:]
+
+
+def uc_question(u):
+    return "What's the best AI setup to %s?" % lower_first(u["job"])
+
+
+def uc_title(D, u):
+    year = (parse_date(D["updated"]) or dt.date.today()).year
+    return "Best AI setup to %s (%d) | %s" % (lower_first(u["job"]), year, NAME)
+
+
+def uc_tools(D, u):
+    return [D["by_id"][s["tool"]] for s in u["setup"]]
+
+
+def uc_chain(D, u):
+    return " → ".join(a["name"] for a in uc_tools(D, u))
+
+
+def ucs_for_agent(D, a):
+    """(use case, 'setup' step number or 'alt', the line about it) for every use case naming this agent."""
+    out = []
+    for u in D["usecases"]:
+        for i, s in enumerate(u["setup"]):
+            if s["tool"] == a["id"]:
+                out.append((u, i + 1, s.get("does", "")))
+        for s in u["alternatives"]:
+            if s["tool"] == a["id"]:
+                out.append((u, "alt", s.get("when", "")))
+    return out
 
 
 # ---------------------------------------------------------------- home page blocks
@@ -241,7 +319,33 @@ def counts(D):
 
 def fresh_line(D):
     n_new = sum(1 for x in D["agents"] + D["workflows"] if D["is_new"](x))
-    return "Updated %s · %d agents%s" % (fmt_date(D["updated"]), len(D["agents"]), (" · %d new this week" % n_new) if n_new else "")
+    n_uc = len(D["usecases"])
+    return "Updated %s · %d agents%s%s" % (fmt_date(D["updated"]), len(D["agents"]),
+                                          (" · %d use cases" % n_uc) if n_uc else "",
+                                          (" · %d new this week" % n_new) if n_new else "")
+
+
+def uc_card(D, u, answer_len=150):
+    return ('<a class="uc" href="/use-cases/%s/"><b>%s</b><span class="ucans">%s</span>'
+            '<span class="uctools">%s</span></a>'
+            % (e(u["id"]), e(u["job"]), e(clip(u.get("answer"), answer_len)),
+               ' <i aria-hidden="true">→</i> '.join(e(a["name"]) for a in uc_tools(D, u))))
+
+
+def uc_groups(D, heading="h3"):
+    out = []
+    for k, label in STAGES.items():
+        items = [u for u in D["usecases"] if u["stage"] == k]
+        if items:
+            out.append('<div class="ucgroup"><%s class="eyebrow">%s</%s><div class="ucgrid">%s</div></div>'
+                       % (heading, e(label), heading, "".join(uc_card(D, u) for u in items)))
+    return '<div class="ucgroups">%s</div>' % "".join(out)
+
+
+def blk_usecases(D):
+    if not D["usecases"]:
+        return '<p class="checked">Use cases are on their way.</p>'
+    return uc_groups(D)
 
 
 # ---------------------------------------------------------------- FAQ (visible text and FAQPage JSON-LD come from the same source)
@@ -260,11 +364,25 @@ def faq_items(D):
             txt_items.append("%s by %s: %s" % (a["name"], a.get("maker", ""), a.get("oneLiner", "")))
         return "<ul>%s</ul>" % "".join(html_items), " ".join(t if t.endswith(".") else t + "." for t in txt_items)
 
-    intro_t = ("agentictools.design is a free directory of AI agents and AI tools for product designers and product managers, "
-               "updated daily. Each listing explains what the tool does in about 30 seconds, who it is for, what it is best at "
-               "and what it costs, and is checked against the product's own website. It lists %d agents across %d categories, "
-               "plus %d workflows that chain them together." % (n_agents, n_cats, n_wf))
+    n_uc = len(D["usecases"])
+    intro_t = ("agentictools.design is a free guide to which AI agents product designers and product managers should use "
+               "for which job. %sIt also keeps a directory of %d AI agents across %d categories, updated daily, where each "
+               "listing explains what the tool does in about 30 seconds, who it is for, what it is best at and what it costs, "
+               "checked against the product's own website, plus %d workflows that chain them together."
+               % (("It has %d use cases, each with the recommended setup: which agents to use, in what order, and why. " % n_uc)
+                  if n_uc else "", n_agents, n_cats, n_wf))
     items.append(("What is agentictools.design?", "<p>%s</p>" % e(intro_t), intro_t))
+
+    if D["usecases"]:
+        lis_h, lis_t = [], []
+        for u in D["usecases"]:
+            lis_h.append('<li><a href="/use-cases/%s/">%s</a>: %s</li>' % (e(u["id"]), e(u["job"]), e(uc_chain(D, u))))
+            lis_t.append("%s: %s." % (u["job"], uc_chain(D, u).replace(" → ", ", then ")))
+        lead = "It depends on the job. These are the setups we recommend, with the agents in the order you'd use them:"
+        items.append(("Which AI agents should designers and PMs use for what?",
+                      '<p>%s</p><ul>%s</ul><p><a href="/use-cases/">See every use case with the reasons</a>.</p>'
+                      % (e(lead), "".join(lis_h)),
+                      "%s %s" % (lead, " ".join(lis_t))))
 
     groups = [
         ("What are the best AI agents for product designers?", ("design",),
@@ -371,8 +489,18 @@ def software_ld(a, with_page=True):
 
 def home_desc(D):
     n_agents, _, n_wf = counts(D)
+    if D["usecases"]:
+        return clip("Which AI agents to use for what. %d jobs designers and PMs actually do, each with the setup to use, "
+                    "in what order, and why. Plus a daily-updated directory of %d AI agents." % (len(D["usecases"]), n_agents), 300)
     return clip("A daily-updated directory of %d AI agents and tools for product designers and product managers. "
                 "What each one does in 30 seconds, who it's for, pricing, and %d workflows that work." % (n_agents, n_wf), 300)
+
+
+def uc_itemlist(D, at):
+    return {"@type": "ItemList", "@id": at, "name": "AI agent setups for designers and PMs, by use case",
+            "numberOfItems": len(D["usecases"]),
+            "itemListElement": [{"@type": "ListItem", "position": i + 1, "url": uc_page(u), "name": uc_question(u)}
+                                for i, u in enumerate(D["usecases"])]}
 
 
 def blk_head(D):
@@ -395,6 +523,10 @@ def blk_head(D):
            "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": t}}
                           for q, _, t in faq_items(D)]}
     graph = {"@context": "https://schema.org", "@graph": [website, org, page, faq]}
+    if D["usecases"]:
+        page["about"].insert(0, {"@type": "Thing", "name": "Which AI agents to use for design and product work"})
+        page["hasPart"] = {"@id": SITE + "/#usecases"}
+        graph["@graph"].append(uc_itemlist(D, SITE + "/#usecases"))
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
     return GA_HEAD + "\n" + "\n".join(m)
 
@@ -419,6 +551,29 @@ SUB_CSS = """
 .cta-band{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:clamp(18px,3vw,28px);background:var(--window)}
 .cta-band h2{margin:0 0 6px;font-size:clamp(20px,2.2vw,24px);font-weight:400;letter-spacing:-.02em}
 .cta-band p{margin:0;color:var(--ink-2);max-width:58ch}
+.subhero .eyebrow{line-height:1.5}
+.subhero p.lede{color:var(--ink);font-size:clamp(17px,1.9vw,20px);line-height:1.45}
+.subhero .meta{font:400 12.5px/1.6 var(--font-mono);color:var(--ink-3)}
+.ucsteps{list-style:none;margin:0;padding:0;display:flex;flex-direction:column;gap:16px;counter-reset:s}
+.ucsteps li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:10px;align-items:start}
+.ucsteps li::before{counter-increment:s;content:counter(s);font:500 11px/20px var(--font-mono);text-align:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);color:var(--ink-2);margin-top:12px}
+.ucstep{display:grid;gap:2px;min-width:0}
+.ucstep a.row,.alt a.row{text-decoration:none;padding-left:0}
+.ucstep p{margin:0;font-size:14.5px;line-height:1.5}
+.ucstep .checked{margin-top:2px}
+.watch{border:1px solid var(--line);border-radius:8px;padding:12px 14px;background:var(--canvas);font-size:14.5px;margin:0}
+.watch .eyebrow{display:block;margin-bottom:6px;color:var(--accent)}
+.alts{border-top:1px solid var(--line)}
+.alt{display:grid;grid-template-columns:minmax(0,280px) minmax(0,1fr);gap:4px 24px;align-items:center;padding:10px 0;border-bottom:1px solid var(--line)}
+.alt p{margin:0;color:var(--ink-2);font-size:14.5px}
+.alt a.job{font-weight:500;text-decoration:none}.alt a.job:hover{color:var(--accent)}
+.hubq{border-bottom:1px solid var(--line);padding:18px 4px}
+.hubq h3{margin:0 0 6px;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.hubq h3 a{text-decoration:none}.hubq h3 a:hover{color:var(--accent)}
+.hubq p{margin:0 0 6px;color:var(--ink-2);max-width:74ch}
+.hubq .uctools{font:400 12px/1.5 var(--font-mono);color:var(--ink-3)}
+.hublist{border-top:1px solid var(--line)}
+@media (max-width:760px){.alt{grid-template-columns:1fr}}
 """
 
 FONT_LINKS = """<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
@@ -442,7 +597,7 @@ GA_HEAD = ("<!-- Google tag (gtag.js) -->\n"
 
 def nav():
     return ('<nav class="top" aria-label="Main"><a class="brand" href="/">%s%s</a>'
-            '<div class="navlinks"><a href="/#directory">Directory</a><a href="/#workflows">Workflows</a>'
+            '<div class="navlinks"><a href="/use-cases/">Use cases</a><a href="/#directory">Directory</a><a href="/#workflows">Workflows</a>'
             '<a href="/#all">All agents</a><a href="/#faq">FAQ</a></div>'
             '<a class="pill dark" href="/#subscribe">Subscribe</a></nav>' % (GLYPH, NAME))
 
@@ -509,12 +664,22 @@ def build_agent_page(D, a):
          e(fmt_date(a.get("verified") or D["updated"])),
          ('<a class="pill dark" href="%s" target="_blank" rel="noopener noreferrer" data-agent="%s">Visit %s ↗</a>' % (e(u), e(a["name"]), e(a["name"]))) if u else "")
 
+    fits = ucs_for_agent(D, a)
     body = ['<div class="crumbs"><a href="/">Directory</a><span>/</span><a href="/#all">%s</a><span>/</span><span>%s</span></div>'
             % (e(cat), e(a["name"])),
             '<header class="subhero"><h1>%s by %s</h1><p>%s</p></header>' % (e(a["name"]), e(a.get("maker", "")), e(a.get("oneLiner", ""))),
             '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
             '<i></i><i></i><i></i></span><span class="t">agentictools.design · %s</span></div><div class="detail">%s</div></article></div></div>'
             % (e(a["name"]), detail)]
+    if fits:
+        rows = []
+        for u, where, line in fits:
+            label = ("Step %d of %d" % (where, len(u["setup"]))) if where != "alt" else "Swap in when"
+            rows.append('<div class="alt"><a class="job" href="/use-cases/%s/">%s</a><p><span class="checked">%s</span> %s</p></div>'
+                        % (e(u["id"]), e(u["job"]), e(label), e(line)))
+        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Use cases</span>'
+                    '<h2>What to use %s for</h2><p>The jobs where we recommend it, and the part it plays in each setup.</p>'
+                    '</div></div><div class="alts">%s</div></section>' % (e(a["name"]), "".join(rows)))
     if wfs:
         body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Workflows</span>'
                     '<h2>Workflows that use %s</h2></div></div><div class="faq">%s</div></section>'
@@ -558,15 +723,156 @@ def build_wf_page(D, w):
             '</div></article></div></div>' % (e(", ".join(names)), "".join("<li><span>%s</span></li>" % e(s) for s in w.get("steps") or []),
                                               e(w.get("outcome", ""))),
             '<section class="block"><div class="sechead"><div><span class="eyebrow">In this workflow</span><h2>The tools</h2></div></div>'
-            '<div class="links">%s</div></section>' % "".join(row_link(a, D) for a in tools),
-            cta_band()]
+            '<div class="links">%s</div></section>' % "".join(row_link(a, D) for a in tools)]
+    ucs = [u for u in D["usecases"] if w["id"] in u["workflows"]]
+    if ucs:
+        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Use cases</span>'
+                    '<h2>Jobs this workflow gets done</h2></div></div><div class="ucgrid">%s</div></section>'
+                    % "".join(uc_card(D, u) for u in ucs))
+    body.append(cta_band())
+    return page_shell(D, m, "\n".join(body))
+
+
+def uc_faq(D, u):
+    """(question, html, text) for a use case page. Built only from the data, so no claim is made up here."""
+    items = []
+    steps = [(D["by_id"][s["tool"]], s.get("does", "")) for s in u["setup"]]
+    h = "<p>%s</p><ol>%s</ol>" % (e(u.get("answer", "")), "".join(
+        '<li><a href="/agents/%s/">%s</a>: %s</li>' % (e(a["id"]), e(a["name"]), e(d)) for a, d in steps))
+    t = "%s %s" % (u.get("answer", ""), " ".join("%d. %s: %s" % (i + 1, a["name"], d) for i, (a, d) in enumerate(steps)))
+    items.append((uc_question(u), h, t))
+
+    lead = "Each tool's price, from its own website:"
+    items.append(("What does this setup cost?",
+                  "<p>%s</p><ul>%s</ul>" % (e(lead), "".join("<li>%s: %s</li>" % (e(a["name"]), e(a.get("pricing") or "See site"))
+                                                             for a, _ in steps)),
+                  "%s %s" % (lead, " ".join("%s: %s." % (a["name"], (a.get("pricing") or "See site").rstrip(".")) for a, _ in steps))))
+    if u["alternatives"]:
+        alts = [(D["by_id"][s["tool"]], s.get("when", "")) for s in u["alternatives"]]
+        items.append(("What can I use instead?",
+                      "<ul>%s</ul>" % "".join('<li><a href="/agents/%s/">%s</a>, when: %s</li>' % (e(a["id"]), e(a["name"]), e(w))
+                                              for a, w in alts),
+                      " ".join("%s, when: %s" % (a["name"], w) for a, w in alts)))
+    if u.get("for"):
+        t = "%s." % str(u["for"]).rstrip(".")
+        items.append(("Who is this setup for?", "<p>%s</p>" % e(t), t))
+    if u.get("watchOut"):
+        items.append(("What should I watch out for?", "<p>%s</p>" % e(u["watchOut"]), u["watchOut"]))
+    return items
+
+
+def build_uc_page(D, u):
+    q = uc_question(u)
+    title = uc_title(D, u)
+    tools = uc_tools(D, u)
+    desc = clip(u.get("answer", ""), 300)
+    url = uc_page(u)
+    modified = u.get("updated") or u.get("added") or D["updated"]
+    m = common_meta(title, desc, url, og_type="article", modified=modified)
+    faq = uc_faq(D, u)
+    howto = {"@type": "HowTo", "@id": url + "#howto", "name": "How to %s with AI agents" % lower_first(u["job"]),
+             "description": desc, "tool": [{"@type": "HowToTool", "name": a["name"]} for a in tools],
+             "step": [{"@type": "HowToStep", "position": i + 1, "name": D["by_id"][s["tool"]]["name"],
+                       "text": s.get("does", ""), "url": agent_page(D["by_id"][s["tool"]])}
+                      for i, s in enumerate(u["setup"])]}
+    graph = {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebPage", "@id": url, "url": url, "name": title, "headline": q, "description": desc, "inLanguage": "en",
+         "isPartOf": {"@id": SITE + "/#website"}, "datePublished": u.get("added") or D["updated"], "dateModified": modified,
+         "audience": {"@type": "Audience", "audienceType": u.get("for") or "Product designers and product managers"},
+         "mentions": [software_ld(a) for a in tools + [D["by_id"][s["tool"]] for s in u["alternatives"]]],
+         "mainEntity": {"@id": url + "#faq"}},
+        howto,
+        {"@type": "FAQPage", "@id": url + "#faq",
+         "mainEntity": [{"@type": "Question", "name": fq, "acceptedAnswer": {"@type": "Answer", "text": ft}} for fq, _, ft in faq]},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": NAME, "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Use cases", "item": UC_HUB},
+            {"@type": "ListItem", "position": 3, "name": u["job"], "item": url}]}]}
+    m.append('<script type="application/ld+json">%s</script>' % ld(graph))
+
+    steps = "".join(
+        '<li><div class="ucstep">%s<p>%s</p><span class="checked">%s</span></div></li>'
+        % (row_link(D["by_id"][s["tool"]], D), e(s.get("does", "")), e(D["by_id"][s["tool"]].get("pricing") or "See site"))
+        for s in u["setup"])
+    watch = ('<p class="watch"><span class="eyebrow">Watch out</span>%s</p>' % e(u["watchOut"])) if u.get("watchOut") else ""
+    body = ['<div class="crumbs"><a href="/">Home</a><span>/</span><a href="/use-cases/">Use cases</a><span>/</span><span>%s</span></div>'
+            % e(u["job"]),
+            '<header class="subhero"><span class="eyebrow">%s · %d-step setup</span><h1>%s</h1><p class="lede">%s</p>%s</header>'
+            % (e(STAGES[u["stage"]]), len(u["setup"]), e(q), e(u.get("answer", "")),
+               ('<p class="meta">Best for: %s</p>' % e(str(u["for"]).rstrip("."))) if u.get("for") else ""),
+            '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
+            '<i></i><i></i><i></i></span><span class="t">agentictools.design · The setup</span></div><div class="wfmain">'
+            '<h2>The setup, in order</h2><div class="ask">%s</div><ol class="ucsteps">%s</ol>%s</div></article></div></div>'
+            % (e(uc_chain(D, u)), steps, watch)]
+    if u["alternatives"]:
+        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Alternatives</span>'
+                    '<h2>Swap a tool in when it fits you better</h2></div></div><div class="alts">%s</div></section>'
+                    % "".join('<div class="alt">%s<p>%s</p></div>' % (row_link(D["by_id"][s["tool"]], D), e(s.get("when", "")))
+                              for s in u["alternatives"]))
+    wfs = [w for w in D["workflows"] if w["id"] in u["workflows"]]
+    if wfs:
+        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Workflows</span>'
+                    '<h2>Step-by-step workflows for this job</h2></div></div><div class="faq">%s</div></section>'
+                    % "".join('<details><summary><h3>%s</h3>%s</summary><div class="a"><ol>%s</ol><p>Result: %s. '
+                              '<a href="/workflows/%s/">Open this workflow</a></p></div></details>'
+                              % (e(w["title"]), CHEV, "".join("<li>%s</li>" % e(s) for s in w.get("steps") or []),
+                                 e((w.get("outcome") or "").rstrip(".")), e(w["id"])) for w in wfs))
+    body.append('<section class="block" aria-labelledby="ucFaq"><div class="sechead"><div><span class="eyebrow">Questions</span>'
+                '<h2 id="ucFaq">%s, answered</h2></div></div><div class="faq">%s</div></section>'
+                % (e(u["job"]), "".join('<details><summary><h3>%s</h3>%s</summary><div class="a">%s</div></details>'
+                                        % (e(fq), CHEV, fh) for fq, fh, _ in faq)))
+    related = [x for x in D["usecases"] if x["stage"] == u["stage"] and x["id"] != u["id"]]
+    related += [x for x in D["usecases"] if x["stage"] != u["stage"]]
+    if related:
+        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Keep going</span>'
+                    '<h2>More setups for designers and PMs</h2></div><a class="link" href="/use-cases/">All use cases →</a></div>'
+                    '<div class="ucgrid">%s</div></section>' % "".join(uc_card(D, x, 110) for x in related[:6]))
+    body.append(cta_band())
+    return page_shell(D, m, "\n".join(body))
+
+
+def build_uc_hub(D):
+    year = (parse_date(D["updated"]) or dt.date.today()).year
+    title = "Which AI agents to use for what: %d setups for designers and PMs (%d) | %s" % (len(D["usecases"]), year, NAME)
+    desc = clip("Pick the job and get the AI setup that does it. %d use cases for product designers and product managers, "
+                "each with the agents to use, in what order, and why." % len(D["usecases"]), 300)
+    m = common_meta(title, desc, UC_HUB, modified=D["updated"])
+    graph = {"@context": "https://schema.org", "@graph": [
+        {"@type": "CollectionPage", "@id": UC_HUB, "url": UC_HUB, "name": title, "description": desc, "inLanguage": "en",
+         "isPartOf": {"@id": SITE + "/#website"}, "dateModified": D["updated"], "mainEntity": {"@id": UC_HUB + "#list"}},
+        uc_itemlist(D, UC_HUB + "#list"),
+        {"@type": "FAQPage", "@id": UC_HUB + "#faq",
+         "mainEntity": [{"@type": "Question", "name": uc_question(u),
+                         "acceptedAnswer": {"@type": "Answer", "text": u.get("answer", ""), "url": uc_page(u)}}
+                        for u in D["usecases"]]},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": NAME, "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Use cases", "item": UC_HUB}]}]}
+    m.append('<script type="application/ld+json">%s</script>' % ld(graph))
+    body = ['<div class="crumbs"><a href="/">Home</a><span>/</span><span>Use cases</span></div>',
+            '<header class="subhero"><span class="eyebrow">%d use cases · updated %s</span><h1>Which AI agents to use for what</h1>'
+            '<p>Most AI lists tell you what exists. This one tells you what to use for the job in front of you: '
+            'the agents, the order, and why. Every tool is checked on its own site.</p></header>'
+            % (len(D["usecases"]), e(fmt_date(D["updated"])))]
+    for k, label in STAGES.items():
+        items = [u for u in D["usecases"] if u["stage"] == k]
+        if not items:
+            continue
+        body.append('<section class="block" style="padding-top:40px"><div class="sechead"><div><span class="eyebrow">Stage</span>'
+                    '<h2>%s</h2></div></div><div class="hublist">%s</div></section>'
+                    % (e(label), "".join('<article class="hubq"><h3><a href="/use-cases/%s/">%s</a></h3><p>%s</p>'
+                                         '<span class="uctools">%s</span></article>'
+                                         % (e(u["id"]), e(uc_question(u)), e(u.get("answer", "")), e(uc_chain(D, u)))
+                                         for u in items)))
+    body.append(cta_band())
     return page_shell(D, m, "\n".join(body))
 
 
 def build_404(D):
     m = ["<title>Page not found | %s</title>" % NAME, '<meta name="robots" content="noindex">']
-    body = ('<header class="subhero"><h1>That page isn\'t here.</h1><p>The agent or workflow may have a new address. '
-            'Everything is listed in the directory.</p><div class="cta"><a class="pill dark big" href="/#all">Browse the directory</a></div></header>')
+    body = ('<header class="subhero"><h1>That page isn\'t here.</h1><p>The page may have a new address. '
+            'Start from the job you want done, or browse every agent.</p><div class="cta"><a class="pill dark big" href="/use-cases/">'
+            'Find your setup</a><a class="pill big" href="/#all">Browse the directory</a></div></header>')
     return page_shell(D, m, body)
 
 
@@ -585,6 +891,9 @@ def robots():
 
 def sitemap(D):
     urls = [(SITE + "/", D["updated"], "daily", "1.0")]
+    if D["usecases"]:
+        urls.append((UC_HUB, D["updated"], "weekly", "0.9"))
+        urls += [(uc_page(u), u.get("updated") or u.get("added") or D["updated"], "weekly", "0.9") for u in D["usecases"]]
     urls += [(agent_page(a), a.get("verified") or a.get("added") or D["updated"], "weekly", "0.8") for a in D["agents"]]
     urls += [(wf_page(w), w.get("added") or D["updated"], "monthly", "0.6") for w in D["workflows"]]
     body = "".join("  <url><loc>%s</loc>%s<changefreq>%s</changefreq><priority>%s</priority></url>\n"
@@ -598,13 +907,41 @@ def md(s):
 
 def llms(D, full=False):
     n_agents, n_cats, n_wf = counts(D)
+    n_uc = len(D["usecases"])
     out = ["# agentictools.design", "",
-           "> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. "
-           "Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, "
-           "checked against the product's own website. %d agents, %d categories, %d workflows. Last updated %s."
-           % (n_agents, n_cats, n_wf, D["updated"]), "",
-           "Machine-readable data: %s/agents.json (fields: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added)." % SITE,
+           "> A free guide to which AI agents product designers and product managers should use for which job. "
+           "%sIt also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, "
+           "what it is best at and what it costs, checked against the product's own website. "
+           "%d agents, %d categories, %d workflows. Last updated %s."
+           % (("%d use cases, each with the recommended setup: which agents to use, in what order, and why. " % n_uc) if n_uc else "",
+              n_agents, n_cats, n_wf, D["updated"]), "",
+           "Machine-readable data: %s/agents.json (agents: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, "
+           "verified, added; usecases: job, stage, for, answer, setup, alternatives, workflows, watchOut)." % SITE,
            ""]
+    if D["usecases"]:
+        out += ["## Use cases: which AI agents to use for what", "", "Index: %s" % UC_HUB, ""]
+        for u in D["usecases"]:
+            if full:
+                out.append("### %s" % md(uc_question(u)))
+                out.append("- Page: %s" % uc_page(u))
+                out.append("- Stage: %s" % STAGES[u["stage"]])
+                if u.get("for"):
+                    out.append("- For: %s" % md(u["for"]))
+                out.append("- Short answer: %s" % md(u.get("answer")))
+                out.append("- Setup, in order:")
+                for i, s in enumerate(u["setup"]):
+                    a = D["by_id"][s["tool"]]
+                    out.append("  %d. %s (%s): %s Pricing: %s" % (i + 1, md(a["name"]), agent_page(a), md(s.get("does")),
+                                                                md(a.get("pricing") or "See site")))
+                for s in u["alternatives"]:
+                    a = D["by_id"][s["tool"]]
+                    out.append("- Alternative: %s (%s), when: %s" % (md(a["name"]), agent_page(a), md(s.get("when"))))
+                if u.get("watchOut"):
+                    out.append("- Watch out: %s" % md(u["watchOut"]))
+                out.append("")
+            else:
+                out.append("- [%s](%s): %s Setup: %s." % (md(u["job"]), uc_page(u), md(u.get("answer")), md(uc_chain(D, u))))
+        out.append("")
     for k in cats_present(D):
         out.append("## %s" % CATS[k])
         out.append("")
@@ -687,6 +1024,8 @@ def main():
         "chips": blk_chips(D),
         "table": blk_table(D),
         "faq": blk_faq(D),
+        "uccount": e("%d use cases" % len(D["usecases"])),
+        "usecases": blk_usecases(D),
         "footfresh": e("Refreshed daily, last on %s. Every listing is checked against the product's own site." % fmt_date(D["updated"])),
     }
     for k, v in blocks.items():
@@ -709,12 +1048,25 @@ def main():
         for x in items:
             write("%s/%s/index.html" % (folder, x["id"]), fn(D, x))
 
+    # use case pages and their hub
+    base = os.path.join(ROOT, "use-cases")
+    keep = {u["id"] for u in D["usecases"]}
+    if os.path.isdir(base):
+        for name in os.listdir(base):
+            if name not in keep and os.path.isdir(os.path.join(base, name)):
+                shutil.rmtree(os.path.join(base, name))
+    for u in D["usecases"]:
+        write("use-cases/%s/index.html" % u["id"], build_uc_page(D, u))
+    if D["usecases"]:
+        write("use-cases/index.html", build_uc_hub(D))
+
     write("404.html", build_404(D))
     write("sitemap.xml", sitemap(D))
     write("robots.txt", robots())
     write("llms.txt", llms(D))
     write("llms-full.txt", llms(D, full=True))
-    print("build: %d agents, %d workflows, updated %s" % (len(D["agents"]), len(D["workflows"]), D["updated"]))
+    print("build: %d agents, %d workflows, %d use cases, updated %s"
+          % (len(D["agents"]), len(D["workflows"]), len(D["usecases"]), D["updated"]))
 
 
 if __name__ == "__main__":

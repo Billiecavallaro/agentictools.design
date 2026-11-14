@@ -1,8 +1,190 @@
 # agentictools.design
 
-> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 27 agents, 6 categories, 6 workflows. Last updated 2026-11-14.
+> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 27 agents, 6 categories, 6 workflows. Last updated 2026-11-14.
 
-Machine-readable data: https://agentictools.design/agents.json (fields: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added).
+Machine-readable data: https://agentictools.design/agents.json (agents: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added; usecases: job, stage, for, answer, setup, alternatives, workflows, watchOut).
+
+## Use cases: which AI agents to use for what
+
+Index: https://agentictools.design/use-cases/
+
+### What's the best AI setup to synthesize user interviews into themes?
+- Page: https://agentictools.design/use-cases/synthesize-user-interviews/
+- Stage: Understand users
+- For: Researchers, designers and PMs sitting on a pile of transcripts
+- Short answer: Bring the transcripts and the rest of your feedback into Dovetail, which turns them into insights that cite their sources. Then use Claude to shape the themes into a readout people will actually read, and log what matters in Linear.
+- Setup, in order:
+  1. Dovetail (https://agentictools.design/agents/dovetail/): Pulls interviews and feedback from many sources into cited insights you can chat with. Pricing: Paid; from $4,800/yr plus credits; 30-day free trial
+  2. Claude (https://agentictools.design/agents/claude/): Turns the cited themes into a tight readout or brief for stakeholders. Pricing: Free plan; Pro $20/mo ($17 billed annually)
+  3. Linear Agent (https://agentictools.design/agents/linear-agents/): Logs the needs that matter as issues, so the evidence travels with the work. Pricing: Free plan includes agents; paid from $10/user/mo billed yearly
+- Alternative: Outset (https://agentictools.design/agents/outset/), when: You haven't run the interviews yet. It writes the guide, runs them and delivers themes, highlight reels and decks.
+- Alternative: Listen Labs (https://agentictools.design/agents/listen-labs/), when: Your interviews happen in many languages. Every finding links back to the interview it came from.
+- Watch out: Read the quotes behind a theme before you present it. Citations are there so you can check the summary, so check it.
+
+### What's the best AI setup to run user interviews at scale with an AI moderator?
+- Page: https://agentictools.design/use-cases/ai-moderated-user-interviews/
+- Stage: Understand users
+- For: Research teams and PMs who need many conversations, fast
+- Short answer: Outset writes the interview guide from your goals and runs hundreds of AI-moderated interviews at once. Pick Listen Labs instead when you need many languages. Either way, keep the results in Dovetail so themes add up over time.
+- Setup, in order:
+  1. Outset (https://agentictools.design/agents/outset/): Generates the guide from your research goals, runs video, voice or text interviews in parallel, then delivers themes and highlight reels. Pricing: See site (demo)
+  2. Dovetail (https://agentictools.design/agents/dovetail/): Holds the results next to the rest of your customer feedback, with every insight citing its source. Pricing: Paid; from $4,800/yr plus credits; 30-day free trial
+- Alternative: Listen Labs (https://agentictools.design/agents/listen-labs/), when: You're interviewing in more than one language. Its AI moderator works in 120+ languages and links every finding to its interview.
+- Alternative: Maze (https://agentictools.design/agents/maze/), when: You need people to use a prototype, not talk about it. Run an unmoderated test instead.
+- Watch out: An AI moderator scales your guide. If the guide asks leading questions, you get leading answers at scale, so pilot it on two or three people first.
+
+### What's the best AI setup to test a prototype with real users?
+- Page: https://agentictools.design/use-cases/usability-test-a-prototype/
+- Stage: Understand users
+- For: Designers and PMs who want evidence before engineering starts
+- Short answer: Build the prototype in Figma Make, then run an unmoderated test in Maze, which recruits people from its own panel and writes the report. You get real reactions without scheduling a single call.
+- Setup, in order:
+  1. Figma Make (https://agentictools.design/agents/figma-make/): Turns your frames into a working prototype people can click through. Pricing: See site
+  2. Maze (https://agentictools.design/agents/maze/): Recruits participants from a 6M+ panel, runs the test unmoderated and generates the report. Pricing: Free trial; plans, see site
+- Alternative: v0 (https://agentictools.design/agents/v0/), when: The prototype needs to be a deployed web app, not a click-through.
+- Alternative: Outset (https://agentictools.design/agents/outset/), when: You want conversations, not task completion. It runs AI-moderated interviews at scale.
+- Watch out: Write tasks as goals, like find a plan for a team of five, not as instructions like click Pricing. Otherwise you're testing your copy, not your design.
+
+### What's the best AI setup to turn customer feedback into a spec?
+- Page: https://agentictools.design/use-cases/customer-feedback-to-spec/
+- Stage: Decide what to build
+- For: PMs drowning in calls, tickets and Slack threads
+- Short answer: Samepage Bets pulls feedback from calls, tickets and chat into one place and ranks it into scored bets. Take the winning bet into ChatPRD to write and score the PRD, then hand the work out in Linear.
+- Setup, in order:
+  1. Samepage Bets (https://agentictools.design/agents/samepage-bets/): Collects scattered feedback and ranks it into scored bets, then has agents research and spec the work, with you approving each step. Pricing: Free plan; Pro $15/mo, Teams $25/user/mo billed yearly
+  2. ChatPRD (https://agentictools.design/agents/chatprd/): Writes the PRD and scores it, so you know it's ready before engineers see it. Pricing: Free plan; Pro $15/mo
+  3. Linear Agent (https://agentictools.design/agents/linear-agents/): Turns the spec into issues you can delegate to Cursor, Codex or ChatPRD, and shows each change and its reasoning. Pricing: Free plan includes agents; paid from $10/user/mo billed yearly
+- Alternative: Dovetail (https://agentictools.design/agents/dovetail/), when: You're at a larger org with a research team. Its agents route ranked customer needs to Jira, Linear or Cursor.
+- Alternative: Rovo (https://agentictools.design/agents/atlassian-rovo/), when: Your team runs on Jira and Confluence. Its agents draft roadmaps and route backlog work.
+- Watch out: Ranked feedback tells you what's loud, not what's important. Keep the call on which bet to take with a person.
+
+### What's the best AI setup to write a PRD from meeting notes?
+- Page: https://agentictools.design/use-cases/write-a-prd/
+- Stage: Decide what to build
+- For: Product managers who'd rather decide than format docs
+- Short answer: Use ChatPRD. Paste in your meeting notes and it drafts the PRD, scores it, and can open it in v0, Lovable or Cursor when you're ready to build. Keep the final spec where your team works with Notion Agent.
+- Setup, in order:
+  1. ChatPRD (https://agentictools.design/agents/chatprd/): Turns meeting notes into a PRD and scores it, so you see what's weak before the review. Pricing: Free plan; Pro $15/mo
+  2. Notion Agent (https://agentictools.design/agents/notion-agent/): Builds and edits the spec page and its databases in your Notion workspace. Pricing: Trial on Free; full agent on Business, $20/seat/mo
+- Alternative: Claude (https://agentictools.design/agents/claude/), when: You want a thinking partner for the hard tradeoffs, not a template.
+- Alternative: Rovo (https://agentictools.design/agents/atlassian-rovo/), when: Your specs live in Confluence and your work lives in Jira.
+- Watch out: Treat the score as a checklist, not a verdict. Only you know whether it's the right problem to solve.
+
+### What's the best AI setup to run a competitive analysis?
+- Page: https://agentictools.design/use-cases/competitive-analysis/
+- Stage: Decide what to build
+- For: PMs and designers prepping a strategy review or a kickoff
+- Short answer: Send ChatGPT agent to browse competitor sites and build the comparison, ask Claude to pull out the gaps and opportunities, and save the brief in Notion with Notion Agent. Check every claim against the sources before you share it.
+- Setup, in order:
+  1. ChatGPT agent (https://agentictools.design/agents/chatgpt-agent/): Browses competitor sites in its own browser and builds the comparison as a spreadsheet or slides, asking before important steps. Pricing: Included with ChatGPT Plus, Pro, Business and Enterprise
+  2. Claude (https://agentictools.design/agents/claude/): Reads the comparison and writes up the gaps and opportunities. Pricing: Free plan; Pro $20/mo ($17 billed annually)
+  3. Notion Agent (https://agentictools.design/agents/notion-agent/): Saves the brief and next steps where the team will find them. Pricing: Trial on Free; full agent on Business, $20/seat/mo
+- Alternative: Comet (https://agentictools.design/agents/perplexity-comet/), when: You'd rather browse yourself. Its assistant compares how different sources cover a topic without leaving the page.
+- Watch out: Agents read marketing pages, and marketing pages flatter. Pair the scan with real reviews or customer calls before you draw conclusions.
+
+### What's the best AI setup to turn a PRD into a clickable prototype?
+- Page: https://agentictools.design/use-cases/prd-to-prototype/
+- Stage: Design and prototype
+- For: PMs and designers with a spec who need something people can click
+- Short answer: Draft or tighten the PRD in ChatPRD, open it in v0 to build a working web prototype, then put it in front of real users with a Maze test. You end up with a clickable app and real feedback on it, often in a single day.
+- Setup, in order:
+  1. ChatPRD (https://agentictools.design/agents/chatprd/): Turns your notes into a PRD and scores it, so weak spots show up before you build. It can open the spec straight in v0. Pricing: Free plan; Pro $15/mo
+  2. v0 (https://agentictools.design/agents/v0/): Builds the clickable web app from the spec. Tweak the UI visually in Design Mode, then deploy in one click and share the link. Pricing: Free plan (7 messages/day); Plus $30/user/mo
+  3. Maze (https://agentictools.design/agents/maze/): Runs an unmoderated test of the prototype with people from its participant panel and writes the report for you. Pricing: Free trial; plans, see site
+- Alternative: Magic Patterns (https://agentictools.design/agents/magic-patterns/), when: The prototype has to look like your real product. Import your component library and it turns the PRD into high-fidelity UI.
+- Alternative: Lovable (https://agentictools.design/agents/lovable/), when: You need more than a demo. Hosting, sign-in and payments come built in.
+- Alternative: Figma Make (https://agentictools.design/agents/figma-make/), when: Your team lives in Figma and wants the prototype next to the designs.
+- Watch out: Don't polish the prototype before the test. The point is to find out which parts of the spec are wrong while they're still cheap to change.
+
+### What's the best AI setup to generate UI that uses your own design system?
+- Page: https://agentictools.design/use-cases/ai-ui-with-your-design-system/
+- Stage: Design and prototype
+- For: Product designers and design system teams tired of generic AI screens
+- Short answer: Start in Figma with the Figma agent, which builds screens from your real library components, tokens and variables. When you want to see it as code, move into Wonder, where the design stays as code and a coding agent builds the version you pick.
+- Setup, in order:
+  1. Figma agent (https://agentictools.design/agents/figma-agent/): Drafts and refines screens from your own components, tokens and variables instead of placeholder UI. It comes with paid Figma plans. Pricing: Included on paid Figma plans
+  2. Wonder (https://agentictools.design/agents/wonder/): Explore variations on a canvas where the design is kept as code, so what you pick is what gets built. Pricing: See site
+  3. Claude Code (https://agentictools.design/agents/claude-code/): Builds the chosen version. Wonder runs it in its own git worktree, and you get the change back to review. Pricing: Included with paid Claude plans; Team $20/seat/mo billed annually
+- Alternative: Magic Patterns (https://agentictools.design/agents/magic-patterns/), when: You want concepts outside Figma that still match your system. Import your component library, then hand off to a coding agent.
+- Alternative: Bolt (https://agentictools.design/agents/bolt/), when: You're starting a build from an existing Figma design or GitHub repo and want to keep your design system.
+- Watch out: AI is only as on-brand as your library. If your components and tokens are messy in Figma, the agent will copy the mess faithfully.
+
+### What's the best AI setup to turn a whiteboard sketch into a prototype?
+- Page: https://agentictools.design/use-cases/sketch-to-prototype/
+- Stage: Design and prototype
+- For: Designers and PMs who think on paper first
+- Short answer: Photograph the sketch and let Stitch turn it into a digital design, paste that into Figma to clean it up, then make it clickable with Figma Make. If you're not a designer, Uizard is the gentler start.
+- Setup, in order:
+  1. Stitch (https://agentictools.design/agents/google-stitch/): Turns a photo of a whiteboard sketch or a screenshot into a digital design you can paste into Figma, plus front-end code. Pricing: See site
+  2. Figma Make (https://agentictools.design/agents/figma-make/): Turns the cleaned-up frames into a working prototype. Click any element in the preview to restyle or re-prompt it. Pricing: See site
+- Alternative: Uizard (https://agentictools.design/agents/uizard/), when: You're a PM or founder without design skills. It scans a hand-drawn wireframe into an editable mockup.
+- Alternative: Figma agent (https://agentictools.design/agents/figma-agent/), when: The screens should be built from your team's own Figma library from the start.
+- Watch out: Write short labels on the sketch, like search, filters or results. Clear words leave the generator less to guess.
+
+### What's the best AI setup to prototype a new feature inside your real product?
+- Page: https://agentictools.design/use-cases/prototype-in-your-real-product/
+- Stage: Design and prototype
+- For: Product teams who are done with throwaway prototypes
+- Short answer: Use Wonder. It's a design canvas on your actual product where the design stays as code, and it runs a coding agent like Codex to build what you design. If you just want a quick build from a GitHub repo, Bolt can start from the repo and keep your design system.
+- Setup, in order:
+  1. Wonder (https://agentictools.design/agents/wonder/): Design on the real product, with the design kept as code instead of a separate mockup. Pricing: See site
+  2. Codex (https://agentictools.design/agents/openai-codex/): Builds the change in the cloud, even with your laptop closed, and checks its work with browser tools. Pricing: Included with ChatGPT Plus, Pro and Business
+- Alternative: Bolt (https://agentictools.design/agents/bolt/), when: You want a quick build that starts from your GitHub repo or Figma file and keeps your design system.
+- Alternative: Cursor (https://agentictools.design/agents/cursor/), when: An engineer is pairing with you. Cursor's cloud agents build, test and demo features in parallel.
+- Watch out: Prototyping on real code means real constraints show up early. That's the point, so don't fight it.
+
+### What's the best AI setup to turn a Figma design into production code?
+- Page: https://agentictools.design/use-cases/figma-to-code/
+- Stage: Build and ship
+- For: Designers and design engineers who want their work shipped as designed
+- Short answer: If the work has to land in your real codebase, give the design to a coding agent that works in that repo. Wonder keeps the design and the code side by side and runs Claude Code for you, and GitHub Copilot reviews the pull request. For a brand new app, Bolt can start a build straight from your Figma file.
+- Setup, in order:
+  1. Wonder (https://agentictools.design/agents/wonder/): Keeps the design as code next to the product and runs Claude Code or Codex on your own subscription to build it. Pricing: See site
+  2. Claude Code (https://agentictools.design/agents/claude-code/): Reads your codebase, edits the files, runs the commands and hands back a pull request. Pricing: Included with paid Claude plans; Team $20/seat/mo billed annually
+  3. GitHub Copilot (https://agentictools.design/agents/github-copilot/): Reviews the pull request on GitHub before anyone merges it. Pricing: Free tier; Pro $10/user/mo
+- Alternative: Bolt (https://agentictools.design/agents/bolt/), when: It's a new app, not a change to an existing one. Start the build from the Figma design and keep your design system.
+- Alternative: Cursor (https://agentictools.design/agents/cursor/), when: Your engineers already work in Cursor. Its agents build, test and demo the feature.
+- Alternative: v0 (https://agentictools.design/agents/v0/), when: It's a web app and you want it deployed to Vercel in one click.
+- Watch out: Review the pull request the way you'd review a junior designer's mockup. Check spacing, states and edge cases, not just the happy path.
+
+### What's the best AI setup to get design QA fixes shipped?
+- Page: https://agentictools.design/use-cases/ship-design-qa-fixes/
+- Stage: Build and ship
+- For: Designers whose polish tickets sit in the backlog forever
+- Short answer: Log each fix in Linear and delegate it straight to a coding agent like Cursor or Codex, then review what comes back with GitHub Copilot code review. Small UI fixes stop waiting for a sprint.
+- Setup, in order:
+  1. Linear Agent (https://agentictools.design/agents/linear-agents/): Logs each fix and delegates it to Cursor or Codex, showing every change and its reasoning. Pricing: Free plan includes agents; paid from $10/user/mo billed yearly
+  2. Cursor (https://agentictools.design/agents/cursor/): Its cloud agents build, test and demo each fix in parallel. Pricing: Free plan; paid plans on site
+  3. GitHub Copilot (https://agentictools.design/agents/github-copilot/): Reviews the pull request before it's merged. Pricing: Free tier; Pro $10/user/mo
+- Alternative: Codex (https://agentictools.design/agents/openai-codex/), when: Your team is on ChatGPT. Codex runs the fixes in the cloud and checks them with browser tools.
+- Alternative: Claude Code (https://agentictools.design/agents/claude-code/), when: You want to kick fixes off from Slack or GitHub and get pull requests back.
+- Watch out: Write each issue like a tiny spec: the screen, what's wrong, what right looks like, and a screenshot. Vague tickets get vague fixes.
+
+### What's the best AI setup to build a working app without writing code?
+- Page: https://agentictools.design/use-cases/build-an-app-without-code/
+- Stage: Build and ship
+- For: PMs, designers and founders who can't code but need a real product
+- Short answer: Lovable is the default. Get the idea down as a spec in ChatPRD, open it in Lovable, and it builds and deploys a full app with hosting, sign-in and payments handled. Pick Replit Agent if you want it to test the app in a browser and fix its own bugs as it goes.
+- Setup, in order:
+  1. ChatPRD (https://agentictools.design/agents/chatprd/): Gets the idea down as a spec first, then opens it in Lovable. Pricing: Free plan; Pro $15/mo
+  2. Lovable (https://agentictools.design/agents/lovable/): Builds and hosts the full app from plain-language chat, backend included. Pricing: Free plan (daily build credits); paid plans, see site
+- Alternative: Replit Agent (https://agentictools.design/agents/replit-agent/), when: You want an agent that tests the app in a browser while it builds and fixes what breaks.
+- Alternative: Bolt (https://agentictools.design/agents/bolt/), when: You're starting from an existing Figma design or GitHub repo.
+- Alternative: v0 (https://agentictools.design/agents/v0/), when: It's a web app and you want to tweak the UI visually before you deploy.
+- Watch out: These tools get you to a working app fast. Before real customers use it, have someone technical check security, data and costs.
+
+### What's the best AI setup to automate status updates and stakeholder reports?
+- Page: https://agentictools.design/use-cases/automate-status-updates/
+- Stage: Build and ship
+- For: PMs and leads who spend Friday afternoons writing updates
+- Short answer: Use the agent that lives where your work does. Notion Agent can run on a schedule to post updates and route tasks, and Claude can draft the part that needs judgment. Teams on Jira and Confluence should use Rovo, and research teams can let Dovetail's agents send recurring stakeholder updates.
+- Setup, in order:
+  1. Notion Agent (https://agentictools.design/agents/notion-agent/): Custom Agents run on a schedule to post updates, answer Slack questions and route tasks. Pricing: Trial on Free; full agent on Business, $20/seat/mo
+  2. Claude (https://agentictools.design/agents/claude/): Drafts the part that needs judgment: what changed, why it matters and what you need from people. Pricing: Free plan; Pro $20/mo ($17 billed annually)
+- Alternative: Rovo (https://agentictools.design/agents/atlassian-rovo/), when: Your team runs on Jira and Confluence. Its agents work across both.
+- Alternative: Dovetail (https://agentictools.design/agents/dovetail/), when: The updates are about research and customer insight.
+- Watch out: Automate the gathering, not the judgment. Read each update before it goes out, at least for the first month.
+
 
 ## Design
 
