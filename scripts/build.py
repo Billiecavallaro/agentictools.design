@@ -601,7 +601,7 @@ SUB_CSS = """
 .hublist{border-top:1px solid var(--line)}
 .feat{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 16px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--window);max-width:760px}
 .feat.open{border-style:dashed;background:transparent}
-.feat .tag{font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:4px 7px;white-space:nowrap}
+.feat .tag{justify-self:start;font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:4px 7px;white-space:nowrap}
 .feat .ftxt{display:grid;gap:2px;min-width:0}
 .feat .ftxt b{font-weight:500}
 .feat .ftxt span{color:var(--ink-2);font-size:14px}
