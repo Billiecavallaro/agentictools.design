@@ -19,6 +19,7 @@ It writes:
 Standard library only.
 """
 import datetime as dt
+import hashlib
 import html
 import json
 import os
@@ -582,7 +583,11 @@ FONT_LINKS = """<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Geist:wght@400;500;600&family=Geist+Mono:wght@400;500&display=swap">
-<link rel="stylesheet" href="/assets/site.css">"""
+<link rel="stylesheet" href="/assets/site.css?v=%s">"""
+
+# set in main() to a short hash of site.css, so a style change reaches
+# returning visitors instead of waiting on their cached copy
+CSS_VER = "1"
 
 # Google Analytics 4. Goes at the top of <head> on every page (home page via
 # blk_head, subpages via page_shell), so every rebuild keeps it.
@@ -618,7 +623,7 @@ def page_shell(D, head_meta, body):
     return ("<!doctype html>\n<html lang=\"en\">\n<head>\n<meta charset=\"utf-8\">\n"
             "<meta name=\"viewport\" content=\"width=device-width, initial-scale=1\">\n%s\n%s\n</head>\n<body>\n"
             "<div class=\"wrap\">\n%s\n<main>\n%s\n</main>\n%s\n</div>\n</body>\n</html>\n"
-            % (GA_HEAD + "\n" + "\n".join(head_meta), FONT_LINKS, nav(), body, footer(D)))
+            % (GA_HEAD + "\n" + "\n".join(head_meta), FONT_LINKS % CSS_VER, nav(), body, footer(D)))
 
 
 def row_link(a, D):
@@ -1035,7 +1040,10 @@ def main():
     style = re.search(r"<style>(.*?)</style>", src, re.S)
     if not style:
         sys.exit("build: no <style> in index.html")
-    write("assets/site.css", style.group(1).strip() + "\n" + SUB_CSS)
+    css = style.group(1).strip() + "\n" + SUB_CSS
+    write("assets/site.css", css)
+    global CSS_VER
+    CSS_VER = hashlib.sha256(css.encode()).hexdigest()[:8]
 
     # profile pages: rebuild the folders so removed or renamed ids don't linger
     for folder, items, fn in (("agents", D["agents"], build_agent_page), ("workflows", D["workflows"], build_wf_page)):
