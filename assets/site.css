@@ -287,4 +287,28 @@ html{scroll-behavior:smooth}
 .hubq p{margin:0 0 6px;color:var(--ink-2);max-width:74ch}
 .hubq .uctools{font:400 12px/1.5 var(--font-mono);color:var(--ink-3)}
 .hublist{border-top:1px solid var(--line)}
-@media (max-width:760px){.alt{grid-template-columns:1fr}}
+.feat{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 16px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--window);max-width:760px}
+.feat.open{border-style:dashed;background:transparent}
+.feat .tag{font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:4px 7px;white-space:nowrap}
+.feat .ftxt{display:grid;gap:2px;min-width:0}
+.feat .ftxt b{font-weight:500}
+.feat .ftxt span{color:var(--ink-2);font-size:14px}
+.feat a.go{color:var(--accent);text-decoration:none;font-size:14px;white-space:nowrap}
+.feat-wrap{padding-bottom:24px}
+footer a{color:inherit}
+.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.offer{display:flex;flex-direction:column;gap:10px;background:var(--window);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:10px;padding:20px}
+.offer h3{margin:0;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.offer .price{font-size:30px;letter-spacing:-.02em;line-height:1}
+.offer .price small{font-size:14px;color:var(--ink-3);letter-spacing:0}
+.offer p{margin:0;color:var(--ink-2);font-size:14.5px}
+.offer ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:14.5px;display:grid;gap:4px}
+.terms{display:grid;gap:10px;max-width:74ch}
+.terms p{margin:0;color:var(--ink-2)}
+.terms b{color:var(--ink);font-weight:500}
+.spots{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:4px 16px;border-top:1px solid var(--line);padding-top:6px}
+.spots div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.spots a{text-decoration:none}.spots a:hover{color:var(--accent)}
+.spots em{font:500 10px/1.6 var(--font-mono);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.spots em.free{color:#3F8A4C}
+@media (max-width:760px){.alt{grid-template-columns:1fr}.feat{grid-template-columns:1fr}}

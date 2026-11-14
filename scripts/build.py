@@ -14,7 +14,12 @@ It writes:
   agents/<id>/index.html  one profile page per agent, listing its use cases
   workflows/<id>/index.html  one page per workflow
   assets/site.css       the page's own styles, shared by the subpages
+  sponsor/index.html    what sponsors can buy, launch prices and how to book
   sitemap.xml, robots.txt, llms.txt, llms-full.txt, 404.html
+
+Featured spots on use-case pages come from the optional top-level "featured"
+list in agents.json (see load()). It is edited by hand when a sponsor books;
+the daily refresh never touches it.
 
 Standard library only.
 """
@@ -152,12 +157,30 @@ def load():
                         workflows=[w for w in u.get("workflows") or [] if w in wf_ids],
                         stage=u.get("stage") if u.get("stage") in STAGES else "design"))
     ucs = [u for k in STAGES for u in ucs if u["stage"] == k]
+
+    # Paid "Featured" spots, one per use case, edited by hand:
+    #   "featured": [{"usecase": "<use case id>", "name": "Tool name",
+    #                 "url": "https://...", "line": "One sentence, max 140 characters.",
+    #                 "until": "YYYY-MM-DD"}]
+    # A spot shows while "until" is on or after the data's "updated" date. A bad
+    # or expired entry is skipped, and the page shows "This spot is available".
+    uc_ids = {u["id"] for u in ucs}
+    featured = {}
+    for f in d.get("featured", []) or []:
+        if not isinstance(f, dict) or f.get("usecase") not in uc_ids or f["usecase"] in featured:
+            continue
+        name, line, url = str(f.get("name") or "").strip(), str(f.get("line") or "").strip(), safe_url(f.get("url"))
+        until = parse_date(f.get("until"))
+        if not name or len(name) > 40 or not url or len(line) > 140 or not until or until < ref:
+            continue
+        featured[f["usecase"]] = {"name": name, "url": url, "line": line, "until": until.isoformat()}
     return {
         "updated": updated,
         "updates": [u for u in d.get("updates", []) if isinstance(u, dict)],
         "agents": ordered(uniq),
         "workflows": ordered(wfs),
         "usecases": ucs,
+        "featured": featured,
         "is_new": is_new,
         "by_id": by_id,
     }
@@ -427,9 +450,11 @@ def faq_items(D):
     t = "Yes. The directory is free to browse, and the weekly email with the best new agents and one workflow is free too."
     items.append(("Is agentictools.design free?", '<p>%s <a href="#subscribe">Get the weekly email</a>.</p>' % e(t), t))
 
-    t = ("Sponsors get a featured card at the top of the directory, always labeled as sponsored. "
-         "Use the Sponsor a spot section on this page to get in touch.")
-    items.append(("Can I sponsor a spot or get my AI tool featured?", '<p>%s <a href="#sponsor">Sponsor a spot</a>.</p>' % e(t), t))
+    t = ("Yes. Tools can buy a Featured spot at the top of a use-case page that fits them, or sponsor an issue of the "
+         "weekly email. Paid spots are always labeled and never change the editorial picks. "
+         "Prices and how to book are on the sponsor page: %s/sponsor/" % SITE)
+    items.append(("Can I sponsor a spot or get my AI tool featured?",
+                  '<p>%s <a href="/sponsor/">See sponsor options</a>.</p>' % e(t.rsplit(" Prices", 1)[0]), t))
     return items
 
 
@@ -574,7 +599,31 @@ SUB_CSS = """
 .hubq p{margin:0 0 6px;color:var(--ink-2);max-width:74ch}
 .hubq .uctools{font:400 12px/1.5 var(--font-mono);color:var(--ink-3)}
 .hublist{border-top:1px solid var(--line)}
-@media (max-width:760px){.alt{grid-template-columns:1fr}}
+.feat{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 16px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--window);max-width:760px}
+.feat.open{border-style:dashed;background:transparent}
+.feat .tag{font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:4px 7px;white-space:nowrap}
+.feat .ftxt{display:grid;gap:2px;min-width:0}
+.feat .ftxt b{font-weight:500}
+.feat .ftxt span{color:var(--ink-2);font-size:14px}
+.feat a.go{color:var(--accent);text-decoration:none;font-size:14px;white-space:nowrap}
+.feat-wrap{padding-bottom:24px}
+footer a{color:inherit}
+.offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
+.offer{display:flex;flex-direction:column;gap:10px;background:var(--window);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:10px;padding:20px}
+.offer h3{margin:0;font-size:17px;font-weight:500;letter-spacing:-.01em}
+.offer .price{font-size:30px;letter-spacing:-.02em;line-height:1}
+.offer .price small{font-size:14px;color:var(--ink-3);letter-spacing:0}
+.offer p{margin:0;color:var(--ink-2);font-size:14.5px}
+.offer ul{margin:0;padding-left:18px;color:var(--ink-2);font-size:14.5px;display:grid;gap:4px}
+.terms{display:grid;gap:10px;max-width:74ch}
+.terms p{margin:0;color:var(--ink-2)}
+.terms b{color:var(--ink);font-weight:500}
+.spots{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:4px 16px;border-top:1px solid var(--line);padding-top:6px}
+.spots div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
+.spots a{text-decoration:none}.spots a:hover{color:var(--accent)}
+.spots em{font:500 10px/1.6 var(--font-mono);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
+.spots em.free{color:#3F8A4C}
+@media (max-width:760px){.alt{grid-template-columns:1fr}.feat{grid-template-columns:1fr}}
 """
 
 FONT_LINKS = """<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
@@ -610,7 +659,8 @@ def nav():
 def footer(D):
     return ('<footer><div><a class="brand" href="/">%s%s</a></div>'
             '<p>Refreshed daily, last on %s. Every listing is checked against the product\'s own site.</p>'
-            '<p>Sponsored listings are always labeled.</p></footer>' % (GLYPH, NAME, e(fmt_date(D["updated"]))))
+            '<p>Sponsored listings are always labeled. <a href="/sponsor/">Sponsor a spot</a></p></footer>'
+            % (GLYPH, NAME, e(fmt_date(D["updated"]))))
 
 
 def cta_band():
@@ -766,6 +816,18 @@ def uc_faq(D, u):
     return items
 
 
+def featured_slot(D, u):
+    f = D["featured"].get(u["id"])
+    if f:
+        return ('<div class="feat-wrap"><aside class="feat" aria-label="Featured placement"><span class="tag">Featured</span>'
+                '<span class="ftxt"><b><a href="%s" rel="sponsored noopener" target="_blank" data-agent="%s">%s</a></b>%s</span>'
+                '<a class="go" href="/sponsor/">About featured spots</a></aside></div>'
+                % (e(f["url"]), e(f["name"]), e(f["name"]), ("<span>%s</span>" % e(f["line"])) if f["line"] else ""))
+    return ('<div class="feat-wrap"><aside class="feat open" aria-label="Featured placement"><span class="tag">Featured</span>'
+            '<span class="ftxt"><b>This spot is available</b><span>Show your tool to people choosing a setup to %s.</span></span>'
+            '<a class="go" href="/sponsor/">Sponsor this spot →</a></aside></div>' % e(lower_first(u["job"])))
+
+
 def build_uc_page(D, u):
     q = uc_question(u)
     title = uc_title(D, u)
@@ -805,6 +867,7 @@ def build_uc_page(D, u):
             '<header class="subhero"><span class="eyebrow">%s · %d-step setup</span><h1>%s</h1><p class="lede">%s</p>%s</header>'
             % (e(STAGES[u["stage"]]), len(u["setup"]), e(q), e(u.get("answer", "")),
                ('<p class="meta">Best for: %s</p>' % e(str(u["for"]).rstrip("."))) if u.get("for") else ""),
+            featured_slot(D, u),
             '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
             '<i></i><i></i><i></i></span><span class="t">agentictools.design · The setup</span></div><div class="wfmain">'
             '<h2>The setup, in order</h2><div class="ask">%s</div><ol class="ucsteps">%s</ol>%s</div></article></div></div>'
@@ -869,7 +932,149 @@ def build_uc_hub(D):
                                          '<span class="uctools">%s</span></article>'
                                          % (e(u["id"]), e(uc_question(u)), e(u.get("answer", "")), e(uc_chain(D, u)))
                                          for u in items)))
+    body.append('<section class="block"><div class="cta-band"><div><h2>Make your tool the featured pick for a use case.</h2>'
+                '<p>Each use case has one labeled Featured spot at the top of its page, seen by people choosing a tool for that job.</p></div>'
+                '<a class="pill big" href="/sponsor/">See sponsor options</a></div></section>')
     body.append(cta_band())
+    return page_shell(D, m, "\n".join(body))
+
+
+# Launch prices, shown on /sponsor/ and in llms.txt. Change them here.
+PRICES = {"spot": 49, "issue": 49, "all": 299}
+SPONSOR_EMAIL = "agentictools.design@gmail.com"
+SPONSOR_URL = SITE + "/sponsor/"
+
+# Copies the sponsor email address. Same behaviour as the home page's button;
+# /assets/track.js sends the sponsor_email_copy event for #sponsorCopy.
+COPY_JS = """<script>
+(function(){
+  "use strict";
+  var btn = document.getElementById("sponsorCopy");
+  if (!btn) return;
+  var addr = btn.getAttribute("data-email"), label = btn.textContent;
+  var live = document.getElementById("sponsorCopied"), t = null;
+  function legacyCopy(){
+    var ta = document.createElement("textarea");
+    ta.value = addr; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function selectAddress(){
+    var el = document.getElementById("sponsorEmail");
+    if (!el || !window.getSelection) return;
+    var r = document.createRange(); r.selectNodeContents(el);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  }
+  function show(text){
+    btn.textContent = text;
+    if (live) live.textContent = text === "Copied!" ? "Email address copied" : "";
+    clearTimeout(t);
+    t = setTimeout(function(){ btn.textContent = label; if (live) live.textContent = ""; }, 2000);
+  }
+  function done(ok){ if (ok) show("Copied!"); else { selectAddress(); show("Address selected"); } }
+  btn.addEventListener("click", function(){
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(addr).then(function(){ done(true); }, function(){ done(legacyCopy()); });
+    } else done(legacyCopy());
+  });
+})();
+</script>"""
+
+
+def sponsor_faq(D):
+    n = len(D["usecases"])
+    return [
+        ("What does a Featured spot look like?",
+         "A card at the top of one use-case page, above the recommended setup, labeled Featured. It shows your tool's name, "
+         "one sentence you write (up to 140 characters) and a link to your site."),
+        ("Does sponsoring change the recommendations?",
+         "No. The setups, alternatives and directory listings are chosen on their own. A sponsor can't buy a place in them, "
+         "and buying a spot doesn't remove a competitor from the page."),
+        ("Which use cases are open?",
+         "All %d have one Featured spot each, sold a month at a time, first come first served. The list on this page shows "
+         "which are open." % n),
+        ("How do I book?",
+         "Email %s with your tool, the use case or issue you want, and your start date. We'll confirm it fits and send an invoice."
+         % SPONSOR_EMAIL),
+    ]
+
+
+def build_sponsor_page(D):
+    n = len(D["usecases"])
+    title = "Sponsor agentictools.design: featured spots and newsletter sponsorships | %s" % NAME
+    desc = clip("Put your AI tool in front of product designers and PMs as they choose a setup. Featured spots on %d use-case "
+                "pages from $%d a month, and newsletter sponsorships. Launch pricing." % (n, PRICES["spot"]), 300)
+    m = common_meta(title, desc, SPONSOR_URL, modified=D["updated"])
+    faq = sponsor_faq(D)
+    graph = {"@context": "https://schema.org", "@graph": [
+        {"@type": "WebPage", "@id": SPONSOR_URL, "url": SPONSOR_URL, "name": title, "description": desc, "inLanguage": "en",
+         "isPartOf": {"@id": SITE + "/#website"}, "dateModified": D["updated"]},
+        {"@type": "FAQPage", "@id": SPONSOR_URL + "#faq",
+         "mainEntity": [{"@type": "Question", "name": q, "acceptedAnswer": {"@type": "Answer", "text": a}} for q, a in faq]},
+        {"@type": "BreadcrumbList", "itemListElement": [
+            {"@type": "ListItem", "position": 1, "name": NAME, "item": SITE + "/"},
+            {"@type": "ListItem", "position": 2, "name": "Sponsor", "item": SPONSOR_URL}]}]}
+    m.append('<script type="application/ld+json">%s</script>' % ld(graph))
+    offers = [
+        ("Featured spot", PRICES["spot"], "/ month, one use case",
+         "The labeled Featured card at the top of one use-case page, seen by people deciding which tool to use for that job.",
+         ["One sponsor per use case", "Your name, one line and a link", "Runs one month, renew any time"]),
+        ("Newsletter sponsor", PRICES["issue"], "/ issue",
+         "The sponsor block at the top of one issue of the weekly email, plus a mention on the home page the week it goes out.",
+         ["One sponsor per issue", "Up to 60 words and a link", "Home page mention for 7 days"]),
+        ("Every use case", PRICES["all"], "/ month",
+         "The Featured spot on all %d use-case pages for a month. Only if your tool fits each one, so this is for broad tools." % n,
+         ["All %d use-case pages" % n, "Reviewed for fit page by page", "Saves $%d against booking them one by one"
+          % max(0, n * PRICES["spot"] - PRICES["all"])]),
+    ]
+    cards = "".join('<article class="offer"><h3>%s</h3><div class="price">$%d <small>%s</small></div><p>%s</p><ul>%s</ul></article>'
+                    % (e(t), p, e(unit), e(d), "".join("<li>%s</li>" % e(x) for x in bullets))
+                    for t, p, unit, d, bullets in offers)
+    spots = "".join('<div><a href="/use-cases/%s/">%s</a>%s</div>'
+                    % (e(u["id"]), e(u["job"]),
+                       ('<em>Booked until %s</em>' % e(fmt_date(D["featured"][u["id"]]["until"], year=False)))
+                       if u["id"] in D["featured"] else '<em class="free">Open</em>')
+                    for u in D["usecases"])
+    body = ['<div class="crumbs"><a href="/">Home</a><span>/</span><span>Sponsor</span></div>',
+            '<header class="subhero"><span class="eyebrow">Sponsor · launch pricing</span>'
+            '<h1>Reach designers and PMs at the moment they pick a tool.</h1>'
+            '<p class="lede">agentictools.design answers one question: which AI setup should I use for this job? '
+            'People land on a use-case page because they are about to choose. A Featured spot puts your tool at the top '
+            'of that page, clearly labeled.</p></header>',
+            '<section class="block" style="padding-top:8px"><div class="sechead"><div><span class="eyebrow">What you can buy</span>'
+            '<h2>Three ways to sponsor</h2></div></div><div class="offers">%s</div>'
+            '<p class="meta" style="margin:12px 0 0;font:400 12.5px/1.6 var(--font-mono);color:var(--ink-3)">'
+            'Launch pricing while the site is new, in US dollars. Prices will rise as the audience grows, and booked spots keep the price you paid.</p>'
+            '</section>' % cards,
+            '<section class="block"><div class="sechead"><div><span class="eyebrow">The fine print</span>'
+            '<h2>How it works</h2></div></div><div class="terms">'
+            '<p><b>Audience.</b> Product designers and product managers looking for which AI tools to use for a specific job, '
+            'arriving from search, AI assistants and the weekly email. The site and the email list are new, so we don\'t publish '
+            'traffic numbers yet. Ask and we\'ll share what our analytics show.</p>'
+            '<p><b>Rules.</b> Every paid placement is labeled Featured or Sponsored. A sponsor has to fit the use case or the '
+            'issue it appears in, and we can say no. The editorial picks, setups and directory listings stay independent: '
+            'paying never changes them.</p>'
+            '<p><b>Terms.</b> Spots run a calendar month or a single issue, first come first served. Pay by invoice before the spot goes live. '
+            'Cancel before it starts for a full refund.</p></div></section>',
+            '<section class="block"><div class="sechead"><div><span class="eyebrow">Featured spots</span>'
+            '<h2>Which use cases are open</h2></div><a class="link" href="/use-cases/">All use cases →</a></div>'
+            '<div class="spots">%s</div></section>' % spots,
+            '<section class="block" id="sponsor" aria-labelledby="sponsorTitle"><div class="sponsor"><div>'
+            '<span class="eyebrow">Book a spot</span><h2 id="sponsorTitle">Tell us the tool and the spot you want.</h2>'
+            '<p>Email us with your tool, the use case or issue, and the start date. We\'ll confirm the fit and send an invoice.</p></div>'
+            '<div class="sponsor-cta"><button type="button" class="pill dark big" id="sponsorCopy" data-email="%s" '
+            'aria-describedby="sponsorEmail">Copy email address</button><span class="sponsor-email" id="sponsorEmail">%s</span>'
+            '<span class="sr-only" id="sponsorCopied" role="status" aria-live="polite"></span></div></div></section>'
+            % (e(SPONSOR_EMAIL), e(SPONSOR_EMAIL)),
+            '<section class="block" aria-labelledby="spFaq"><div class="sechead"><div><span class="eyebrow">Questions</span>'
+            '<h2 id="spFaq">Sponsoring, answered</h2></div></div><div class="faq">%s</div></section>'
+            % "".join('<details><summary><h3>%s</h3>%s</summary><div class="a"><p>%s</p></div></details>' % (e(q), CHEV, e(a))
+                      for q, a in faq),
+            COPY_JS]
     return page_shell(D, m, "\n".join(body))
 
 
@@ -901,6 +1106,7 @@ def sitemap(D):
         urls += [(uc_page(u), u.get("updated") or u.get("added") or D["updated"], "weekly", "0.9") for u in D["usecases"]]
     urls += [(agent_page(a), a.get("verified") or a.get("added") or D["updated"], "weekly", "0.8") for a in D["agents"]]
     urls += [(wf_page(w), w.get("added") or D["updated"], "monthly", "0.6") for w in D["workflows"]]
+    urls.append((SPONSOR_URL, D["updated"], "monthly", "0.4"))
     body = "".join("  <url><loc>%s</loc>%s<changefreq>%s</changefreq><priority>%s</priority></url>\n"
                    % (e(u), ("<lastmod>%s</lastmod>" % e(d)) if parse_date(d) else "", f, p) for u, d, f, p in urls)
     return '<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n%s</urlset>\n' % body
@@ -983,6 +1189,10 @@ def llms(D, full=False):
         else:
             out.append("- [%s](%s): %s, using %s" % (md(w["title"]), wf_page(w), md(w.get("outcome")), names))
     out.append("")
+    out += ["## Sponsorship", "",
+            "- [Sponsor agentictools.design](%s): labeled Featured spots on use-case pages ($%d a month each, or $%d a month for all), "
+            "and newsletter sponsorships ($%d an issue). Launch pricing. Paid spots never change the editorial picks."
+            % (SPONSOR_URL, PRICES["spot"], PRICES["all"], PRICES["issue"]), ""]
     if not full:
         out += ["## Optional", "", "- [Full text of every listing](%s/llms-full.txt)" % SITE,
                 "- [Directory data as JSON](%s/agents.json)" % SITE, ""]
@@ -1068,6 +1278,7 @@ def main():
     if D["usecases"]:
         write("use-cases/index.html", build_uc_hub(D))
 
+    write("sponsor/index.html", build_sponsor_page(D))
     write("404.html", build_404(D))
     write("sitemap.xml", sitemap(D))
     write("robots.txt", robots())

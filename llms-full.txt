@@ -524,3 +524,7 @@ Index: https://agentictools.design/use-cases/
 3. Save the brief and next steps in Notion with Notion Agent
 - Result: A sourced competitor brief your team can act on
 
+
+## Sponsorship
+
+- [Sponsor agentictools.design](https://agentictools.design/sponsor/): labeled Featured spots on use-case pages ($49 a month each, or $299 a month for all), and newsletter sponsorships ($49 an issue). Launch pricing. Paid spots never change the editorial picks.
