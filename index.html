@@ -218,6 +218,10 @@ section.block{padding-block:72px 0}
 .sponsor{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:clamp(18px,3vw,28px);background:var(--window)}
 .sponsor h2{margin:0 0 6px;font-size:clamp(20px,2.2vw,24px);font-weight:400;letter-spacing:-.02em}
 .sponsor p{margin:0;color:var(--ink-2);max-width:58ch;text-wrap:pretty}
+.sponsor-cta{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.sponsor-cta .pill{min-width:12.5em;justify-content:center}
+.sponsor-email{font:400 13px/1.4 var(--font-mono);color:var(--ink-2);user-select:all;-webkit-user-select:all;cursor:text;overflow-wrap:anywhere}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 footer{padding-block:56px 40px;display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;color:var(--ink-3);font-size:13px}
 footer p{margin:0}
@@ -385,7 +389,11 @@ html{scroll-behavior:smooth}
         <h2 id="sponsorTitle">Put your agent in front of designers and PMs.</h2>
         <p>Sponsors get a featured card at the top of the directory, clearly labeled as sponsored.</p>
       </div>
-      <a class="pill dark big" href="mailto:billiejocavallaro@gmail.com?subject=agentictools.design%20sponsorship">Email about sponsoring</a>
+      <div class="sponsor-cta">
+        <button type="button" class="pill dark big" id="sponsorCopy" data-email="agentictools.design@gmail.com" aria-describedby="sponsorEmail">Copy email address</button>
+        <span class="sponsor-email" id="sponsorEmail">agentictools.design@gmail.com</span>
+        <span class="sr-only" id="sponsorCopied" role="status" aria-live="polite"></span>
+      </div>
     </div>
   </section>
 
@@ -642,6 +650,48 @@ html{scroll-behavior:smooth}
   paintAll();
   if ("ResizeObserver" in window){ new ResizeObserver(function(){ clearTimeout(timer); timer = setTimeout(paintAll, 120); }).observe(document.body); }
   else window.addEventListener("resize", function(){ clearTimeout(timer); timer = setTimeout(paintAll, 120); });
+})();
+</script>
+<script>
+(function(){
+  "use strict";
+  var btn = document.getElementById("sponsorCopy");
+  if (!btn) return;
+  var addr = btn.getAttribute("data-email");
+  var label = btn.textContent, live = document.getElementById("sponsorCopied"), t = null;
+  function legacyCopy(){
+    var ta = document.createElement("textarea");
+    ta.value = addr; ta.setAttribute("readonly", "");
+    ta.style.position = "fixed"; ta.style.top = "-1000px"; ta.style.opacity = "0";
+    document.body.appendChild(ta); ta.select();
+    var ok = false;
+    try { ok = document.execCommand("copy"); } catch (e) { ok = false; }
+    document.body.removeChild(ta);
+    return ok;
+  }
+  function selectAddress(){
+    var el = document.getElementById("sponsorEmail");
+    if (!el || !window.getSelection) return;
+    var r = document.createRange(); r.selectNodeContents(el);
+    var sel = window.getSelection(); sel.removeAllRanges(); sel.addRange(r);
+  }
+  function show(text){
+    btn.textContent = text;
+    if (live) live.textContent = text === "Copied!" ? "Email address copied" : "";
+    clearTimeout(t);
+    t = setTimeout(function(){ btn.textContent = label; if (live) live.textContent = ""; }, 2000);
+  }
+  function done(ok){
+    if (ok) show("Copied!");
+    else { selectAddress(); show("Address selected"); }
+  }
+  btn.addEventListener("click", function(){
+    if (navigator.clipboard && window.isSecureContext) {
+      navigator.clipboard.writeText(addr).then(function(){ done(true); }, function(){ done(legacyCopy()); });
+    } else {
+      done(legacyCopy());
+    }
+  });
 })();
 </script>
 </body>

@@ -181,6 +181,10 @@ section.block{padding-block:72px 0}
 .sponsor{display:flex;flex-wrap:wrap;gap:16px 32px;align-items:center;justify-content:space-between;border:1px solid var(--line);border-radius:10px;padding:clamp(18px,3vw,28px);background:var(--window)}
 .sponsor h2{margin:0 0 6px;font-size:clamp(20px,2.2vw,24px);font-weight:400;letter-spacing:-.02em}
 .sponsor p{margin:0;color:var(--ink-2);max-width:58ch;text-wrap:pretty}
+.sponsor-cta{display:flex;flex-direction:column;align-items:flex-start;gap:8px}
+.sponsor-cta .pill{min-width:12.5em;justify-content:center}
+.sponsor-email{font:400 13px/1.4 var(--font-mono);color:var(--ink-2);user-select:all;-webkit-user-select:all;cursor:text;overflow-wrap:anywhere}
+.sr-only{position:absolute;width:1px;height:1px;padding:0;margin:-1px;overflow:hidden;clip:rect(0,0,0,0);white-space:nowrap;border:0}
 
 footer{padding-block:56px 40px;display:flex;flex-wrap:wrap;gap:16px 40px;justify-content:space-between;color:var(--ink-3);font-size:13px}
 footer p{margin:0}
