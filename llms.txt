@@ -1,6 +1,6 @@
 # agentictools.design
 
-> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 26 agents, 6 categories, 6 workflows. Last updated 2026-11-12.
+> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 27 agents, 6 categories, 6 workflows. Last updated 2026-11-14.
 
 Machine-readable data: https://agentictools.design/agents.json (fields: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added).
 
@@ -29,6 +29,7 @@ Machine-readable data: https://agentictools.design/agents.json (fields: name, ma
 
 ## Product & specs
 
+- [Samepage Bets](https://agentictools.design/agents/samepage-bets/): Pulls customer feedback into one place, ranks it, then has agents research, spec and ship the work. (by Samepage)
 - [ChatPRD](https://agentictools.design/agents/chatprd/): AI product-management assistant that drafts, reviews and prototypes specs. (by ChatPRD)
 - [Linear Agent](https://agentictools.design/agents/linear-agents/): Issue tracker where AI agents are workspace members you can assign work to. (by Linear)
 - [Notion Agent](https://agentictools.design/agents/notion-agent/): Workspace agent that builds and edits pages and databases across connected apps. (by Notion)

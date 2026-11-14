@@ -1,6 +1,6 @@
 # agentictools.design
 
-> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 26 agents, 6 categories, 6 workflows. Last updated 2026-11-12.
+> A free, daily-updated directory of AI agents and AI tools for product designers and product managers. Each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 27 agents, 6 categories, 6 workflows. Last updated 2026-11-14.
 
 Machine-readable data: https://agentictools.design/agents.json (fields: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added).
 
@@ -154,6 +154,16 @@ Machine-readable data: https://agentictools.design/agents.json (fields: name, ma
 
 
 ## Product & specs
+
+### Samepage Bets (by Samepage)
+- Profile: https://agentictools.design/agents/samepage-bets/
+- Official site: https://www.samepage.ai/
+- What it does: Pulls customer feedback into one place, ranks it, then has agents research, spec and ship the work.
+- For: Product managers and product leaders
+- Best at: Turns scattered feedback from calls, tickets and chat into scored bets, with a human approving each agent step.
+- Pricing: Free plan; Pro $15/mo, Teams $25/user/mo billed yearly
+- Tags: feedback, prioritization, specs, roadmap
+- Checked on its own site: 2026-11-14
 
 ### ChatPRD (by ChatPRD)
 - Profile: https://agentictools.design/agents/chatprd/

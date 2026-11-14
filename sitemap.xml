@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
-  <url><loc>https://agentictools.design/</loc><lastmod>2026-11-12</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://agentictools.design/</loc><lastmod>2026-11-14</lastmod><changefreq>daily</changefreq><priority>1.0</priority></url>
+  <url><loc>https://agentictools.design/agents/samepage-bets/</loc><lastmod>2026-11-14</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://agentictools.design/agents/figma-agent/</loc><lastmod>2026-11-12</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://agentictools.design/agents/wonder/</loc><lastmod>2026-11-12</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://agentictools.design/agents/figma-make/</loc><lastmod>2026-11-12</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
@@ -28,9 +29,9 @@
   <url><loc>https://agentictools.design/agents/chatgpt-agent/</loc><lastmod>2026-11-12</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://agentictools.design/agents/perplexity-comet/</loc><lastmod>2026-11-12</lastmod><changefreq>weekly</changefreq><priority>0.8</priority></url>
   <url><loc>https://agentictools.design/workflows/canvas-to-shipped-code/</loc><lastmod>2026-11-12</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://agentictools.design/workflows/idea-to-tested-prototype/</loc><lastmod>2026-11-12</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://agentictools.design/workflows/interviews-to-roadmap/</loc><lastmod>2026-11-12</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://agentictools.design/workflows/sketch-to-figma-prototype/</loc><lastmod>2026-11-12</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://agentictools.design/workflows/design-fix-to-pr/</loc><lastmod>2026-11-12</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
-  <url><loc>https://agentictools.design/workflows/competitive-scan-to-brief/</loc><lastmod>2026-11-12</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://agentictools.design/workflows/idea-to-tested-prototype/</loc><lastmod>2026-11-14</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://agentictools.design/workflows/interviews-to-roadmap/</loc><lastmod>2026-11-14</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://agentictools.design/workflows/sketch-to-figma-prototype/</loc><lastmod>2026-11-14</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://agentictools.design/workflows/design-fix-to-pr/</loc><lastmod>2026-11-14</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
+  <url><loc>https://agentictools.design/workflows/competitive-scan-to-brief/</loc><lastmod>2026-11-14</lastmod><changefreq>monthly</changefreq><priority>0.6</priority></url>
 </urlset>

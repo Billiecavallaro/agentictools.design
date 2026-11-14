@@ -1,7 +1,11 @@
 {
  "schema": 1,
- "updated": "2026-11-12",
+ "updated": "2026-11-14",
  "updates": [
+  {
+   "date": "2026-11-14",
+   "text": "Added Samepage Bets, feedback to shipped work with PM agents"
+  },
   {
    "date": "2026-11-12",
    "text": "Added Figma agent, the on-canvas design agent in Figma"
@@ -28,6 +32,25 @@
   }
  ],
  "agents": [
+  {
+   "id": "samepage-bets",
+   "name": "Samepage Bets",
+   "maker": "Samepage",
+   "category": "pm",
+   "url": "https://www.samepage.ai/",
+   "oneLiner": "Pulls customer feedback into one place, ranks it, then has agents research, spec and ship the work.",
+   "forWho": "Product managers and product leaders",
+   "standout": "Turns scattered feedback from calls, tickets and chat into scored bets, with a human approving each agent step.",
+   "pricing": "Free plan; Pro $15/mo, Teams $25/user/mo billed yearly",
+   "tags": [
+    "feedback",
+    "prioritization",
+    "specs",
+    "roadmap"
+   ],
+   "verified": "2026-11-14",
+   "added": "2026-11-14"
+  },
   {
    "id": "figma-agent",
    "name": "Figma agent",
