@@ -4,6 +4,10 @@
  "updates": [
   {
    "date": "2026-11-14",
+   "text": "New: 14 use cases showing which agents to use for which job"
+  },
+  {
+   "date": "2026-11-14",
    "text": "Added Samepage Bets, feedback to shipped work with PM agents"
   },
   {
@@ -587,6 +591,489 @@
     "notion-agent"
    ],
    "outcome": "A sourced competitor brief your team can act on"
+  }
+ ],
+ "usecases": [
+  {
+   "id": "prd-to-prototype",
+   "job": "Turn a PRD into a clickable prototype",
+   "stage": "design",
+   "for": "PMs and designers with a spec who need something people can click",
+   "answer": "Draft or tighten the PRD in ChatPRD, open it in v0 to build a working web prototype, then put it in front of real users with a Maze test. You end up with a clickable app and real feedback on it, often in a single day.",
+   "setup": [
+    {
+     "tool": "chatprd",
+     "does": "Turns your notes into a PRD and scores it, so weak spots show up before you build. It can open the spec straight in v0."
+    },
+    {
+     "tool": "v0",
+     "does": "Builds the clickable web app from the spec. Tweak the UI visually in Design Mode, then deploy in one click and share the link."
+    },
+    {
+     "tool": "maze",
+     "does": "Runs an unmoderated test of the prototype with people from its participant panel and writes the report for you."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "magic-patterns",
+     "when": "The prototype has to look like your real product. Import your component library and it turns the PRD into high-fidelity UI."
+    },
+    {
+     "tool": "lovable",
+     "when": "You need more than a demo. Hosting, sign-in and payments come built in."
+    },
+    {
+     "tool": "figma-make",
+     "when": "Your team lives in Figma and wants the prototype next to the designs."
+    }
+   ],
+   "workflows": [
+    "idea-to-tested-prototype"
+   ],
+   "watchOut": "Don't polish the prototype before the test. The point is to find out which parts of the spec are wrong while they're still cheap to change.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "ai-ui-with-your-design-system",
+   "job": "Generate UI that uses your own design system",
+   "stage": "design",
+   "for": "Product designers and design system teams tired of generic AI screens",
+   "answer": "Start in Figma with the Figma agent, which builds screens from your real library components, tokens and variables. When you want to see it as code, move into Wonder, where the design stays as code and a coding agent builds the version you pick.",
+   "setup": [
+    {
+     "tool": "figma-agent",
+     "does": "Drafts and refines screens from your own components, tokens and variables instead of placeholder UI. It comes with paid Figma plans."
+    },
+    {
+     "tool": "wonder",
+     "does": "Explore variations on a canvas where the design is kept as code, so what you pick is what gets built."
+    },
+    {
+     "tool": "claude-code",
+     "does": "Builds the chosen version. Wonder runs it in its own git worktree, and you get the change back to review."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "magic-patterns",
+     "when": "You want concepts outside Figma that still match your system. Import your component library, then hand off to a coding agent."
+    },
+    {
+     "tool": "bolt",
+     "when": "You're starting a build from an existing Figma design or GitHub repo and want to keep your design system."
+    }
+   ],
+   "workflows": [
+    "canvas-to-shipped-code"
+   ],
+   "watchOut": "AI is only as on-brand as your library. If your components and tokens are messy in Figma, the agent will copy the mess faithfully.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "figma-to-code",
+   "job": "Turn a Figma design into production code",
+   "stage": "ship",
+   "for": "Designers and design engineers who want their work shipped as designed",
+   "answer": "If the work has to land in your real codebase, give the design to a coding agent that works in that repo. Wonder keeps the design and the code side by side and runs Claude Code for you, and GitHub Copilot reviews the pull request. For a brand new app, Bolt can start a build straight from your Figma file.",
+   "setup": [
+    {
+     "tool": "wonder",
+     "does": "Keeps the design as code next to the product and runs Claude Code or Codex on your own subscription to build it."
+    },
+    {
+     "tool": "claude-code",
+     "does": "Reads your codebase, edits the files, runs the commands and hands back a pull request."
+    },
+    {
+     "tool": "github-copilot",
+     "does": "Reviews the pull request on GitHub before anyone merges it."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "bolt",
+     "when": "It's a new app, not a change to an existing one. Start the build from the Figma design and keep your design system."
+    },
+    {
+     "tool": "cursor",
+     "when": "Your engineers already work in Cursor. Its agents build, test and demo the feature."
+    },
+    {
+     "tool": "v0",
+     "when": "It's a web app and you want it deployed to Vercel in one click."
+    }
+   ],
+   "workflows": [
+    "canvas-to-shipped-code",
+    "design-fix-to-pr"
+   ],
+   "watchOut": "Review the pull request the way you'd review a junior designer's mockup. Check spacing, states and edge cases, not just the happy path.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "sketch-to-prototype",
+   "job": "Turn a whiteboard sketch into a prototype",
+   "stage": "design",
+   "for": "Designers and PMs who think on paper first",
+   "answer": "Photograph the sketch and let Stitch turn it into a digital design, paste that into Figma to clean it up, then make it clickable with Figma Make. If you're not a designer, Uizard is the gentler start.",
+   "setup": [
+    {
+     "tool": "google-stitch",
+     "does": "Turns a photo of a whiteboard sketch or a screenshot into a digital design you can paste into Figma, plus front-end code."
+    },
+    {
+     "tool": "figma-make",
+     "does": "Turns the cleaned-up frames into a working prototype. Click any element in the preview to restyle or re-prompt it."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "uizard",
+     "when": "You're a PM or founder without design skills. It scans a hand-drawn wireframe into an editable mockup."
+    },
+    {
+     "tool": "figma-agent",
+     "when": "The screens should be built from your team's own Figma library from the start."
+    }
+   ],
+   "workflows": [
+    "sketch-to-figma-prototype"
+   ],
+   "watchOut": "Write short labels on the sketch, like search, filters or results. Clear words leave the generator less to guess.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "prototype-in-your-real-product",
+   "job": "Prototype a new feature inside your real product",
+   "stage": "design",
+   "for": "Product teams who are done with throwaway prototypes",
+   "answer": "Use Wonder. It's a design canvas on your actual product where the design stays as code, and it runs a coding agent like Codex to build what you design. If you just want a quick build from a GitHub repo, Bolt can start from the repo and keep your design system.",
+   "setup": [
+    {
+     "tool": "wonder",
+     "does": "Design on the real product, with the design kept as code instead of a separate mockup."
+    },
+    {
+     "tool": "openai-codex",
+     "does": "Builds the change in the cloud, even with your laptop closed, and checks its work with browser tools."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "bolt",
+     "when": "You want a quick build that starts from your GitHub repo or Figma file and keeps your design system."
+    },
+    {
+     "tool": "cursor",
+     "when": "An engineer is pairing with you. Cursor's cloud agents build, test and demo features in parallel."
+    }
+   ],
+   "workflows": [
+    "canvas-to-shipped-code"
+   ],
+   "watchOut": "Prototyping on real code means real constraints show up early. That's the point, so don't fight it.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "synthesize-user-interviews",
+   "job": "Synthesize user interviews into themes",
+   "stage": "discover",
+   "for": "Researchers, designers and PMs sitting on a pile of transcripts",
+   "answer": "Bring the transcripts and the rest of your feedback into Dovetail, which turns them into insights that cite their sources. Then use Claude to shape the themes into a readout people will actually read, and log what matters in Linear.",
+   "setup": [
+    {
+     "tool": "dovetail",
+     "does": "Pulls interviews and feedback from many sources into cited insights you can chat with."
+    },
+    {
+     "tool": "claude",
+     "does": "Turns the cited themes into a tight readout or brief for stakeholders."
+    },
+    {
+     "tool": "linear-agents",
+     "does": "Logs the needs that matter as issues, so the evidence travels with the work."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "outset",
+     "when": "You haven't run the interviews yet. It writes the guide, runs them and delivers themes, highlight reels and decks."
+    },
+    {
+     "tool": "listen-labs",
+     "when": "Your interviews happen in many languages. Every finding links back to the interview it came from."
+    }
+   ],
+   "workflows": [
+    "interviews-to-roadmap"
+   ],
+   "watchOut": "Read the quotes behind a theme before you present it. Citations are there so you can check the summary, so check it.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "ai-moderated-user-interviews",
+   "job": "Run user interviews at scale with an AI moderator",
+   "stage": "discover",
+   "for": "Research teams and PMs who need many conversations, fast",
+   "answer": "Outset writes the interview guide from your goals and runs hundreds of AI-moderated interviews at once. Pick Listen Labs instead when you need many languages. Either way, keep the results in Dovetail so themes add up over time.",
+   "setup": [
+    {
+     "tool": "outset",
+     "does": "Generates the guide from your research goals, runs video, voice or text interviews in parallel, then delivers themes and highlight reels."
+    },
+    {
+     "tool": "dovetail",
+     "does": "Holds the results next to the rest of your customer feedback, with every insight citing its source."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "listen-labs",
+     "when": "You're interviewing in more than one language. Its AI moderator works in 120+ languages and links every finding to its interview."
+    },
+    {
+     "tool": "maze",
+     "when": "You need people to use a prototype, not talk about it. Run an unmoderated test instead."
+    }
+   ],
+   "workflows": [
+    "interviews-to-roadmap"
+   ],
+   "watchOut": "An AI moderator scales your guide. If the guide asks leading questions, you get leading answers at scale, so pilot it on two or three people first.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "usability-test-a-prototype",
+   "job": "Test a prototype with real users",
+   "stage": "discover",
+   "for": "Designers and PMs who want evidence before engineering starts",
+   "answer": "Build the prototype in Figma Make, then run an unmoderated test in Maze, which recruits people from its own panel and writes the report. You get real reactions without scheduling a single call.",
+   "setup": [
+    {
+     "tool": "figma-make",
+     "does": "Turns your frames into a working prototype people can click through."
+    },
+    {
+     "tool": "maze",
+     "does": "Recruits participants from a 6M+ panel, runs the test unmoderated and generates the report."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "v0",
+     "when": "The prototype needs to be a deployed web app, not a click-through."
+    },
+    {
+     "tool": "outset",
+     "when": "You want conversations, not task completion. It runs AI-moderated interviews at scale."
+    }
+   ],
+   "workflows": [
+    "idea-to-tested-prototype"
+   ],
+   "watchOut": "Write tasks as goals, like find a plan for a team of five, not as instructions like click Pricing. Otherwise you're testing your copy, not your design.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "customer-feedback-to-spec",
+   "job": "Turn customer feedback into a spec",
+   "stage": "define",
+   "for": "PMs drowning in calls, tickets and Slack threads",
+   "answer": "Samepage Bets pulls feedback from calls, tickets and chat into one place and ranks it into scored bets. Take the winning bet into ChatPRD to write and score the PRD, then hand the work out in Linear.",
+   "setup": [
+    {
+     "tool": "samepage-bets",
+     "does": "Collects scattered feedback and ranks it into scored bets, then has agents research and spec the work, with you approving each step."
+    },
+    {
+     "tool": "chatprd",
+     "does": "Writes the PRD and scores it, so you know it's ready before engineers see it."
+    },
+    {
+     "tool": "linear-agents",
+     "does": "Turns the spec into issues you can delegate to Cursor, Codex or ChatPRD, and shows each change and its reasoning."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "dovetail",
+     "when": "You're at a larger org with a research team. Its agents route ranked customer needs to Jira, Linear or Cursor."
+    },
+    {
+     "tool": "atlassian-rovo",
+     "when": "Your team runs on Jira and Confluence. Its agents draft roadmaps and route backlog work."
+    }
+   ],
+   "workflows": [
+    "interviews-to-roadmap"
+   ],
+   "watchOut": "Ranked feedback tells you what's loud, not what's important. Keep the call on which bet to take with a person.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "write-a-prd",
+   "job": "Write a PRD from meeting notes",
+   "stage": "define",
+   "for": "Product managers who'd rather decide than format docs",
+   "answer": "Use ChatPRD. Paste in your meeting notes and it drafts the PRD, scores it, and can open it in v0, Lovable or Cursor when you're ready to build. Keep the final spec where your team works with Notion Agent.",
+   "setup": [
+    {
+     "tool": "chatprd",
+     "does": "Turns meeting notes into a PRD and scores it, so you see what's weak before the review."
+    },
+    {
+     "tool": "notion-agent",
+     "does": "Builds and edits the spec page and its databases in your Notion workspace."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "claude",
+     "when": "You want a thinking partner for the hard tradeoffs, not a template."
+    },
+    {
+     "tool": "atlassian-rovo",
+     "when": "Your specs live in Confluence and your work lives in Jira."
+    }
+   ],
+   "workflows": [
+    "idea-to-tested-prototype"
+   ],
+   "watchOut": "Treat the score as a checklist, not a verdict. Only you know whether it's the right problem to solve.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "competitive-analysis",
+   "job": "Run a competitive analysis",
+   "stage": "define",
+   "for": "PMs and designers prepping a strategy review or a kickoff",
+   "answer": "Send ChatGPT agent to browse competitor sites and build the comparison, ask Claude to pull out the gaps and opportunities, and save the brief in Notion with Notion Agent. Check every claim against the sources before you share it.",
+   "setup": [
+    {
+     "tool": "chatgpt-agent",
+     "does": "Browses competitor sites in its own browser and builds the comparison as a spreadsheet or slides, asking before important steps."
+    },
+    {
+     "tool": "claude",
+     "does": "Reads the comparison and writes up the gaps and opportunities."
+    },
+    {
+     "tool": "notion-agent",
+     "does": "Saves the brief and next steps where the team will find them."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "perplexity-comet",
+     "when": "You'd rather browse yourself. Its assistant compares how different sources cover a topic without leaving the page."
+    }
+   ],
+   "workflows": [
+    "competitive-scan-to-brief"
+   ],
+   "watchOut": "Agents read marketing pages, and marketing pages flatter. Pair the scan with real reviews or customer calls before you draw conclusions.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "ship-design-qa-fixes",
+   "job": "Get design QA fixes shipped",
+   "stage": "ship",
+   "for": "Designers whose polish tickets sit in the backlog forever",
+   "answer": "Log each fix in Linear and delegate it straight to a coding agent like Cursor or Codex, then review what comes back with GitHub Copilot code review. Small UI fixes stop waiting for a sprint.",
+   "setup": [
+    {
+     "tool": "linear-agents",
+     "does": "Logs each fix and delegates it to Cursor or Codex, showing every change and its reasoning."
+    },
+    {
+     "tool": "cursor",
+     "does": "Its cloud agents build, test and demo each fix in parallel."
+    },
+    {
+     "tool": "github-copilot",
+     "does": "Reviews the pull request before it's merged."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "openai-codex",
+     "when": "Your team is on ChatGPT. Codex runs the fixes in the cloud and checks them with browser tools."
+    },
+    {
+     "tool": "claude-code",
+     "when": "You want to kick fixes off from Slack or GitHub and get pull requests back."
+    }
+   ],
+   "workflows": [
+    "design-fix-to-pr"
+   ],
+   "watchOut": "Write each issue like a tiny spec: the screen, what's wrong, what right looks like, and a screenshot. Vague tickets get vague fixes.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "build-an-app-without-code",
+   "job": "Build a working app without writing code",
+   "stage": "ship",
+   "for": "PMs, designers and founders who can't code but need a real product",
+   "answer": "Lovable is the default. Get the idea down as a spec in ChatPRD, open it in Lovable, and it builds and deploys a full app with hosting, sign-in and payments handled. Pick Replit Agent if you want it to test the app in a browser and fix its own bugs as it goes.",
+   "setup": [
+    {
+     "tool": "chatprd",
+     "does": "Gets the idea down as a spec first, then opens it in Lovable."
+    },
+    {
+     "tool": "lovable",
+     "does": "Builds and hosts the full app from plain-language chat, backend included."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "replit-agent",
+     "when": "You want an agent that tests the app in a browser while it builds and fixes what breaks."
+    },
+    {
+     "tool": "bolt",
+     "when": "You're starting from an existing Figma design or GitHub repo."
+    },
+    {
+     "tool": "v0",
+     "when": "It's a web app and you want to tweak the UI visually before you deploy."
+    }
+   ],
+   "workflows": [],
+   "watchOut": "These tools get you to a working app fast. Before real customers use it, have someone technical check security, data and costs.",
+   "added": "2026-11-14"
+  },
+  {
+   "id": "automate-status-updates",
+   "job": "Automate status updates and stakeholder reports",
+   "stage": "ship",
+   "for": "PMs and leads who spend Friday afternoons writing updates",
+   "answer": "Use the agent that lives where your work does. Notion Agent can run on a schedule to post updates and route tasks, and Claude can draft the part that needs judgment. Teams on Jira and Confluence should use Rovo, and research teams can let Dovetail's agents send recurring stakeholder updates.",
+   "setup": [
+    {
+     "tool": "notion-agent",
+     "does": "Custom Agents run on a schedule to post updates, answer Slack questions and route tasks."
+    },
+    {
+     "tool": "claude",
+     "does": "Drafts the part that needs judgment: what changed, why it matters and what you need from people."
+    }
+   ],
+   "alternatives": [
+    {
+     "tool": "atlassian-rovo",
+     "when": "Your team runs on Jira and Confluence. Its agents work across both."
+    },
+    {
+     "tool": "dovetail",
+     "when": "The updates are about research and customer insight."
+    }
+   ],
+   "workflows": [],
+   "watchOut": "Automate the gathering, not the judgment. Read each update before it goes out, at least for the first month.",
+   "added": "2026-11-14"
   }
  ]
 }
