@@ -372,6 +372,75 @@ def blk_usecases(D):
     return uc_groups(D)
 
 
+# ---------------------------------------------------------------- hero finder ("I want to…") and example setup
+
+# Extra words people type for each use case, so "PRD", "interviews" or
+# "feedback" find the right setup. Matching also uses the job, who it's for and
+# the tool names, so a use case without an entry here still shows up.
+FINDER_WORDS = {
+    "prd-to-prototype": "prd spec specs requirements prototype prototyping clickable mockup demo mvp validate idea",
+    "ai-ui-with-your-design-system": "design system components component library tokens ui screens generate on-brand brand consistent figma",
+    "figma-to-code": "figma code coding handoff hand-off developer dev frontend front-end react html css implement production build",
+    "sketch-to-prototype": "sketch sketches whiteboard drawing napkin wireframe wireframes paper photo lo-fi low-fidelity mockup prototype",
+    "prototype-in-your-real-product": "prototype feature real product codebase repo production existing app live data",
+    "synthesize-user-interviews": "synthesis synthesize interviews interview research findings themes insights affinity notes transcripts analyze",
+    "ai-moderated-user-interviews": "interviews interview moderator moderated research scale talk users recruit participants voice interviewer discovery",
+    "usability-test-a-prototype": "usability test testing user-testing validate validation feedback prototype unmoderated participants",
+    "customer-feedback-to-spec": "feedback customer customers support tickets reviews nps requests spec roadmap prioritize prioritization bets",
+    "write-a-prd": "prd write writing spec specs requirements meeting notes document doc brief",
+    "competitive-analysis": "competitors competitor competitive analysis market research landscape benchmark compare teardown",
+    "ship-design-qa-fixes": "design qa bugs bug fixes fix polish issues tickets ui pixel visual ship",
+    "build-an-app-without-code": "app apps no-code nocode build website site mvp launch side project vibe coding without code",
+    "automate-status-updates": "status updates update reports report stakeholders weekly summary automate recap",
+}
+
+# Setups the hero shows as examples, in order. The first is the one people see
+# without JavaScript; the rest rotate in slowly. Missing ids are skipped.
+HERO_EXAMPLES = ["prd-to-prototype", "synthesize-user-interviews", "figma-to-code", "customer-feedback-to-spec"]
+
+
+def tool_chip(a):
+    return '<span class="tchip">%s%s</span>' % (mark(a), e(a["name"]))
+
+
+def chain_chips(D, u):
+    return '<span class="tchain">%s</span>' % ' <i aria-hidden="true">→</i> '.join(tool_chip(a) for a in uc_tools(D, u))
+
+
+def hero_examples(D):
+    by = {u["id"]: u for u in D["usecases"]}
+    picks = [by[i] for i in HERO_EXAMPLES if i in by] or D["usecases"][:1]
+    return picks
+
+
+def blk_example(D):
+    picks = hero_examples(D)
+    if not picks:
+        return ""
+    items = []
+    for i, u in enumerate(picks):
+        items.append('<a class="exitem" href="/use-cases/%s/" data-uc="%s"%s>'
+                     '<span class="exjob">%s</span>%s<span class="exgo" aria-hidden="true">→</span></a>'
+                     % (e(u["id"]), e(u["id"]), "" if i == 0 else " hidden", e(u["job"]), chain_chips(D, u)))
+    dots = ""
+    if len(picks) > 1:
+        dots = '<div class="exdots" hidden>%s</div>' % "".join(
+            '<button type="button" aria-label="Show example %d of %d"%s></button>'
+            % (i + 1, len(picks), ' aria-current="true"' if i == 0 else "") for i in range(len(picks)))
+    return ('<div class="example" id="heroExample"><div class="exhead"><span class="eyebrow">Example setup</span>%s</div>%s</div>'
+            % (dots, "".join(items)))
+
+
+def blk_finderdata(D):
+    rows = []
+    for u in D["usecases"]:
+        tools = uc_tools(D, u)
+        rows.append({"id": u["id"], "t": u["job"], "f": u.get("for", ""), "k": FINDER_WORDS.get(u["id"], ""),
+                     "n": [a["name"] for a in tools],
+                     "m": [[mark_text(a.get("name")), TINT.get(a.get("category"), TINT["general"])] for a in tools]})
+    return '<script type="application/json" id="finderData">%s</script>' % ld(rows)
+
+
 # ---------------------------------------------------------------- FAQ (visible text and FAQPage JSON-LD come from the same source)
 
 def faq_items(D):
@@ -1241,6 +1310,8 @@ def main():
         "faq": blk_faq(D),
         "uccount": e("%d use cases" % len(D["usecases"])),
         "usecases": blk_usecases(D),
+        "example": blk_example(D),
+        "finderdata": blk_finderdata(D),
         "footfresh": e("Refreshed daily, last on %s. Every listing is checked against the product's own site." % fmt_date(D["updated"])),
     }
     for k, v in blocks.items():

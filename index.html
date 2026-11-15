@@ -96,10 +96,56 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:16px;p
 .pill.dark:hover{filter:brightness(1.15)}
 
 /* hero */
-.hero{padding-block:44px 36px;display:grid;gap:22px;max-width:760px}
+.hero{padding-block:44px 36px;display:grid;grid-template-columns:minmax(0,1fr);gap:22px;max-width:760px}
 .hero h1{font-weight:400;font-size:clamp(30px,4.6vw,46px);line-height:1.08;letter-spacing:-.025em;margin:0;text-wrap:balance}
 .hero p{margin:0;font-size:clamp(16px,1.8vw,19px);color:var(--ink-2);max-width:56ch;text-wrap:pretty}
 .cta{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
+/* hero finder: "I want to…" */
+.finder{position:relative;display:grid;gap:8px;max-width:640px;margin-top:4px}
+.finder-label{font:500 12px/1 var(--font-mono);letter-spacing:.04em;color:var(--ink-2)}
+.finder-box{display:flex;align-items:center;gap:10px;background:var(--window);border:1px solid var(--line);border-radius:999px;padding:6px 6px 6px 18px;box-shadow:0 1px 0 rgba(0,0,0,.03),0 10px 28px -14px rgba(40,38,30,.35);transition:border-color .15s,box-shadow .15s}
+.finder-box:focus-within{border-color:color-mix(in srgb,var(--accent) 60%,var(--line));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent),0 10px 28px -14px rgba(40,38,30,.35)}
+.finder-icon{flex:none;color:var(--ink-3)}
+.finder-box input{flex:1;min-width:0;border:0;background:none;outline:none;font-size:17px;padding:8px 0}
+.finder-box input::placeholder{color:var(--ink-3)}
+.finder-box .pill{flex:none;padding:10px 18px;font-size:15px}
+.finder-list{position:absolute;z-index:20;left:0;right:0;top:100%;margin:6px 0 0;padding:6px;list-style:none;background:var(--window);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:min(420px,60vh);overflow:auto}
+.finder-list li{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border-radius:8px;cursor:pointer}
+.finder-list li[aria-selected="true"],.finder-list li:hover{background:var(--select)}
+.finder-list li b{font-weight:500;font-size:15px;line-height:1.3}
+.finder-list li mark{background:none;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 55%,transparent);text-underline-offset:3px}
+.finder-list .fl-none{cursor:default;color:var(--ink-2);font-size:14px}
+.finder-list .fl-none:hover{background:none}
+.finder-list .fl-none a{color:var(--accent);text-decoration:none}
+.tchain{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13.5px}
+.tchain i{font-style:normal;color:var(--accent)}
+.tchip{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.tchip .mark{width:22px;height:22px;border-radius:6px;font-size:10.5px}
+.finder-list .tchain{font-size:12.5px;color:var(--ink-2)}
+.finder-list .tchip .mark{width:18px;height:18px;border-radius:5px;font-size:9px}
+.example{max-width:640px;border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:12px;background:color-mix(in srgb,var(--window) 70%,transparent);padding:12px 14px 14px}
+.exhead{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:8px}
+.exdots{display:flex;gap:2px}
+.exdots button{width:22px;height:22px;border:0;background:none;padding:0;cursor:pointer;display:grid;place-items:center}
+.exdots button::before{content:"";width:6px;height:6px;border-radius:50%;background:var(--line);transition:background .2s}
+.exdots button[aria-current="true"]::before{background:var(--ink-2)}
+.exitem{position:relative;display:grid;gap:8px;text-decoration:none;border-radius:8px;padding:2px 28px 2px 0;transition:opacity .3s}
+.exitem.fading{opacity:0}
+.exjob{font-size:16.5px;font-weight:500;letter-spacing:-.01em;line-height:1.3}
+.exitem .tchain{font-size:14px}
+.exgo{position:absolute;right:4px;top:50%;transform:translateY(-50%);color:var(--ink-3);transition:transform .2s,color .2s}
+.exitem:hover .exgo{color:var(--accent);transform:translate(3px,-50%)}
+.exitem:hover .exjob{text-decoration:underline;text-decoration-color:var(--line);text-underline-offset:4px}
+.finder-list[hidden],.exitem[hidden],.exdots[hidden]{display:none}
+.hero .hero-more{font-size:14px;color:var(--ink-3)}
+.hero-more a{color:var(--ink-2);text-underline-offset:3px;text-decoration-color:var(--line)}
+.hero-more a:hover{color:var(--ink)}
+@media (max-width:520px){
+  .finder-box{padding-left:14px;gap:8px}
+  .finder-box input{font-size:16px}
+  .finder-box .pill{padding:9px 13px;font-size:14px}
+  .finder-icon{display:none}
+}
 .fresh{display:inline-flex;align-items:center;gap:8px;font:400 12px/1 var(--font-mono);color:var(--ink-2)}
 .dot{width:7px;height:7px;border-radius:50%;background:#4E9A5B;box-shadow:0 0 0 3px color-mix(in srgb,#4E9A5B 22%,transparent)}
 
@@ -308,10 +354,20 @@ html{scroll-behavior:smooth}
     <span class="fresh"><span class="dot" aria-hidden="true"></span><span id="freshText"><!--b:fresh-->Updated Nov 14, 2026 · 27 agents · 14 use cases · 4 new this week<!--/b:fresh--></span></span>
     <h1>Pick the job. Get the AI setup that does it.</h1>
     <p>A field guide for designers and PMs. For the work in front of you, see which agents to use, in what order, and why. Every tool is checked on its own site.</p>
-    <div class="cta">
-      <a class="pill dark big" href="#use-cases">Find your setup</a>
-      <a class="pill big" href="#directory">Browse all agents</a>
-    </div>
+    <!-- The "I want to…" finder. Without JavaScript the form just jumps to the use-case list. -->
+    <form class="finder" id="finder" action="#use-cases" role="search" aria-label="Find your setup">
+      <label class="finder-label" for="finderInput">I want to…</label>
+      <div class="finder-box">
+        <svg class="finder-icon" width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5.2" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
+        <input id="finderInput" name="q" type="text" placeholder="turn a PRD into a prototype" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go">
+        <button class="pill dark" type="submit">Find setup</button>
+      </div>
+      <ul class="finder-list" id="finderList" aria-label="Matching setups" hidden></ul>
+      <p class="sr-only" id="finderLive" aria-live="polite"></p>
+    </form>
+    <!--b:example--><div class="example" id="heroExample"><div class="exhead"><span class="eyebrow">Example setup</span><div class="exdots" hidden><button type="button" aria-label="Show example 1 of 4" aria-current="true"></button><button type="button" aria-label="Show example 2 of 4"></button><button type="button" aria-label="Show example 3 of 4"></button><button type="button" aria-label="Show example 4 of 4"></button></div></div><a class="exitem" href="/use-cases/prd-to-prototype/" data-uc="prd-to-prototype"><span class="exjob">Turn a PRD into a clickable prototype</span><span class="tchain"><span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#D3DCE8">Ch</span>ChatPRD</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#CFE0DA">v0</span>v0</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#E6DCC8">Ma</span>Maze</span></span><span class="exgo" aria-hidden="true">→</span></a><a class="exitem" href="/use-cases/synthesize-user-interviews/" data-uc="synthesize-user-interviews" hidden><span class="exjob">Synthesize user interviews into themes</span><span class="tchain"><span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#E6DCC8">Do</span>Dovetail</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#DADAD2">Cl</span>Claude</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#D3DCE8">Li</span>Linear Agent</span></span><span class="exgo" aria-hidden="true">→</span></a><a class="exitem" href="/use-cases/figma-to-code/" data-uc="figma-to-code" hidden><span class="exjob">Turn a Figma design into production code</span><span class="tchain"><span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#D9CFE6">Wo</span>Wonder</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#E3D3CC">Cl</span>Claude Code</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#E3D3CC">Gi</span>GitHub Copilot</span></span><span class="exgo" aria-hidden="true">→</span></a><a class="exitem" href="/use-cases/customer-feedback-to-spec/" data-uc="customer-feedback-to-spec" hidden><span class="exjob">Turn customer feedback into a spec</span><span class="tchain"><span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#D3DCE8">Sa</span>Samepage Bets</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#D3DCE8">Ch</span>ChatPRD</span> <i aria-hidden="true">→</i> <span class="tchip"><span class="mark" aria-hidden="true" style="--tint:#D3DCE8">Li</span>Linear Agent</span></span><span class="exgo" aria-hidden="true">→</span></a></div><!--/b:example-->
+    <p class="hero-more">Or <a href="#use-cases">browse every use case</a> · <a href="#directory">all agents</a></p>
+    <!--b:finderdata--><script type="application/json" id="finderData">[{"id":"synthesize-user-interviews","t":"Synthesize user interviews into themes","f":"Researchers, designers and PMs sitting on a pile of transcripts","k":"synthesis synthesize interviews interview research findings themes insights affinity notes transcripts analyze","n":["Dovetail","Claude","Linear Agent"],"m":[["Do","#E6DCC8"],["Cl","#DADAD2"],["Li","#D3DCE8"]]},{"id":"ai-moderated-user-interviews","t":"Run user interviews at scale with an AI moderator","f":"Research teams and PMs who need many conversations, fast","k":"interviews interview moderator moderated research scale talk users recruit participants voice interviewer discovery","n":["Outset","Dovetail"],"m":[["Ou","#E6DCC8"],["Do","#E6DCC8"]]},{"id":"usability-test-a-prototype","t":"Test a prototype with real users","f":"Designers and PMs who want evidence before engineering starts","k":"usability test testing user-testing validate validation feedback prototype unmoderated participants","n":["Figma Make","Maze"],"m":[["Fi","#D9CFE6"],["Ma","#E6DCC8"]]},{"id":"customer-feedback-to-spec","t":"Turn customer feedback into a spec","f":"PMs drowning in calls, tickets and Slack threads","k":"feedback customer customers support tickets reviews nps requests spec roadmap prioritize prioritization bets","n":["Samepage Bets","ChatPRD","Linear Agent"],"m":[["Sa","#D3DCE8"],["Ch","#D3DCE8"],["Li","#D3DCE8"]]},{"id":"write-a-prd","t":"Write a PRD from meeting notes","f":"Product managers who'd rather decide than format docs","k":"prd write writing spec specs requirements meeting notes document doc brief","n":["ChatPRD","Notion Agent"],"m":[["Ch","#D3DCE8"],["No","#D3DCE8"]]},{"id":"competitive-analysis","t":"Run a competitive analysis","f":"PMs and designers prepping a strategy review or a kickoff","k":"competitors competitor competitive analysis market research landscape benchmark compare teardown","n":["ChatGPT agent","Claude","Notion Agent"],"m":[["Ch","#DADAD2"],["Cl","#DADAD2"],["No","#D3DCE8"]]},{"id":"prd-to-prototype","t":"Turn a PRD into a clickable prototype","f":"PMs and designers with a spec who need something people can click","k":"prd spec specs requirements prototype prototyping clickable mockup demo mvp validate idea","n":["ChatPRD","v0","Maze"],"m":[["Ch","#D3DCE8"],["v0","#CFE0DA"],["Ma","#E6DCC8"]]},{"id":"ai-ui-with-your-design-system","t":"Generate UI that uses your own design system","f":"Product designers and design system teams tired of generic AI screens","k":"design system components component library tokens ui screens generate on-brand brand consistent figma","n":["Figma agent","Wonder","Claude Code"],"m":[["Fi","#D9CFE6"],["Wo","#D9CFE6"],["Cl","#E3D3CC"]]},{"id":"sketch-to-prototype","t":"Turn a whiteboard sketch into a prototype","f":"Designers and PMs who think on paper first","k":"sketch sketches whiteboard drawing napkin wireframe wireframes paper photo lo-fi low-fidelity mockup prototype","n":["Stitch","Figma Make"],"m":[["St","#D9CFE6"],["Fi","#D9CFE6"]]},{"id":"prototype-in-your-real-product","t":"Prototype a new feature inside your real product","f":"Product teams who are done with throwaway prototypes","k":"prototype feature real product codebase repo production existing app live data","n":["Wonder","Codex"],"m":[["Wo","#D9CFE6"],["Co","#E3D3CC"]]},{"id":"figma-to-code","t":"Turn a Figma design into production code","f":"Designers and design engineers who want their work shipped as designed","k":"figma code coding handoff hand-off developer dev frontend front-end react html css implement production build","n":["Wonder","Claude Code","GitHub Copilot"],"m":[["Wo","#D9CFE6"],["Cl","#E3D3CC"],["Gi","#E3D3CC"]]},{"id":"ship-design-qa-fixes","t":"Get design QA fixes shipped","f":"Designers whose polish tickets sit in the backlog forever","k":"design qa bugs bug fixes fix polish issues tickets ui pixel visual ship","n":["Linear Agent","Cursor","GitHub Copilot"],"m":[["Li","#D3DCE8"],["Cu","#E3D3CC"],["Gi","#E3D3CC"]]},{"id":"build-an-app-without-code","t":"Build a working app without writing code","f":"PMs, designers and founders who can't code but need a real product","k":"app apps no-code nocode build website site mvp launch side project vibe coding without code","n":["ChatPRD","Lovable"],"m":[["Ch","#D3DCE8"],["Lo","#CFE0DA"]]},{"id":"automate-status-updates","t":"Automate status updates and stakeholder reports","f":"PMs and leads who spend Friday afternoons writing updates","k":"status updates update reports report stakeholders weekly summary automate recap","n":["Notion Agent","Claude"],"m":[["No","#D3DCE8"],["Cl","#DADAD2"]]}]</script><!--/b:finderdata-->
   </header>
 
   <section class="block uc-block" id="use-cases" aria-labelledby="ucTitle">
@@ -689,6 +745,199 @@ html{scroll-behavior:smooth}
   paintAll();
   if ("ResizeObserver" in window){ new ResizeObserver(function(){ clearTimeout(timer); timer = setTimeout(paintAll, 120); }).observe(document.body); }
   else window.addEventListener("resize", function(){ clearTimeout(timer); timer = setTimeout(paintAll, 120); });
+})();
+</script>
+<script>
+/* Hero finder: type what you want to do, get the matching setups.
+   Options come from #finderData, which scripts/build.py writes from the
+   use cases in agents.json, so new use cases show up on their own.
+   GA events: setup_finder_pick (usecase_id, search_term, position, method),
+   setup_finder_no_match (search_term), hero_example_click (usecase_id). */
+(function(){
+  "use strict";
+  var form = document.getElementById("finder"), input = document.getElementById("finderInput");
+  var list = document.getElementById("finderList"), live = document.getElementById("finderLive");
+  var src = document.getElementById("finderData");
+  if (!form || !input || !list || !src) return;
+  var items;
+  try { items = JSON.parse(src.textContent) || []; } catch(e){ return; }
+  if (!items.length) return;
+
+  function send(name, params){
+    if (typeof window.gtag !== "function") return;
+    params = params || {}; params.page_path = location.pathname;
+    window.gtag("event", name, params);
+  }
+  var STOP = {"i":1,"want":1,"to":1,"a":1,"an":1,"the":1,"my":1,"our":1,"into":1,"from":1,"with":1,"of":1,"for":1,"and":1,"in":1,"on":1,"me":1,"do":1,"how":1,"can":1,"need":1,"help":1,"some":1,"using":1,"use":1,"ai":1,"get":1,"be":1,"we":1,"is":1,"it":1,"you":1,"your":1,"like":1,"just":1,"quickly":1,"fast":1};
+  function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim(); }
+  function stem(w){ return w.replace(/(ings|ing|ed|es|s)$/,"").replace(/e$/,""); }
+  function words(s){ return norm(s).split(" ").filter(Boolean); }
+  items.forEach(function(it){
+    it.fields = [[words(it.t),5],[words(it.k),3],[words((it.n||[]).join(" ")),3],[words(it.f),1]];
+  });
+
+  function tokScore(tok, it, isLast){
+    var st = stem(tok), best = 0;
+    if (tok.length < 2 && !isLast) return 0;
+    it.fields.forEach(function(f){
+      var w = f[1];
+      f[0].forEach(function(word){
+        var s = 0;
+        if (word === tok) s = w + 1;
+        else if (word.indexOf(tok) === 0 || (st.length > 2 && stem(word).indexOf(st) === 0)) s = (tok.length > 1 || isLast) ? w : 0;
+        if (s > best) best = s;
+      });
+    });
+    return best;
+  }
+  function search(q){
+    var all = words(q), toks = all.filter(function(t){ return !STOP[t]; });
+    if (!toks.length) return [];
+    var last = all[all.length-1], scored = [];
+    items.forEach(function(it, i){
+      var hit = 0, score = 0;
+      toks.forEach(function(t){ var s = tokScore(t, it, t === last && !/\s$/.test(q)); if (s){ hit++; score += s; } });
+      if (hit) scored.push({it:it, hit:hit, score:score, i:i});
+    });
+    if (!scored.length) return [];
+    var top = Math.max.apply(null, scored.map(function(x){ return x.hit; }));
+    return scored.filter(function(x){ return x.hit === top; })
+      .sort(function(a,b){ return b.score - a.score || a.i - b.i; })
+      .slice(0, 5).map(function(x){ return x.it; });
+  }
+
+  // highlight the words of the job that the query matched
+  function titleNode(t, q){
+    var toks = words(q).filter(function(x){ return !STOP[x] && x.length > 1; }), b = document.createElement("b");
+    String(t).split(/(\s+)/).forEach(function(part){
+      var w = norm(part), m = w && toks.some(function(tok){ return w.indexOf(tok) === 0 || (stem(tok).length > 2 && stem(w).indexOf(stem(tok)) === 0); });
+      if (m){ var k = document.createElement("mark"); k.textContent = part; b.appendChild(k); }
+      else b.appendChild(document.createTextNode(part));
+    });
+    return b;
+  }
+  function chainNode(it){
+    var c = document.createElement("span"); c.className = "tchain";
+    (it.n||[]).forEach(function(name, i){
+      if (i){ var ar = document.createElement("i"); ar.setAttribute("aria-hidden","true"); ar.textContent = "→"; c.appendChild(ar); }
+      var chip = document.createElement("span"); chip.className = "tchip";
+      var mk = document.createElement("span"); mk.className = "mark"; mk.setAttribute("aria-hidden","true");
+      var m = (it.m||[])[i] || ["?","#DADAD2"]; mk.textContent = m[0]; mk.style.setProperty("--tint", m[1]);
+      chip.appendChild(mk); chip.appendChild(document.createTextNode(name)); c.appendChild(chip);
+    });
+    return c;
+  }
+
+  // combobox wiring happens here, so without JavaScript it's a plain field
+  input.setAttribute("role","combobox"); input.setAttribute("aria-autocomplete","list");
+  input.setAttribute("aria-expanded","false"); input.setAttribute("aria-controls","finderList");
+  list.setAttribute("role","listbox");
+
+  var results = [], active = -1, liveT = null, missT = null, missSent = {};
+  function url(it){ return "/use-cases/" + encodeURIComponent(it.id) + "/"; }
+  function setActive(i){
+    active = i;
+    Array.prototype.forEach.call(list.querySelectorAll("li[role=option]"), function(li, j){
+      li.setAttribute("aria-selected", j === i ? "true" : "false");
+      if (j === i && li.scrollIntoView) li.scrollIntoView({block:"nearest"});
+    });
+    if (i >= 0) input.setAttribute("aria-activedescendant", "fo-" + i); else input.removeAttribute("aria-activedescendant");
+  }
+  function close(){ list.hidden = true; input.setAttribute("aria-expanded","false"); setActive(-1); }
+  function announce(text){ clearTimeout(liveT); liveT = setTimeout(function(){ live.textContent = text; }, 450); }
+  function render(){
+    var q = input.value;
+    results = search(q);
+    list.textContent = "";
+    clearTimeout(missT);
+    if (!words(q).length){ close(); announce(""); return; }
+    if (!results.length){
+      var li = document.createElement("li"); li.className = "fl-none";
+      li.appendChild(document.createTextNode("No setup for that yet. "));
+      var a = document.createElement("a"); a.href = "#use-cases"; a.textContent = "See every use case";
+      a.addEventListener("click", close);
+      li.appendChild(a); list.appendChild(li);
+      list.hidden = false; input.setAttribute("aria-expanded","true"); setActive(-1);
+      announce("No setup matches yet.");
+      var term = norm(q).slice(0, 60);
+      missT = setTimeout(function(){ if (term.length > 2 && !missSent[term]){ missSent[term] = 1; send("setup_finder_no_match", {search_term: term}); } }, 1500);
+      return;
+    }
+    results.forEach(function(it, i){
+      var li = document.createElement("li");
+      li.id = "fo-" + i; li.setAttribute("role","option"); li.setAttribute("aria-selected","false");
+      li.setAttribute("aria-label", it.t + ": " + (it.n||[]).join(", then "));
+      li.appendChild(titleNode(it.t, q)); li.appendChild(chainNode(it));
+      li.addEventListener("mousedown", function(ev){ ev.preventDefault(); });
+      li.addEventListener("mousemove", function(){ if (active !== i) setActive(i); });
+      li.addEventListener("click", function(ev){ go(i, "click", ev.metaKey || ev.ctrlKey); });
+      list.appendChild(li);
+    });
+    list.hidden = false; input.setAttribute("aria-expanded","true"); setActive(0);
+    announce(results.length + (results.length === 1 ? " setup matches." : " setups match.") + " Use up and down arrows to choose, Enter to open.");
+  }
+  function go(i, method, newTab){
+    var it = results[i]; if (!it) return;
+    send("setup_finder_pick", {usecase_id: it.id, search_term: norm(input.value).slice(0, 60), position: i + 1, method: method});
+    if (newTab){ window.open(url(it), "_blank", "noopener"); return; }
+    close();
+    location.href = url(it);
+  }
+
+  input.addEventListener("input", function(){ render(); pauseExamples(); });
+  input.addEventListener("focus", function(){ if (input.value) render(); });
+  input.addEventListener("blur", function(){ setTimeout(close, 120); });
+  input.addEventListener("keydown", function(ev){
+    var open = !list.hidden && results.length;
+    if (ev.key === "ArrowDown"){ ev.preventDefault(); if (list.hidden && input.value) render(); else if (open) setActive((active + 1) % results.length); }
+    else if (ev.key === "ArrowUp"){ ev.preventDefault(); if (open) setActive((active - 1 + results.length) % results.length); }
+    else if (ev.key === "Escape"){ if (!list.hidden){ ev.preventDefault(); close(); } else if (input.value){ ev.preventDefault(); input.value = ""; render(); } }
+  });
+  form.addEventListener("submit", function(ev){
+    if (!words(input.value).length) return;          // empty: fall through to the use-case list
+    if (!results.length) render();
+    if (results.length){ ev.preventDefault(); go(active >= 0 ? active : 0, "enter", false); }
+  });
+  document.addEventListener("click", function(ev){ if (!form.contains(ev.target)) close(); });
+
+  // /?q=... opens with the box filled in
+  try { var q0 = new URLSearchParams(location.search).get("q"); if (q0){ input.value = q0.slice(0, 80); render(); } } catch(e){}
+
+  /* ---------- example setups: a calm rotation under the box ---------- */
+  var ex = document.getElementById("heroExample"), exItems = ex ? ex.querySelectorAll(".exitem") : [], exDots = ex ? ex.querySelector(".exdots") : null;
+  var cur = 0, exTimer = null, paused = false, hovering = false;
+  var still = window.matchMedia && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  if (ex){
+    ex.addEventListener("click", function(ev){
+      var a = ev.target.closest && ev.target.closest(".exitem");
+      if (a) send("hero_example_click", {usecase_id: a.getAttribute("data-uc")});
+    });
+  }
+  function show(n, instant){
+    if (!exItems.length || n === cur) return;
+    var from = exItems[cur], to = exItems[n], dots = exDots ? exDots.querySelectorAll("button") : [];
+    Array.prototype.forEach.call(dots, function(d, j){ if (j === n) d.setAttribute("aria-current","true"); else d.removeAttribute("aria-current"); });
+    cur = n;
+    if (instant || still){ from.hidden = true; to.hidden = false; return; }
+    from.classList.add("fading");
+    setTimeout(function(){ from.hidden = true; from.classList.remove("fading"); to.classList.add("fading"); to.hidden = false;
+      requestAnimationFrame(function(){ requestAnimationFrame(function(){ to.classList.remove("fading"); }); }); }, 300);
+  }
+  function tick(){ if (!paused && !hovering && !document.hidden) show((cur + 1) % exItems.length); }
+  function pauseExamples(){ paused = true; }
+  if (exItems.length > 1){
+    if (exDots){
+      exDots.hidden = false;
+      Array.prototype.forEach.call(exDots.querySelectorAll("button"), function(b, j){
+        b.addEventListener("click", function(){ paused = true; show(j, true); });
+      });
+    }
+    ex.addEventListener("mouseenter", function(){ hovering = true; });
+    ex.addEventListener("mouseleave", function(){ hovering = false; });
+    ex.addEventListener("focusin", function(){ hovering = true; });
+    ex.addEventListener("focusout", function(){ hovering = false; });
+    if (!still) exTimer = setInterval(tick, 7000);
+  }
 })();
 </script>
 <script>
