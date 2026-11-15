@@ -180,7 +180,8 @@ def load():
     #                 "url": "https://...", "line": "One sentence, max 140 characters.",
     #                 "until": "YYYY-MM-DD"}]
     # A spot shows while "until" is on or after the data's "updated" date. A bad
-    # or expired entry is skipped, and the page shows "This spot is available".
+    # or expired entry is skipped, and an open spot shows nothing at all. An
+    # optional "agent": "<agent id>" gives the tile that tool's logo.
     uc_ids = {u["id"] for u in ucs}
     featured = {}
     for f in d.get("featured", []) or []:
@@ -516,7 +517,7 @@ def faq_items(D):
     t = "Yes. The directory is free to browse, and the weekly email with the best new agents and one workflow is free too."
     items.append(("Is agentictools.design free?", '<p>%s <a href="#subscribe">Get the weekly email</a>.</p>' % e(t), t))
 
-    t = ("Yes. Tools can buy a Featured spot at the top of a use-case page that fits them, or sponsor an issue of the "
+    t = ("Yes. Tools can buy a Featured spot on a use-case page that fits them, or sponsor an issue of the "
          "weekly email. Paid spots are always labeled and never change the editorial picks. "
          "Prices and how to book are on the sponsor page: %s/sponsor/" % SITE)
     items.append(("Can I sponsor a spot or get my AI tool featured?",
@@ -626,6 +627,55 @@ def blk_head(D):
 
 SUB_CSS = """
 /* subpages */
+/* use-case pages: the job, the setup as a chain of logos, the swaps; the rest folded */
+.ucx-head{padding-block:28px 26px;max-width:860px}
+.ucx-head h1{font-weight:400;font-size:clamp(30px,4.6vw,48px);line-height:1.06;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.ucx-setup{display:flex;flex-wrap:wrap;align-items:stretch;gap:18px 28px}
+.ucflow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:stretch;gap:14px 0}
+.ucflow li{display:flex;align-items:stretch}
+.ucflow li+li::before{content:"";flex:none;align-self:center;width:40px;height:1.5px;margin:0 10px;background:var(--accent)}
+.ucflow li+li>.ucnode::before{content:"";position:absolute;left:-11px;top:50%;margin-top:-4px;border:4px solid transparent;border-left:5px solid var(--accent);border-right:0}
+.ucnode{position:relative;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px;width:176px;padding:20px 14px 16px;
+  text-decoration:none;background:var(--window);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:14px;transition:box-shadow .2s,transform .2s}
+.ucnode:hover{box-shadow:var(--shadow);transform:translateY(-1px)}
+.ucnode .mark{width:56px;height:56px;border-radius:14px;font-size:18px}
+.ucnode b{font-weight:500;font-size:15.5px;line-height:1.25}
+.ucnode>span:last-child{font-size:13.5px;line-height:1.35;color:var(--ink-2);text-wrap:balance}
+.ucsp{padding-top:30px}
+.ucsp .sptag{position:absolute;top:9px;right:9px;background:var(--window);font:500 9.5px/1 var(--font-mono);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);border:1px solid var(--line);border-radius:999px;padding:3px 6px}
+.ucx-alts{padding-top:34px}
+.ucx-sub{margin:0 0 12px;font-size:15px;font-weight:400;color:var(--ink-3);letter-spacing:0}
+.ucalts{display:flex;flex-wrap:wrap;gap:10px}
+.ucalt{display:inline-flex;align-items:center;gap:10px;padding:9px 16px 9px 9px;text-decoration:none;background:var(--window);
+  border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:12px;max-width:100%;transition:box-shadow .2s}
+.ucalt:hover{box-shadow:var(--shadow)}
+.ucalt .mark{width:34px;height:34px;border-radius:9px;font-size:12px}
+.ucalt>span{display:grid;gap:1px;min-width:0}
+.ucalt b{font-weight:500;font-size:14.5px}
+.ucalt>span>span{font-size:13px;color:var(--ink-2)}
+.ucx-more{margin-top:56px}
+.ucx-more summary h2{margin:0;font-size:16px;font-weight:500;letter-spacing:-.01em}
+.ucqs h3{margin:14px 0 6px;font-size:15px;font-weight:500;color:var(--ink)}
+.ucqs h3:first-child{margin-top:0}
+.ucqs h3 a{color:var(--ink)!important}
+.hubstage{padding-top:36px!important}
+.hubstage .sechead h2{font-size:clamp(19px,2.2vw,22px)}
+.footlinks a{text-decoration:none}.footlinks a:hover{color:var(--ink)}
+@media (max-width:620px){
+  .ucx-setup,.ucflow{flex-direction:column;align-items:stretch;width:100%}
+  .ucflow{gap:0}
+  .ucflow li{flex-direction:column;align-items:stretch}
+  .ucflow li+li::before{width:1.5px;height:22px;margin:4px auto 8px}
+  .ucflow li+li>.ucnode::before{left:50%;top:-12px;margin:0 0 0 -4px;border:4px solid transparent;border-top:5px solid var(--accent);border-bottom:0}
+  .ucnode{width:auto;flex-direction:row;text-align:left;gap:12px;padding:12px 14px;display:grid;grid-template-columns:44px minmax(0,1fr);grid-template-rows:auto auto;column-gap:12px;row-gap:2px}
+  .ucnode .mark{width:44px;height:44px;border-radius:11px;grid-row:1/3}
+  .ucnode b{align-self:end}
+  .ucnode>span:last-child{align-self:start;text-wrap:pretty}
+  .ucsp{padding-top:12px}
+  .ucsp .sptag{top:10px;right:10px}
+  .ucalt{width:100%}
+}
+
 .crumbs{font:400 12px var(--font-mono);color:var(--ink-3);padding-block:12px 0;display:flex;gap:8px;flex-wrap:wrap}
 .crumbs a{text-decoration:none}.crumbs a:hover{color:var(--ink)}
 .subhero{padding-block:28px 28px;display:grid;gap:14px;max-width:760px}
@@ -664,14 +714,6 @@ SUB_CSS = """
 .hubq p{margin:0 0 6px;color:var(--ink-2);max-width:74ch}
 .hubq .uctools{font:400 12px/1.5 var(--font-mono);color:var(--ink-3)}
 .hublist{border-top:1px solid var(--line)}
-.feat{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:6px 16px;align-items:center;border:1px solid var(--line);border-radius:10px;padding:14px 16px;background:var(--window);max-width:760px}
-.feat.open{border-style:dashed;background:transparent}
-.feat .tag{justify-self:start;font:500 10px/1 var(--font-mono);letter-spacing:.08em;text-transform:uppercase;color:var(--accent);border:1px solid color-mix(in srgb,var(--accent) 45%,transparent);border-radius:999px;padding:4px 7px;white-space:nowrap}
-.feat .ftxt{display:grid;gap:2px;min-width:0}
-.feat .ftxt b{font-weight:500}
-.feat .ftxt span{color:var(--ink-2);font-size:14px}
-.feat a.go{color:var(--accent);text-decoration:none;font-size:14px;white-space:nowrap}
-.feat-wrap{padding-bottom:24px}
 footer a{color:inherit}
 .offers{display:grid;grid-template-columns:repeat(auto-fit,minmax(240px,1fr));gap:12px}
 .offer{display:flex;flex-direction:column;gap:10px;background:var(--window);border:1px solid color-mix(in srgb,var(--line) 70%,transparent);border-radius:10px;padding:20px}
@@ -688,7 +730,7 @@ footer a{color:inherit}
 .spots a{text-decoration:none}.spots a:hover{color:var(--accent)}
 .spots em{font:500 10px/1.6 var(--font-mono);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
 .spots em.free{color:#3F8A4C}
-@media (max-width:760px){.alt{grid-template-columns:1fr}.feat{grid-template-columns:1fr}}
+@media (max-width:760px){.alt{grid-template-columns:1fr}}
 """
 
 FONT_LINKS = """<link rel="icon" href="/favicon.svg?v=2" type="image/svg+xml">
@@ -724,13 +766,13 @@ def nav():
 def footer(D):
     return ('<footer><div><a class="brand" href="/">%s%s</a></div>'
             '<p>Refreshed daily, last on %s. Every listing is checked against the product\'s own site.</p>'
-            '<p>Sponsored listings are always labeled. <a href="/sponsor/">Sponsor a spot</a></p></footer>'
+            '<p class="footlinks"><a href="/sponsor/">Advertise</a></p></footer>'
             % (GLYPH, NAME, e(fmt_date(D["updated"]))))
 
 
 def cta_band():
     return ('<section class="block"><div class="cta-band"><div><h2>New agents, once a week.</h2>'
-            '<p>The best additions from the directory and one workflow worth stealing, in your inbox every week.</p></div>'
+            '</div>'
             '<a class="pill dark big" href="/#subscribe">Get the weekly email</a></div></section>')
 
 
@@ -881,16 +923,105 @@ def uc_faq(D, u):
     return items
 
 
-def featured_slot(D, u):
+# Short labels for the setup visual on each use-case page, keyed by
+# "<use case id>/<tool id>". The long "does" and "when" lines stay in the page,
+# folded under "How it works", for search and AI answers. A step without an
+# entry gets the first clause of its "does" (or "when") line.
+STEP_LABELS = {
+    "prd-to-prototype/chatprd": "Writes and scores the PRD",
+    "prd-to-prototype/v0": "Builds the clickable app",
+    "prd-to-prototype/maze": "Tests it with real users",
+    "ai-ui-with-your-design-system/figma-agent": "Drafts screens from your components",
+    "ai-ui-with-your-design-system/wonder": "Explores variations as code",
+    "ai-ui-with-your-design-system/claude-code": "Builds the one you pick",
+    "figma-to-code/wonder": "Keeps the design as code",
+    "figma-to-code/claude-code": "Writes the code and opens a PR",
+    "figma-to-code/github-copilot": "Reviews the PR",
+    "sketch-to-prototype/google-stitch": "Turns the photo into a design",
+    "sketch-to-prototype/figma-make": "Makes it clickable",
+    "prototype-in-your-real-product/wonder": "Designs on the real product",
+    "prototype-in-your-real-product/openai-codex": "Builds the change in the cloud",
+    "synthesize-user-interviews/dovetail": "Finds cited themes",
+    "synthesize-user-interviews/claude": "Writes the readout",
+    "synthesize-user-interviews/linear-agents": "Logs needs as issues",
+    "ai-moderated-user-interviews/outset": "Runs the interviews",
+    "ai-moderated-user-interviews/dovetail": "Stores cited insights",
+    "usability-test-a-prototype/figma-make": "Makes the prototype",
+    "usability-test-a-prototype/maze": "Recruits, tests and reports",
+    "customer-feedback-to-spec/samepage-bets": "Ranks feedback into bets",
+    "customer-feedback-to-spec/chatprd": "Writes and scores the PRD",
+    "customer-feedback-to-spec/linear-agents": "Turns it into issues",
+    "write-a-prd/chatprd": "Turns notes into a PRD",
+    "write-a-prd/notion-agent": "Builds the spec page",
+    "competitive-analysis/chatgpt-agent": "Browses competitors, builds the table",
+    "competitive-analysis/claude": "Writes up the gaps",
+    "competitive-analysis/notion-agent": "Saves the brief",
+    "ship-design-qa-fixes/linear-agents": "Logs and delegates each fix",
+    "ship-design-qa-fixes/cursor": "Builds and tests the fixes",
+    "ship-design-qa-fixes/github-copilot": "Reviews the PR",
+    "build-an-app-without-code/chatprd": "Writes the spec",
+    "build-an-app-without-code/lovable": "Builds and hosts the app",
+    "automate-status-updates/notion-agent": "Posts updates on a schedule",
+    "automate-status-updates/claude": "Writes what changed and why",
+}
+ALT_LABELS = {
+    "prd-to-prototype/magic-patterns": "It must look like your product",
+    "prd-to-prototype/lovable": "You need a real app",
+    "prd-to-prototype/figma-make": "Your team lives in Figma",
+    "ai-ui-with-your-design-system/magic-patterns": "You're working outside Figma",
+    "ai-ui-with-your-design-system/bolt": "You're starting from Figma or a repo",
+    "figma-to-code/bolt": "It's a brand-new app",
+    "figma-to-code/cursor": "Your engineers use Cursor",
+    "figma-to-code/v0": "You want it on Vercel",
+    "sketch-to-prototype/uizard": "You don't design",
+    "sketch-to-prototype/figma-agent": "Use your Figma library",
+    "prototype-in-your-real-product/bolt": "You want a quick build",
+    "prototype-in-your-real-product/cursor": "An engineer is pairing",
+    "synthesize-user-interviews/outset": "You haven't run them yet",
+    "synthesize-user-interviews/listen-labs": "Many languages",
+    "ai-moderated-user-interviews/listen-labs": "Many languages",
+    "ai-moderated-user-interviews/maze": "Test, don't talk",
+    "usability-test-a-prototype/v0": "It needs to be a web app",
+    "usability-test-a-prototype/outset": "You want conversations",
+    "customer-feedback-to-spec/dovetail": "You have a research team",
+    "customer-feedback-to-spec/atlassian-rovo": "You run on Jira",
+    "write-a-prd/claude": "You want a thinking partner",
+    "write-a-prd/atlassian-rovo": "Specs live in Confluence",
+    "competitive-analysis/perplexity-comet": "You'd rather browse yourself",
+    "ship-design-qa-fixes/openai-codex": "Your team is on ChatGPT",
+    "ship-design-qa-fixes/claude-code": "Kick off fixes from Slack",
+    "build-an-app-without-code/replit-agent": "It should test as it builds",
+    "build-an-app-without-code/bolt": "You're starting from Figma or a repo",
+    "build-an-app-without-code/v0": "It's a web app",
+    "automate-status-updates/atlassian-rovo": "You run on Jira",
+    "automate-status-updates/dovetail": "Updates are about research",
+}
+
+
+def short_label(u, s, key, table):
+    lab = table.get("%s/%s" % (u["id"], s["tool"]))
+    if lab:
+        return lab
+    first = re.split(r"(?<=[a-z0-9)])[.,;:]\s|\s[-–—]\s", str(s.get(key) or "").strip(), maxsplit=1)[0]
+    return clip(first.rstrip("."), 42)
+
+
+def sponsor_tile(D, u):
+    """A sold Featured spot, drawn as one more tool tile beside the setup and tagged Sponsored.
+    Nothing shows for an open spot."""
     f = D["featured"].get(u["id"])
-    if f:
-        return ('<div class="feat-wrap"><aside class="feat" aria-label="Featured placement"><span class="tag">Featured</span>'
-                '<span class="ftxt"><b><a href="%s" rel="sponsored noopener" target="_blank" data-agent="%s">%s</a></b>%s</span>'
-                '<a class="go" href="/sponsor/">About featured spots</a></aside></div>'
-                % (e(f["url"]), e(f["name"]), e(f["name"]), ("<span>%s</span>" % e(f["line"])) if f["line"] else ""))
-    return ('<div class="feat-wrap"><aside class="feat open" aria-label="Featured placement"><span class="tag">Featured</span>'
-            '<span class="ftxt"><b>This spot is available</b><span>Show your tool to people choosing a setup to %s.</span></span>'
-            '<a class="go" href="/sponsor/">Sponsor this spot →</a></aside></div>' % e(lower_first(u["job"])))
+    if not f:
+        return ""
+    a = D["by_id"].get(f.get("agent") or "") or next(
+        (x for x in D["agents"] if x["name"].lower() == f["name"].lower()), None) or {"name": f["name"], "category": "general"}
+    return ('<a class="ucnode ucsp" href="%s" rel="sponsored noopener" target="_blank" data-agent="%s">'
+            '<em class="sptag">Sponsored</em>%s<b>%s</b>%s</a>'
+            % (e(f["url"]), e(f["name"]), mark(a, True), e(f["name"]), ("<span>%s</span>" % e(f["line"])) if f["line"] else ""))
+
+
+def uc_mini_cards(D, items):
+    return '<div class="ucgrid ucmini">%s</div>' % "".join(
+        '<a class="uc" href="/use-cases/%s/"><b>%s</b>%s</a>' % (e(x["id"]), e(x["job"]), logo_chain(D, x)) for x in items)
 
 
 def build_uc_page(D, u):
@@ -922,44 +1053,56 @@ def build_uc_page(D, u):
             {"@type": "ListItem", "position": 3, "name": u["job"], "item": url}]}]}
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
 
-    steps = "".join(
-        '<li><div class="ucstep">%s<p>%s</p><span class="checked">%s</span></div></li>'
-        % (row_link(D["by_id"][s["tool"]], D), e(s.get("does", "")), e(D["by_id"][s["tool"]].get("pricing") or "See site"))
+    # What shows: the job, the setup as a chain of logos, the swaps. Everything
+    # else is folded below for search and AI answers.
+    nodes = "".join(
+        '<li><a class="ucnode" href="/agents/%s/">%s<b>%s</b><span>%s</span></a></li>'
+        % (e(D["by_id"][s["tool"]]["id"]), mark(D["by_id"][s["tool"]], True), e(D["by_id"][s["tool"]]["name"]),
+           e(short_label(u, s, "does", STEP_LABELS)))
         for s in u["setup"])
-    watch = ('<p class="watch"><span class="eyebrow">Watch out</span>%s</p>' % e(u["watchOut"])) if u.get("watchOut") else ""
     body = ['<div class="crumbs"><a href="/">Home</a><span>/</span><a href="/use-cases/">Use cases</a><span>/</span><span>%s</span></div>'
             % e(u["job"]),
-            '<header class="subhero"><span class="eyebrow">%s · %d-step setup</span><h1>%s</h1><p class="lede">%s</p>%s</header>'
-            % (e(STAGES[u["stage"]]), len(u["setup"]), e(q), e(u.get("answer", "")),
-               ('<p class="meta">Best for: %s</p>' % e(str(u["for"]).rstrip("."))) if u.get("for") else ""),
-            featured_slot(D, u),
-            '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
-            '<i></i><i></i><i></i></span><span class="t">agentictools.design · The setup</span></div><div class="wfmain">'
-            '<h2>The setup, in order</h2><div class="ask">%s</div><ol class="ucsteps">%s</ol>%s</div></article></div></div>'
-            % (e(uc_chain(D, u)), steps, watch)]
+            '<header class="ucx-head"><h1>%s</h1></header>' % e(u["job"]),
+            '<section class="ucx-setup" aria-label="The setup, in order"><ol class="ucflow">%s</ol>%s</section>'
+            % (nodes, sponsor_tile(D, u))]
     if u["alternatives"]:
-        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Alternatives</span>'
-                    '<h2>Swap a tool in when it fits you better</h2></div></div><div class="alts">%s</div></section>'
-                    % "".join('<div class="alt">%s<p>%s</p></div>' % (row_link(D["by_id"][s["tool"]], D), e(s.get("when", "")))
+        body.append('<section class="ucx-alts" aria-labelledby="ucAlts"><h2 id="ucAlts" class="ucx-sub">Or swap in</h2>'
+                    '<div class="ucalts">%s</div></section>'
+                    % "".join('<a class="ucalt" href="/agents/%s/">%s<span><b>%s</b><span>if %s</span></span></a>'
+                              % (e(D["by_id"][s["tool"]]["id"]), mark(D["by_id"][s["tool"]]), e(D["by_id"][s["tool"]]["name"]),
+                                 e(lower_first(short_label(u, s, "when", ALT_LABELS))))
                               for s in u["alternatives"]))
+
+    steps = "".join(
+        '<li><a href="/agents/%s/">%s</a>: %s <span class="checked">%s</span></li>'
+        % (e(D["by_id"][s["tool"]]["id"]), e(D["by_id"][s["tool"]]["name"]), e(s.get("does", "")),
+           e(D["by_id"][s["tool"]].get("pricing") or "See site"))
+        for s in u["setup"])
+    how = ['<p>%s</p>' % e(u.get("answer", "")), '<ol>%s</ol>' % steps]
+    if u["alternatives"]:
+        how.append('<p>Swap a tool in when it fits you better:</p><ul>%s</ul>' % "".join(
+            '<li><a href="/agents/%s/">%s</a>: %s</li>' % (e(D["by_id"][s["tool"]]["id"]), e(D["by_id"][s["tool"]]["name"]),
+                                                          e(s.get("when", ""))) for s in u["alternatives"]))
+    if u.get("watchOut"):
+        how.append('<p><b>Watch out:</b> %s</p>' % e(u["watchOut"]))
+    if u.get("for"):
+        how.append('<p><b>Best for:</b> %s.</p>' % e(str(u["for"]).rstrip(".")))
+    folds = ['<details><summary><h2>How it works</h2>%s</summary><div class="a">%s</div></details>' % (CHEV, "".join(how))]
     wfs = [w for w in D["workflows"] if w["id"] in u["workflows"]]
-    if wfs:
-        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Workflows</span>'
-                    '<h2>Step-by-step workflows for this job</h2></div></div><div class="faq">%s</div></section>'
-                    % "".join('<details><summary><h3>%s</h3>%s</summary><div class="a"><ol>%s</ol><p>Result: %s. '
-                              '<a href="/workflows/%s/">Open this workflow</a></p></div></details>'
-                              % (e(w["title"]), CHEV, "".join("<li>%s</li>" % e(s) for s in w.get("steps") or []),
-                                 e((w.get("outcome") or "").rstrip(".")), e(w["id"])) for w in wfs))
-    body.append('<section class="block" aria-labelledby="ucFaq"><div class="sechead"><div><span class="eyebrow">Questions</span>'
-                '<h2 id="ucFaq">%s, answered</h2></div></div><div class="faq">%s</div></section>'
-                % (e(u["job"]), "".join('<details><summary><h3>%s</h3>%s</summary><div class="a">%s</div></details>'
-                                        % (e(fq), CHEV, fh) for fq, fh, _ in faq)))
+    for w in wfs:
+        folds.append('<details><summary><h2>Workflow: %s</h2>%s</summary><div class="a"><ol>%s</ol><p>Result: %s. '
+                     '<a href="/workflows/%s/">Open this workflow</a></p></div></details>'
+                     % (e(w["title"]), CHEV, "".join("<li>%s</li>" % e(s) for s in w.get("steps") or []),
+                        e((w.get("outcome") or "").rstrip(".")), e(w["id"])))
+    folds.append('<details><summary><h2>Questions</h2>%s</summary><div class="a ucqs">%s</div></details>'
+                 % (CHEV, "".join('<h3>%s</h3>%s' % (e(fq), fh) for fq, fh, _ in faq)))
+    body.append('<section class="ucx-more faq" aria-label="Details">%s</section>' % "".join(folds))
+
     related = [x for x in D["usecases"] if x["stage"] == u["stage"] and x["id"] != u["id"]]
     related += [x for x in D["usecases"] if x["stage"] != u["stage"]]
     if related:
-        body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Keep going</span>'
-                    '<h2>More setups for designers and PMs</h2></div><a class="link" href="/use-cases/">All use cases →</a></div>'
-                    '<div class="ucgrid">%s</div></section>' % "".join(uc_card(D, x, 110) for x in related[:6]))
+        body.append('<section class="block"><div class="sechead"><div><h2>More setups</h2></div>'
+                    '<a class="link" href="/use-cases/">All →</a></div>%s</section>' % uc_mini_cards(D, related[:6]))
     body.append(cta_band())
     return page_shell(D, m, "\n".join(body))
 
@@ -983,23 +1126,17 @@ def build_uc_hub(D):
             {"@type": "ListItem", "position": 2, "name": "Use cases", "item": UC_HUB}]}]}
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
     body = ['<div class="crumbs"><a href="/">Home</a><span>/</span><span>Use cases</span></div>',
-            '<header class="subhero"><span class="eyebrow">%d use cases · updated %s</span><h1>Which AI agents to use for what</h1>'
-            '<p>Most AI lists tell you what exists. This one tells you what to use for the job in front of you: '
-            'the agents, the order, and why. Every tool is checked on its own site.</p></header>'
-            % (len(D["usecases"]), e(fmt_date(D["updated"])))]
+            '<header class="ucx-head"><h1>Which AI agents to use for what</h1></header>']
     for k, label in STAGES.items():
         items = [u for u in D["usecases"] if u["stage"] == k]
-        if not items:
-            continue
-        body.append('<section class="block" style="padding-top:40px"><div class="sechead"><div><span class="eyebrow">Stage</span>'
-                    '<h2>%s</h2></div></div><div class="hublist">%s</div></section>'
-                    % (e(label), "".join('<article class="hubq"><h3><a href="/use-cases/%s/">%s</a></h3><p>%s</p>'
-                                         '<span class="uctools">%s</span></article>'
-                                         % (e(u["id"]), e(uc_question(u)), e(u.get("answer", "")), e(uc_chain(D, u)))
-                                         for u in items)))
-    body.append('<section class="block"><div class="cta-band"><div><h2>Make your tool the featured pick for a use case.</h2>'
-                '<p>Each use case has one labeled Featured spot at the top of its page, seen by people choosing a tool for that job.</p></div>'
-                '<a class="pill big" href="/sponsor/">See sponsor options</a></div></section>')
+        if items:
+            body.append('<section class="block hubstage"><div class="sechead"><div><h2>%s</h2></div></div>%s</section>'
+                        % (e(label), uc_mini_cards(D, items)))
+    # The one-line answers, folded, so search and AI answers can read them.
+    body.append('<section class="ucx-more faq" aria-label="Every setup in one line"><details><summary><h2>Every setup in one line</h2>%s'
+                '</summary><div class="a ucqs">%s</div></details></section>'
+                % (CHEV, "".join('<h3><a href="/use-cases/%s/">%s</a></h3><p>%s</p>' % (e(u["id"]), e(uc_question(u)), e(u.get("answer", "")))
+                                 for u in D["usecases"])))
     body.append(cta_band())
     return page_shell(D, m, "\n".join(body))
 
@@ -1054,7 +1191,7 @@ def sponsor_faq(D):
     n = len(D["usecases"])
     return [
         ("What does a Featured spot look like?",
-         "A card at the top of one use-case page, above the recommended setup, labeled Featured. It shows your tool's name, "
+         "A tile next to the recommended setup on one use-case page, tagged Sponsored. It shows your tool's logo, name, "
          "one sentence you write (up to 140 characters) and a link to your site."),
         ("Does sponsoring change the recommendations?",
          "No. The setups, alternatives and directory listings are chosen on their own. A sponsor can't buy a place in them, "
@@ -1086,7 +1223,7 @@ def build_sponsor_page(D):
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
     offers = [
         ("Featured spot", PRICES["spot"], "/ month, one use case",
-         "The labeled Featured card at the top of one use-case page, seen by people deciding which tool to use for that job.",
+         "A tile tagged Sponsored next to the setup on one use-case page, seen by people deciding which tool to use for that job.",
          ["One sponsor per use case", "Your name, one line and a link", "Runs one month, renew any time"]),
         ("Newsletter sponsor", PRICES["issue"], "/ issue",
          "The sponsor block at the top of one issue of the weekly email, plus a mention on the home page the week it goes out.",
@@ -1108,8 +1245,8 @@ def build_sponsor_page(D):
             '<header class="subhero"><span class="eyebrow">Sponsor · launch pricing</span>'
             '<h1>Reach designers and PMs at the moment they pick a tool.</h1>'
             '<p class="lede">agentictools.design answers one question: which AI setup should I use for this job? '
-            'People land on a use-case page because they are about to choose. A Featured spot puts your tool at the top '
-            'of that page, clearly labeled.</p></header>',
+            'People land on a use-case page because they are about to choose. A Featured spot puts your tool right next '
+            'to the setup on that page, clearly labeled.</p></header>',
             '<section class="block" style="padding-top:8px"><div class="sechead"><div><span class="eyebrow">What you can buy</span>'
             '<h2>Three ways to sponsor</h2></div></div><div class="offers">%s</div>'
             '<p class="meta" style="margin:12px 0 0;font:400 12.5px/1.6 var(--font-mono);color:var(--ink-3)">'
