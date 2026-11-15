@@ -1,6 +1,6 @@
 # agentictools.design
 
-> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 27 agents, 6 categories, 6 workflows. Last updated 2026-11-14.
+> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 28 agents, 6 categories, 6 workflows. Last updated 2026-11-15.
 
 Machine-readable data: https://agentictools.design/agents.json (agents: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added; usecases: job, stage, for, answer, setup, alternatives, workflows, watchOut).
 
@@ -171,6 +171,7 @@ Index: https://agentictools.design/use-cases/
 - Alternative: Replit Agent (https://agentictools.design/agents/replit-agent/), when: You want an agent that tests the app in a browser while it builds and fixes what breaks.
 - Alternative: Bolt (https://agentictools.design/agents/bolt/), when: You're starting from an existing Figma design or GitHub repo.
 - Alternative: v0 (https://agentictools.design/agents/v0/), when: It's a web app and you want to tweak the UI visually before you deploy.
+- Alternative: FlutterFlow (https://agentictools.design/agents/flutterflow/), when: Pick it when the app needs to be a native iPhone and Android app in the stores.
 - Watch out: These tools get you to a working app fast. Before real customers use it, have someone technical check security, data and costs.
 
 ### What's the best AI setup to automate status updates and stakeholder reports?
@@ -389,6 +390,16 @@ Index: https://agentictools.design/use-cases/
 
 
 ## Build
+
+### FlutterFlow (by FlutterFlow)
+- Profile: https://agentictools.design/agents/flutterflow/
+- Official site: https://flutterflow.io/
+- What it does: Describe a phone app and its agent builds a native iOS and Android version, backend included.
+- For: Designers and PMs who want a real mobile app without coding
+- Best at: Goes from a plain-language description to an app ready to submit to the App Store and Google Play.
+- Pricing: Free plan; paid from $29/mo billed yearly
+- Tags: mobile-apps, no-code, app-builder
+- Checked on its own site: 2026-11-15
 
 ### Claude Code (by Anthropic)
 - Profile: https://agentictools.design/agents/claude-code/

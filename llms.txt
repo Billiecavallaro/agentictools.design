@@ -1,6 +1,6 @@
 # agentictools.design
 
-> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 27 agents, 6 categories, 6 workflows. Last updated 2026-11-14.
+> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 28 agents, 6 categories, 6 workflows. Last updated 2026-11-15.
 
 Machine-readable data: https://agentictools.design/agents.json (agents: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added; usecases: job, stage, for, answer, setup, alternatives, workflows, watchOut).
 
@@ -56,6 +56,7 @@ Index: https://agentictools.design/use-cases/
 
 ## Build
 
+- [FlutterFlow](https://agentictools.design/agents/flutterflow/): Describe a phone app and its agent builds a native iOS and Android version, backend included. (by FlutterFlow)
 - [Claude Code](https://agentictools.design/agents/claude-code/): Agentic coding tool that reads your codebase, edits files and runs commands. (by Anthropic)
 - [Cursor](https://agentictools.design/agents/cursor/): AI code editor whose agents plan, build and test features. (by Cursor)
 - [GitHub Copilot](https://agentictools.design/agents/github-copilot/): Coding agent that picks up GitHub issues and returns reviewed pull requests. (by GitHub)

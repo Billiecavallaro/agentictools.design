@@ -1,7 +1,11 @@
 {
  "schema": 1,
- "updated": "2026-11-14",
+ "updated": "2026-11-15",
  "updates": [
+  {
+   "date": "2026-11-15",
+   "text": "Added FlutterFlow, an AI agent that builds native mobile apps from a description"
+  },
   {
    "date": "2026-11-14",
    "text": "New: 14 use cases showing which agents to use for which job"
@@ -36,6 +40,24 @@
   }
  ],
  "agents": [
+  {
+   "id": "flutterflow",
+   "name": "FlutterFlow",
+   "maker": "FlutterFlow",
+   "category": "build",
+   "url": "https://flutterflow.io/",
+   "oneLiner": "Describe a phone app and its agent builds a native iOS and Android version, backend included.",
+   "forWho": "Designers and PMs who want a real mobile app without coding",
+   "standout": "Goes from a plain-language description to an app ready to submit to the App Store and Google Play.",
+   "pricing": "Free plan; paid from $29/mo billed yearly",
+   "tags": [
+    "mobile-apps",
+    "no-code",
+    "app-builder"
+   ],
+   "verified": "2026-11-15",
+   "added": "2026-11-15"
+  },
   {
    "id": "samepage-bets",
    "name": "Samepage Bets",
@@ -1039,6 +1061,10 @@
     {
      "tool": "v0",
      "when": "It's a web app and you want to tweak the UI visually before you deploy."
+    },
+    {
+     "tool": "flutterflow",
+     "when": "Pick it when the app needs to be a native iPhone and Android app in the stores."
     }
    ],
    "workflows": [],
