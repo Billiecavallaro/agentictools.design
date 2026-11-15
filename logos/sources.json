@@ -1,4 +1,26 @@
 {
+ "atlassian-rovo": "https://www.atlassian.com/apple-touch-icon.png",
+ "bolt": "https://bolt.new/static/apple-touch-icon.png",
+ "chatgpt-agent": "https://chatgpt.com/cdn/assets/favicon-180x180-ee49640db59e.webp",
+ "chatprd": "https://www.chatprd.ai/favicon.ico",
  "claude": "https://claude.com/apple-touch-icon.png",
- "claude-code": "https://claude.com/apple-touch-icon.png"
+ "claude-code": "https://claude.com/apple-touch-icon.png",
+ "cursor": "https://cursor.com/marketing-static/apple-touch-icon-light.png",
+ "devin-desktop": "https://devin.ai/apple-icon.png",
+ "dovetail": "https://dovetail.com/apple-touch-favicon.png",
+ "figma-agent": "https://static.figma.com/app/icon/2/touch-180.png",
+ "figma-make": "https://static.figma.com/app/icon/2/touch-180.png",
+ "github-copilot": "https://github.com/apple-touch-icon.png",
+ "google-stitch": "https://www.gstatic.com/labs-code/stitch/favicon-512x512.png",
+ "linear-agents": "https://linear.app/static/apple-touch-icon.png?v=2",
+ "listen-labs": "https://framerusercontent.com/images/ZPw18SgcVyZn4gCiKYiTdlG7ds0.png",
+ "magic-patterns": "https://www.magicpatterns.com/apple-icon.png",
+ "maze": "https://www.datocms-assets.com/38511/1762960626-image.png?w=180&h=180",
+ "notion-agent": "https://www.notion.com/front-static/logo-ios.png",
+ "outset": "https://framerusercontent.com/images/czycHHWwDEqqiKwPpFtsTEO9OuQ.png",
+ "replit-agent": "https://replit.com/cdn-cgi/imagedelivery/3caXs657xcWBvFz04GwEnw/marketing-favicon-rb-48-png/fullsize",
+ "samepage-bets": "https://framerusercontent.com/images/UyAhQ44vWxUOOhPSe3ejo977es8.png",
+ "uizard": "https://uizard.io/apple-touch-icon.png",
+ "v0": "https://v0.app/assets/apple-icon.png",
+ "wonder": "https://wonder.design/apple-icon.png"
 }
