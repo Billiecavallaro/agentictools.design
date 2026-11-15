@@ -758,7 +758,7 @@ GA_HEAD = ("<!-- Google tag (gtag.js) -->\n"
 
 def nav():
     return ('<nav class="top" aria-label="Main"><a class="brand" href="/">%s%s</a>'
-            '<div class="navlinks"><a href="/use-cases/">Use cases</a><a href="/#directory">Directory</a><a href="/#workflows">Workflows</a>'
+            '<div class="navlinks"><a href="/use-cases/">Use cases</a><a href="/#directory">Directory</a>'
             '<a href="/#all">All agents</a><a href="/#faq">FAQ</a></div>'
             '<a class="pill dark" href="/#subscribe">Subscribe</a></nav>' % (GLYPH, NAME))
 
@@ -877,7 +877,7 @@ def build_wf_page(D, w):
             {"@type": "ListItem", "position": 2, "name": w["title"], "item": url}]}]}
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
     tools = [D["by_id"][t] for t in (w.get("tools") or []) if t in D["by_id"]]
-    body = ['<div class="crumbs"><a href="/">Directory</a><span>/</span><a href="/#workflows">Workflows</a><span>/</span><span>%s</span></div>' % e(w["title"]),
+    body = ['<div class="crumbs"><a href="/">Directory</a><span>/</span><span>/</span><span>%s</span></div>' % e(w["title"]),
             '<header class="subhero"><h1>%s</h1><p>%s</p></header>' % (e(w["title"]), e((w.get("outcome") or "").rstrip(".") + ".")),
             '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
             '<i></i><i></i><i></i></span><span class="t">agentictools.design · Workflow</span></div><div class="wfmain">'
@@ -1429,8 +1429,6 @@ def main():
         src = f.read()
     blocks = {
         "head": "\n" + blk_head(D) + "\n",
-        "wflist": blk_wflist(D),
-        "wfmain": blk_wfmain(D),
         "chips": blk_chips(D),
         "table": blk_table(D),
         "faq": blk_faq(D),

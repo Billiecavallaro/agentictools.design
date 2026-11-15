@@ -14,6 +14,11 @@ Every image is decoded and re-encoded as a 96x96 PNG with Pillow, so only
 plain pixels end up in the repo (no SVG, no scripts). If nothing usable is
 found the agent keeps its letter badge; build.py handles that.
 
+Some product sites turn automated requests away. For those we try the site's
+own /apple-touch-icon.png and /favicon.ico anyway, then the company's own
+GitHub organization picture (GITHUB_ORGS), used only when GitHub says the
+organization is verified and its website is on the agent's own domain.
+
 logos/sources.json records where each file came from.
 """
 import html
@@ -41,6 +46,14 @@ Image.MAX_IMAGE_PIXELS = 4096 * 4096
 # (for example an announcement post).
 SITE_OVERRIDE = {
     "google-stitch": "https://stitch.withgoogle.com/",
+}
+# The company's GitHub organization, tried in order when the site itself won't
+# give us an icon. Each is checked (verified, website on the agent's domain)
+# before its picture is used, so a wrong guess here is simply skipped.
+GITHUB_ORGS = {
+    "lovable": ["lovablelabs", "lovable-dev", "GPT-Engineer-App"],
+    "openai-codex": ["openai"],
+    "perplexity-comet": ["perplexityai", "ppl-ai"],
 }
 UA = {"User-Agent": "Mozilla/5.0 (compatible; agentictools.design logo fetcher; +https://agentictools.design/)",
       "Accept": "text/html,image/*;q=0.9,*/*;q=0.5"}
@@ -91,6 +104,37 @@ def candidates(page_url):
     return uniq
 
 
+def site_domain(url):
+    host = urllib.parse.urlparse(url).hostname or ""
+    return ".".join(host.split(".")[-2:])
+
+
+def from_github(aid, page):
+    """(png bytes, source url) from a verified GitHub org whose website is on the agent's domain."""
+    want = site_domain(page)
+    for org in GITHUB_ORGS.get(aid, []):
+        try:
+            req = urllib.request.Request("https://api.github.com/orgs/" + urllib.parse.quote(org),
+                                         headers={"User-Agent": UA["User-Agent"], "Accept": "application/vnd.github+json"})
+            with urllib.request.urlopen(req, timeout=20) as r:
+                info = json.loads(r.read(200_000).decode("utf-8"))
+            blog = str(info.get("blog") or "")
+            if "://" not in blog:
+                blog = "https://" + blog
+            if not info.get("is_verified") or not want or site_domain(blog) != want:
+                print("fetch_logos: %s: skipped GitHub org %s (not verified on %s)" % (aid, org, want))
+                continue
+            av = str(info.get("avatar_url") or "")
+            if not av.startswith("https://avatars.githubusercontent.com/"):
+                continue
+            av += ("&" if "?" in av else "?") + "s=192"
+            _, data = get(av, MAX_BYTES)
+            return to_png(data), av
+        except Exception as ex:
+            print("fetch_logos: %s: GitHub org %s failed (%s)" % (aid, org, ex))
+    return None, None
+
+
 def to_png(data):
     im = Image.open(io.BytesIO(data))
     im.load()
@@ -128,9 +172,9 @@ def main():
         try:
             urls = candidates(page)
         except Exception as ex:
-            print("fetch_logos: %s: couldn't read %s (%s)" % (aid, page, ex))
-            missed += 1
-            continue
+            print("fetch_logos: %s: couldn't read %s (%s); trying its standard icon files" % (aid, page, ex))
+            origin = "{0.scheme}://{0.netloc}".format(urllib.parse.urlparse(page))
+            urls = [origin + "/apple-touch-icon.png", origin + "/favicon.ico", origin + "/favicon.png"]
         done = False
         for u in urls:
             try:
@@ -145,6 +189,15 @@ def main():
             got += 1
             done = True
             break
+        if not done:
+            png, src = from_github(aid, page)
+            if png:
+                with open(os.path.join(OUT, aid + ".png"), "wb") as f:
+                    f.write(png)
+                sources[aid] = src
+                print("fetch_logos: %s <- %s" % (aid, src))
+                got += 1
+                done = True
         if not done:
             print("fetch_logos: %s: no usable icon, keeping the letter badge" % aid)
             missed += 1
