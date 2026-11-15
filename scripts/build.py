@@ -95,9 +95,25 @@ def mark_text(name):
     return re.sub(r"[^A-Za-z0-9]", "", name or "")[:2] or "?"
 
 
-def mark(a, big=False):
-    return ('<span class="mark" aria-hidden="true" style="--tint:%s">%s</span>'
-            % (TINT.get(a.get("category"), TINT["general"]), e(mark_text(a.get("name")))))
+# Agents whose own icon is in logos/<id>.png (fetched by scripts/fetch_logos.py).
+# Everyone else keeps the two-letter badge.
+LOGOS = set()
+
+
+def load_logos():
+    LOGOS.clear()
+    d = os.path.join(ROOT, "logos")
+    if os.path.isdir(d):
+        LOGOS.update(n[:-4] for n in os.listdir(d) if n.endswith(".png") and ID_OK.match(n[:-4]))
+
+
+def mark(a, big=False, title=False):
+    t = (' title="%s"' % e(a.get("name"))) if title else ""
+    if a.get("id") in LOGOS:
+        return ('<span class="mark logo" aria-hidden="true"%s><img src="/logos/%s.png" alt="" width="48" height="48" '
+                'loading="lazy" decoding="async"></span>' % (t, e(a["id"])))
+    return ('<span class="mark" aria-hidden="true" style="--tint:%s"%s>%s</span>'
+            % (TINT.get(a.get("category"), TINT["general"]), t, e(mark_text(a.get("name")))))
 
 
 def clip(s, n):
@@ -111,6 +127,7 @@ def clip(s, n):
 # ---------------------------------------------------------------- data
 
 def load():
+    load_logos()
     with open(os.path.join(ROOT, "agents.json"), encoding="utf-8") as f:
         d = json.load(f)
     updated = d.get("updated") or dt.date.today().isoformat()
@@ -248,47 +265,16 @@ def new_badge(D, x):
     return '<em class="nw">New</em>' if D["is_new"](x) else ""
 
 
-def blk_cats(D):
-    out = []
-    for k in ["all"] + cats_present(D):
-        n = len(D["agents"]) if k == "all" else sum(1 for a in D["agents"] if a.get("category") == k)
-        out.append('<button class="cat" type="button" aria-pressed="%s"><span>%s</span><span class="n">%d</span></button>'
-                   % ("true" if k == "all" else "false", e("All agents" if k == "all" else CATS[k]), n))
-    return "".join(out)
-
-
-def blk_list(D):
-    out = []
-    for i, a in enumerate(D["agents"]):
-        out.append('<button class="row" type="button" role="option" aria-selected="%s">%s<span class="txt"><b>%s</b>'
-                   '<span>%s · %s</span></span>%s</button>'
-                   % ("true" if i == 0 else "false", mark(a), e(a["name"]), e(a.get("maker", "")),
-                      e(CATS.get(a.get("category"), "")), new_badge(D, a)))
-    return "".join(out)
-
-
-def blk_detail(D):
-    if not D["agents"]:
-        return '<p class="checked">No agents in this category yet.</p>'
-    a = D["agents"][0]
-    u = safe_url(a.get("url"))
-    return (
-        '<div class="dhead">%s<div><h3>%s</h3><p>%s · %s</p></div>%s</div>'
-        '<div class="thirty"><span class="eyebrow"><span>In 30 seconds</span><span>0:30</span></span><p>%s</p></div>'
-        '<dl class="facts"><dt>For</dt><dd>%s</dd><dt>Best at</dt><dd>%s</dd><dt>Pricing</dt><dd>%s</dd></dl>'
-        '<div class="tags">%s</div>'
-        '<div class="dfoot"><span class="checked">Checked on its own site %s</span>%s</div>'
-    ) % (mark(a), e(a["name"]), e(a.get("maker", "")), e(CATS.get(a.get("category"), "")), new_badge(D, a),
-         e(a.get("oneLiner", "")), e(a.get("forWho", "")), e(a.get("standout", "")), e(a.get("pricing") or "See site"),
-         "".join('<span class="tag">%s</span>' % e(t) for t in a.get("tags") or []),
-         e(fmt_date(a.get("verified") or D["updated"])),
-         ('<a class="pill" href="%s" target="_blank" rel="noopener noreferrer" data-agent="%s">Visit site ↗</a>' % (e(u), e(a["name"]))) if u else "")
-
-
-def blk_log(D):
-    ups = D["updates"][:6] or [{"date": D["updated"], "text": "Directory refreshed"}]
-    return "".join('<time datetime="%s">%s</time><span>%s</span>' % (e(u.get("date")), e(fmt_date(u.get("date"), False)), e(u.get("text")))
-                   for u in ups)
+def blk_grid(D):
+    """The homepage directory: a grid of tool logos and names. Each tile opens
+    (tap, or hover where there's a mouse) to the 30-second description, which
+    is in the page either way for screen readers and search."""
+    tiles = []
+    for a in D["agents"]:
+        tiles.append('<details class="atile"><summary>%s<b>%s</b>%s</summary>'
+                     '<div class="atip"><p>%s</p><a class="link" href="/agents/%s/">Profile →</a></div></details>'
+                     % (mark(a, True), e(a["name"]), new_badge(D, a), e(a.get("oneLiner", "")), e(a["id"])))
+    return '<div class="agrid">%s</div>' % "".join(tiles)
 
 
 def blk_wflist(D):
@@ -366,10 +352,19 @@ def uc_groups(D, heading="h3"):
     return '<div class="ucgroups">%s</div>' % "".join(out)
 
 
+def logo_chain(D, u):
+    tools = uc_tools(D, u)
+    return ('<span class="ucchain">%s<span class="sr-only">%s</span></span>'
+            % (' <i aria-hidden="true">→</i> '.join(mark(a, title=True) for a in tools),
+               e(", then ".join(a["name"] for a in tools))))
+
+
 def blk_usecases(D):
     if not D["usecases"]:
         return '<p class="checked">Use cases are on their way.</p>'
-    return uc_groups(D)
+    return '<div class="ucgrid ucmini">%s</div>' % "".join(
+        '<a class="uc" href="/use-cases/%s/"><b>%s</b>%s</a>' % (e(u["id"]), e(u["job"]), logo_chain(D, u))
+        for u in D["usecases"])
 
 
 # ---------------------------------------------------------------- hero finder ("I want to…") and example setup
@@ -394,41 +389,41 @@ FINDER_WORDS = {
     "automate-status-updates": "status updates update reports report stakeholders weekly summary automate recap",
 }
 
-# Setups the hero shows as examples, in order. The first is the one people see
-# without JavaScript; the rest rotate in slowly. Missing ids are skipped.
-HERO_EXAMPLES = ["prd-to-prototype", "synthesize-user-interviews", "figma-to-code", "customer-feedback-to-spec"]
-
-
-def tool_chip(a):
-    return '<span class="tchip">%s%s</span>' % (mark(a), e(a["name"]))
-
-
-def chain_chips(D, u):
-    return '<span class="tchain">%s</span>' % ' <i aria-hidden="true">→</i> '.join(tool_chip(a) for a in uc_tools(D, u))
-
-
-def hero_examples(D):
-    by = {u["id"]: u for u in D["usecases"]}
-    picks = [by[i] for i in HERO_EXAMPLES if i in by] or D["usecases"][:1]
-    return picks
+# Setups the hero animates, in order, with what each one ends in. The first is
+# the one people see without JavaScript. Missing ids are skipped.
+HERO_EXAMPLES = [
+    ("prd-to-prototype", "Tested prototype"),
+    ("synthesize-user-interviews", "Themes to share"),
+    ("figma-to-code", "Production code"),
+    ("customer-feedback-to-spec", "A spec to build"),
+]
+CHECK = ('<svg width="14" height="14" viewBox="0 0 14 14" aria-hidden="true"><path d="M3 7.4l2.6 2.6L11 4.4" fill="none" '
+         'stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>')
 
 
 def blk_example(D):
-    picks = hero_examples(D)
+    by = {u["id"]: u for u in D["usecases"]}
+    picks = [(by[i], r) for i, r in HERO_EXAMPLES if i in by] or [(u, "Done") for u in D["usecases"][:1]]
     if not picks:
         return ""
     items = []
-    for i, u in enumerate(picks):
-        items.append('<a class="exitem" href="/use-cases/%s/" data-uc="%s"%s>'
-                     '<span class="exjob">%s</span>%s<span class="exgo" aria-hidden="true">→</span></a>'
-                     % (e(u["id"]), e(u["id"]), "" if i == 0 else " hidden", e(u["job"]), chain_chips(D, u)))
+    for i, (u, result) in enumerate(picks):
+        tools = uc_tools(D, u)
+        steps = ['<span class="fnode fjob">%s</span>' % e(u["job"])]
+        for a in tools:
+            steps.append('<span class="farrow" aria-hidden="true"></span>')
+            steps.append('<span class="fnode ftool">%s<span>%s</span></span>' % (mark(a, True), e(a["name"])))
+        steps.append('<span class="farrow" aria-hidden="true"></span>')
+        steps.append('<span class="fnode fres">%s%s</span>' % (CHECK, e(result)))
+        items.append('<a class="flowitem" href="/use-cases/%s/" data-uc="%s" aria-label="%s: %s, ending in %s"%s>%s</a>'
+                     % (e(u["id"]), e(u["id"]), e(u["job"]), e(", then ".join(a["name"] for a in tools)), e(result.lower()),
+                        "" if i == 0 else " hidden", "".join(steps)))
     dots = ""
     if len(picks) > 1:
-        dots = '<div class="exdots" hidden>%s</div>' % "".join(
+        dots = '<div class="fdots" hidden>%s</div>' % "".join(
             '<button type="button" aria-label="Show example %d of %d"%s></button>'
             % (i + 1, len(picks), ' aria-current="true"' if i == 0 else "") for i in range(len(picks)))
-    return ('<div class="example" id="heroExample"><div class="exhead"><span class="eyebrow">Example setup</span>%s</div>%s</div>'
-            % (dots, "".join(items)))
+    return '<div class="flow" id="heroExample">%s%s</div>' % ("".join(items), dots)
 
 
 def blk_finderdata(D):
@@ -437,8 +432,10 @@ def blk_finderdata(D):
         tools = uc_tools(D, u)
         rows.append({"id": u["id"], "t": u["job"], "f": u.get("for", ""), "k": FINDER_WORDS.get(u["id"], ""),
                      "n": [a["name"] for a in tools],
-                     "m": [[mark_text(a.get("name")), TINT.get(a.get("category"), TINT["general"])] for a in tools]})
-    return '<script type="application/json" id="finderData">%s</script>' % ld(rows)
+                     "m": [[mark_text(a.get("name")), TINT.get(a.get("category"), TINT["general"]),
+                            a["id"] if a["id"] in LOGOS else ""] for a in tools]})
+    return ('<script type="application/json" id="finderData">%s</script>'
+            '<script type="application/json" id="logoData">%s</script>' % (ld(rows), ld(sorted(LOGOS))))
 
 
 # ---------------------------------------------------------------- FAQ (visible text and FAQPage JSON-LD come from the same source)
@@ -531,8 +528,7 @@ def blk_faq(D):
     rows = "".join('<details><summary><h3>%s</h3>%s</summary><div class="a">%s</div></details>' % (e(q), CHEV, h)
                    for q, h, _ in faq_items(D))
     return ('<section class="block" id="faq" aria-labelledby="faqTitle">\n    <div class="sechead"><div>'
-            '<span class="eyebrow">Questions</span><h2 id="faqTitle">AI agents for designers and PMs, answered</h2>'
-            '<p>Plain answers, rebuilt from the directory every day.</p></div></div>\n'
+            '<h2 id="faqTitle">AI agents for designers and PMs, answered</h2></div></div>\n'
             '    <div class="faq">%s</div>\n  </section>' % rows)
 
 
@@ -1296,20 +1292,13 @@ def main():
         src = f.read()
     blocks = {
         "head": "\n" + blk_head(D) + "\n",
-        "fresh": e(fresh_line(D)),
-        "cats": blk_cats(D),
-        "list": blk_list(D),
-        "detail": blk_detail(D),
-        "log": blk_log(D),
-        "wfcount": e("Ready to run %d" % len(D["workflows"])),
         "wflist": blk_wflist(D),
         "wfmain": blk_wfmain(D),
-        "allcount": e("%d agents · %d categories" % (len(D["agents"]), len(cats_present(D)))),
         "chips": blk_chips(D),
         "table": blk_table(D),
         "faq": blk_faq(D),
-        "uccount": e("%d use cases" % len(D["usecases"])),
         "usecases": blk_usecases(D),
+        "grid": blk_grid(D),
         "example": blk_example(D),
         "finderdata": blk_finderdata(D),
         "footfresh": e("Refreshed daily, last on %s. Every listing is checked against the product's own site." % fmt_date(D["updated"])),

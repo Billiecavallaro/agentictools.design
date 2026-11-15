@@ -1,5 +1,6 @@
-# Rebuilds the crawlable HTML, sitemap and llms.txt whenever agents.json
-# (or the page template) changes on main, then commits the result back.
+# Fetches missing tool logos and rebuilds the crawlable HTML, sitemap and
+# llms.txt whenever agents.json (or the page template) changes on main, then
+# commits the result back.
 # The daily refresh only pushes agents.json; this does the rest.
 name: Build static pages
 
@@ -10,6 +11,7 @@ on:
       - agents.json
       - index.html
       - scripts/build.py
+      - scripts/fetch_logos.py
       - .github/workflows/build.yml
   workflow_dispatch:
 
@@ -28,6 +30,17 @@ jobs:
       - uses: actions/checkout@v4
         with:
           ref: main
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      # Each tool's own icon, from its own site, for any agent without one yet.
+      # If a site can't be reached the agent keeps its letter badge.
+      - name: Fetch missing tool logos
+        run: |
+          python3 -m pip install --quiet pillow || true  # without it the step is skipped
+          python3 scripts/fetch_logos.py || echo "Logo fetch had problems; those agents keep their letter badges."
 
       - name: Build pages from agents.json
         run: python3 scripts/build.py
