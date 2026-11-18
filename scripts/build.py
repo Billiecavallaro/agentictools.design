@@ -627,9 +627,16 @@ def blk_head(D):
 
 SUB_CSS = """
 /* subpages */
-/* use-case pages: the job, the setup as a chain of logos, the swaps; the rest folded */
+/* use-case pages: recommendation first, visible instructions, secondary FAQs folded */
 .ucx-head{padding-block:28px 26px;max-width:860px}
 .ucx-head h1{font-weight:400;font-size:clamp(30px,4.6vw,48px);line-height:1.06;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.ucx-answer{font-size:18px;line-height:1.6;max-width:70ch;margin:20px 0 0;color:var(--ink-2)}
+.ucx-fit,.ucx-warning{font-size:14px;line-height:1.6;max-width:76ch;margin:14px 0 0;color:var(--ink-2)}
+.ucx-warning{padding:12px 16px;border-left:2px solid var(--accent);background:var(--band)}
+.ucx-instructions{max-width:76ch;margin-top:34px}
+.ucx-instructions h2{font-size:20px;font-weight:500;margin:0 0 14px;letter-spacing:-.02em}
+.ucx-instructions li{padding-left:4px;margin-block:12px}
+.ucx-instructions .checked{display:block;margin-top:4px}
 .ucx-setup{display:flex;flex-wrap:wrap;align-items:stretch;gap:18px 28px}
 .ucflow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:stretch;gap:14px 0}
 .ucflow li{display:flex;align-items:stretch}
@@ -729,7 +736,7 @@ footer a{color:inherit}
 .spots div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 .spots a{text-decoration:none}.spots a:hover{color:var(--accent)}
 .spots em{font:500 10px/1.6 var(--font-mono);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
-.spots em.free{color:#3F8A4C}
+.spots em.free{color:var(--success)}
 @media (max-width:760px){.alt{grid-template-columns:1fr}}
 """
 
@@ -827,8 +834,8 @@ def build_agent_page(D, a):
          ('<a class="pill dark" href="%s" target="_blank" rel="noopener noreferrer" data-agent="%s">Visit %s ↗</a>' % (e(u), e(a["name"]), e(a["name"]))) if u else "")
 
     fits = ucs_for_agent(D, a)
-    body = ['<div class="crumbs"><a href="/">Directory</a><span>/</span><a href="/#all">%s</a><span>/</span><span>%s</span></div>'
-            % (e(cat), e(a["name"])),
+    body = ['<div class="crumbs"><a href="/#all">Directory</a><span>/</span><a href="/?category=%s#all">%s</a><span>/</span><span>%s</span></div>'
+            % (e(a.get("category") or "general"), e(cat), e(a["name"])),
             '<header class="subhero"><h1>%s by %s</h1><p>%s</p></header>' % (e(a["name"]), e(a.get("maker", "")), e(a.get("oneLiner", ""))),
             '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
             '<i></i><i></i><i></i></span><span class="t">agentictools.design · %s</span></div><div class="detail">%s</div></article></div></div>'
@@ -877,7 +884,7 @@ def build_wf_page(D, w):
             {"@type": "ListItem", "position": 2, "name": w["title"], "item": url}]}]}
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
     tools = [D["by_id"][t] for t in (w.get("tools") or []) if t in D["by_id"]]
-    body = ['<div class="crumbs"><a href="/">Directory</a><span>/</span><span>/</span><span>%s</span></div>' % e(w["title"]),
+    body = ['<div class="crumbs"><a href="/#all">Directory</a><span>/</span><span>%s</span></div>' % e(w["title"]),
             '<header class="subhero"><h1>%s</h1><p>%s</p></header>' % (e(w["title"]), e((w.get("outcome") or "").rstrip(".") + ".")),
             '<div class="stage"><div class="stage-inner"><article class="win page-win"><div class="bar"><span class="lights" aria-hidden="true">'
             '<i></i><i></i><i></i></span><span class="t">agentictools.design · Workflow</span></div><div class="wfmain">'
@@ -1053,8 +1060,8 @@ def build_uc_page(D, u):
             {"@type": "ListItem", "position": 3, "name": u["job"], "item": url}]}]}
     m.append('<script type="application/ld+json">%s</script>' % ld(graph))
 
-    # What shows: the job, the setup as a chain of logos, the swaps. Everything
-    # else is folded below for search and AI answers.
+    # Lead with the recommendation, audience and warning, before the tool chain.
+    # Instructions stay visible; secondary questions can be expanded on demand.
     nodes = "".join(
         '<li><a class="ucnode" href="/agents/%s/">%s<b>%s</b><span>%s</span></a></li>'
         % (e(D["by_id"][s["tool"]]["id"]), mark(D["by_id"][s["tool"]], True), e(D["by_id"][s["tool"]]["name"]),
@@ -1062,15 +1069,19 @@ def build_uc_page(D, u):
         for s in u["setup"])
     body = ['<div class="crumbs"><a href="/">Home</a><span>/</span><a href="/use-cases/">Use cases</a><span>/</span><span>%s</span></div>'
             % e(u["job"]),
-            '<header class="ucx-head"><h1>%s</h1></header>' % e(u["job"]),
+            '<header class="ucx-head"><h1>%s</h1><p class="ucx-answer">%s</p>%s%s</header>'
+            % (e(u["job"]), e(u.get("answer", "")),
+               '<p class="ucx-fit"><b>Best for:</b> %s.</p>' % e(str(u["for"]).rstrip(".")) if u.get("for") else "",
+               '<p class="ucx-warning"><b>Watch out:</b> %s</p>' % e(u["watchOut"]) if u.get("watchOut") else ""),
             '<section class="ucx-setup" aria-label="The setup, in order"><ol class="ucflow">%s</ol>%s</section>'
             % (nodes, sponsor_tile(D, u))]
+    alternatives = ""
     if u["alternatives"]:
-        body.append('<section class="ucx-alts" aria-labelledby="ucAlts"><h2 id="ucAlts" class="ucx-sub">Or swap in</h2>'
+        alternatives = ('<section class="ucx-alts" aria-labelledby="ucAlts"><h2 id="ucAlts" class="ucx-sub">Or swap in</h2>'
                     '<div class="ucalts">%s</div></section>'
                     % "".join('<a class="ucalt" href="/agents/%s/">%s<span><b>%s</b><span>if %s</span></span></a>'
                               % (e(D["by_id"][s["tool"]]["id"]), mark(D["by_id"][s["tool"]]), e(D["by_id"][s["tool"]]["name"]),
-                                 e(lower_first(short_label(u, s, "when", ALT_LABELS))))
+                                 e(lower_first(s.get("when", ""))))
                               for s in u["alternatives"]))
 
     steps = "".join(
@@ -1078,19 +1089,14 @@ def build_uc_page(D, u):
         % (e(D["by_id"][s["tool"]]["id"]), e(D["by_id"][s["tool"]]["name"]), e(s.get("does", "")),
            e(D["by_id"][s["tool"]].get("pricing") or "See site"))
         for s in u["setup"])
-    how = ['<p>%s</p>' % e(u.get("answer", "")), '<ol>%s</ol>' % steps]
-    if u["alternatives"]:
-        how.append('<p>Swap a tool in when it fits you better:</p><ul>%s</ul>' % "".join(
-            '<li><a href="/agents/%s/">%s</a>: %s</li>' % (e(D["by_id"][s["tool"]]["id"]), e(D["by_id"][s["tool"]]["name"]),
-                                                          e(s.get("when", ""))) for s in u["alternatives"]))
-    if u.get("watchOut"):
-        how.append('<p><b>Watch out:</b> %s</p>' % e(u["watchOut"]))
-    if u.get("for"):
-        how.append('<p><b>Best for:</b> %s.</p>' % e(str(u["for"]).rstrip(".")))
-    folds = ['<details><summary><h2>How it works</h2>%s</summary><div class="a">%s</div></details>' % (CHEV, "".join(how))]
+    body.append('<section class="ucx-instructions" aria-labelledby="howItWorks"><h2 id="howItWorks">How it works</h2>'
+                '<ol>%s</ol></section>' % steps)
+    if alternatives:
+        body.append(alternatives)
+    folds = []
     wfs = [w for w in D["workflows"] if w["id"] in u["workflows"]]
     for w in wfs:
-        folds.append('<details><summary><h2>Workflow: %s</h2>%s</summary><div class="a"><ol>%s</ol><p>Result: %s. '
+        folds.append('<details open><summary><h2>Workflow: %s</h2>%s</summary><div class="a"><ol>%s</ol><p>Result: %s. '
                      '<a href="/workflows/%s/">Open this workflow</a></p></div></details>'
                      % (e(w["title"]), CHEV, "".join("<li>%s</li>" % e(s) for s in w.get("steps") or []),
                         e((w.get("outcome") or "").rstrip(".")), e(w["id"])))
