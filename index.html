@@ -48,7 +48,8 @@
   --select:#E7E7E2;
   --ink:#1D1D1B;
   --ink-2:#5D5D57;
-  --ink-3:#8C8C85;
+  --ink-3:#686861;
+  --success:#33763F;
   --line:#DDDDD6;
   --accent:#BC4B26;
   --pill:#1D1D1B;
@@ -60,13 +61,13 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --canvas:#141413;--band:#1A1A18;--window:#1F1F1D;--window-side:#1A1A18;--select:#2B2B28;
-  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#77776F;--line:#2F2F2B;--accent:#E58260;
+  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#A0A098;--success:#7FBC89;--line:#2F2F2B;--accent:#E58260;
   --pill:#EDEDE7;--pill-ink:#141413;
   --shadow:0 1px 0 rgba(255,255,255,.03),0 18px 40px -12px rgba(0,0,0,.7),0 4px 12px -4px rgba(0,0,0,.5);
   --art-filter:brightness(.58) saturate(.8);color-scheme:dark}}
 :root[data-theme="dark"]{
   --canvas:#141413;--band:#1A1A18;--window:#1F1F1D;--window-side:#1A1A18;--select:#2B2B28;
-  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#77776F;--line:#2F2F2B;--accent:#E58260;
+  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#A0A098;--success:#7FBC89;--line:#2F2F2B;--accent:#E58260;
   --pill:#EDEDE7;--pill-ink:#141413;
   --shadow:0 1px 0 rgba(255,255,255,.03),0 18px 40px -12px rgba(0,0,0,.7),0 4px 12px -4px rgba(0,0,0,.5);
   --art-filter:brightness(.58) saturate(.8);color-scheme:dark}
@@ -257,7 +258,7 @@ section.block{padding-block:72px 0}
 .steps li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:13.5px;align-items:start}
 .steps li::before{counter-increment:s;content:counter(s);font:500 11px/20px var(--font-mono);text-align:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);color:var(--ink-2)}
 .done{font:400 12px var(--font-mono);color:var(--ink-2);display:flex;gap:8px;align-items:baseline}
-.done b{color:#4E9A5B;font-weight:500}
+.done b{color:var(--success);font-weight:500}
 
 /* use cases */
 .uc-block{padding-block:4px 0}
@@ -332,7 +333,7 @@ footer p{margin:0}
 .faq .a p{margin:0 0 10px}
 .faq .a ul{margin:0 0 10px;padding-left:18px}
 .faq .a li{margin-bottom:4px}
-.faq .a a{color:var(--accent);text-decoration:none}
+.faq .a a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .faq .a a:hover{text-decoration:underline}
 
 /* responsive */
@@ -344,7 +345,11 @@ footer p{margin:0}
   .trow .pr{display:none}
 }
 @media (max-width:760px){
-  .navlinks{display:none}
+  nav.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding-block:14px}
+  nav.top .brand{font-size:15px;gap:6px}
+  .navlinks{display:flex;grid-column:1/-1;grid-row:2;flex-wrap:wrap;gap:0 20px;font-size:14px}
+  .navlinks a{display:inline-flex;align-items:center;min-height:44px}
+  nav.top>.pill{grid-column:2;grid-row:1;min-height:44px;padding:7px 12px}
   .dir{grid-template-columns:1fr;height:auto}
   .side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}
   .side .eyebrow{display:none}
@@ -426,7 +431,7 @@ html{scroll-behavior:smooth}
       </div>
       <label class="search" for="q">
         <svg width="14" height="14" viewBox="0 0 16 16" aria-hidden="true"><circle cx="7" cy="7" r="5" fill="none" stroke="currentColor" stroke-width="1.5"/><path d="M11 11l3.5 3.5" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/></svg>
-        <input id="q" type="search" placeholder="Search agents, makers, uses" autocomplete="off">
+        <input id="q" aria-label="Search agents, makers and uses" type="search" placeholder="Search agents, makers, uses" autocomplete="off">
       </label>
     </div>
     <div class="chips" id="chips" role="group" aria-label="Filter by category"><!--b:chips--><button class="chip" type="button" aria-pressed="true">All</button><button class="chip" type="button" aria-pressed="false">Design</button><button class="chip" type="button" aria-pressed="false">Prototyping</button><button class="chip" type="button" aria-pressed="false">Research</button><button class="chip" type="button" aria-pressed="false">Product &amp; specs</button><button class="chip" type="button" aria-pressed="false">Build</button><button class="chip" type="button" aria-pressed="false">General</button><!--/b:chips--></div>
@@ -551,6 +556,8 @@ html{scroll-behavior:smooth}
   function boot(d){
     data = d; data.agents = ordered(data.agents || []); data.workflows = ordered(data.workflows || []);
     document.getElementById("footFresh").textContent = "Refreshed daily, last on " + fmtDate(data.updated) + ". Every listing is checked against the product's own site.";
+    var requestedCategory = new URLSearchParams(location.search).get("category");
+    if (Object.prototype.hasOwnProperty.call(CATS, requestedCategory)) tableCat = requestedCategory;
     renderChips(); renderTable();
   }
   document.getElementById("q").addEventListener("input", function(){ if (data) renderTable(); });
