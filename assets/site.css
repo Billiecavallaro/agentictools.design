@@ -7,7 +7,8 @@
   --select:#E7E7E2;
   --ink:#1D1D1B;
   --ink-2:#5D5D57;
-  --ink-3:#8C8C85;
+  --ink-3:#686861;
+  --success:#33763F;
   --line:#DDDDD6;
   --accent:#BC4B26;
   --pill:#1D1D1B;
@@ -19,13 +20,13 @@
 }
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){
   --canvas:#141413;--band:#1A1A18;--window:#1F1F1D;--window-side:#1A1A18;--select:#2B2B28;
-  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#77776F;--line:#2F2F2B;--accent:#E58260;
+  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#A0A098;--success:#7FBC89;--line:#2F2F2B;--accent:#E58260;
   --pill:#EDEDE7;--pill-ink:#141413;
   --shadow:0 1px 0 rgba(255,255,255,.03),0 18px 40px -12px rgba(0,0,0,.7),0 4px 12px -4px rgba(0,0,0,.5);
   --art-filter:brightness(.58) saturate(.8);color-scheme:dark}}
 :root[data-theme="dark"]{
   --canvas:#141413;--band:#1A1A18;--window:#1F1F1D;--window-side:#1A1A18;--select:#2B2B28;
-  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#77776F;--line:#2F2F2B;--accent:#E58260;
+  --ink:#EDEDE7;--ink-2:#A9A9A1;--ink-3:#A0A098;--success:#7FBC89;--line:#2F2F2B;--accent:#E58260;
   --pill:#EDEDE7;--pill-ink:#141413;
   --shadow:0 1px 0 rgba(255,255,255,.03),0 18px 40px -12px rgba(0,0,0,.7),0 4px 12px -4px rgba(0,0,0,.5);
   --art-filter:brightness(.58) saturate(.8);color-scheme:dark}
@@ -216,7 +217,7 @@ section.block{padding-block:72px 0}
 .steps li{display:grid;grid-template-columns:22px minmax(0,1fr);gap:8px;font-size:13.5px;align-items:start}
 .steps li::before{counter-increment:s;content:counter(s);font:500 11px/20px var(--font-mono);text-align:center;width:20px;height:20px;border-radius:50%;border:1px solid var(--line);color:var(--ink-2)}
 .done{font:400 12px var(--font-mono);color:var(--ink-2);display:flex;gap:8px;align-items:baseline}
-.done b{color:#4E9A5B;font-weight:500}
+.done b{color:var(--success);font-weight:500}
 
 /* use cases */
 .uc-block{padding-block:4px 0}
@@ -291,7 +292,7 @@ footer p{margin:0}
 .faq .a p{margin:0 0 10px}
 .faq .a ul{margin:0 0 10px;padding-left:18px}
 .faq .a li{margin-bottom:4px}
-.faq .a a{color:var(--accent);text-decoration:none}
+.faq .a a{color:var(--accent);text-decoration:underline;text-underline-offset:3px}
 .faq .a a:hover{text-decoration:underline}
 
 /* responsive */
@@ -303,7 +304,11 @@ footer p{margin:0}
   .trow .pr{display:none}
 }
 @media (max-width:760px){
-  .navlinks{display:none}
+  nav.top{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:4px 12px;padding-block:14px}
+  nav.top .brand{font-size:15px;gap:6px}
+  .navlinks{display:flex;grid-column:1/-1;grid-row:2;flex-wrap:wrap;gap:0 20px;font-size:14px}
+  .navlinks a{display:inline-flex;align-items:center;min-height:44px}
+  nav.top>.pill{grid-column:2;grid-row:1;min-height:44px;padding:7px 12px}
   .dir{grid-template-columns:1fr;height:auto}
   .side{flex-direction:row;overflow-x:auto;border-right:0;border-bottom:1px solid var(--line);padding:8px}
   .side .eyebrow{display:none}
@@ -324,9 +329,16 @@ footer p{margin:0}
 html{scroll-behavior:smooth}
 
 /* subpages */
-/* use-case pages: the job, the setup as a chain of logos, the swaps; the rest folded */
+/* use-case pages: recommendation first, visible instructions, secondary FAQs folded */
 .ucx-head{padding-block:28px 26px;max-width:860px}
 .ucx-head h1{font-weight:400;font-size:clamp(30px,4.6vw,48px);line-height:1.06;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.ucx-answer{font-size:18px;line-height:1.6;max-width:70ch;margin:20px 0 0;color:var(--ink-2)}
+.ucx-fit,.ucx-warning{font-size:14px;line-height:1.6;max-width:76ch;margin:14px 0 0;color:var(--ink-2)}
+.ucx-warning{padding:12px 16px;border-left:2px solid var(--accent);background:var(--band)}
+.ucx-instructions{max-width:76ch;margin-top:34px}
+.ucx-instructions h2{font-size:20px;font-weight:500;margin:0 0 14px;letter-spacing:-.02em}
+.ucx-instructions li{padding-left:4px;margin-block:12px}
+.ucx-instructions .checked{display:block;margin-top:4px}
 .ucx-setup{display:flex;flex-wrap:wrap;align-items:stretch;gap:18px 28px}
 .ucflow{list-style:none;margin:0;padding:0;display:flex;flex-wrap:wrap;align-items:stretch;gap:14px 0}
 .ucflow li{display:flex;align-items:stretch}
@@ -426,5 +438,5 @@ footer a{color:inherit}
 .spots div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-bottom:1px solid var(--line);font-size:14.5px}
 .spots a{text-decoration:none}.spots a:hover{color:var(--accent)}
 .spots em{font:500 10px/1.6 var(--font-mono);font-style:normal;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-3);white-space:nowrap}
-.spots em.free{color:#3F8A4C}
+.spots em.free{color:var(--success)}
 @media (max-width:760px){.alt{grid-template-columns:1fr}}
