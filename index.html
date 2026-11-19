@@ -107,6 +107,10 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:16px;p
 .finder-box:focus-within{border-color:color-mix(in srgb,var(--accent) 60%,var(--line));box-shadow:0 0 0 3px color-mix(in srgb,var(--accent) 16%,transparent),0 10px 28px -14px rgba(40,38,30,.35)}
 .finder-box input{flex:1;min-width:0;width:100%;border:0;background:none;outline:none;font-size:17px;padding:8px 0}
 .finder-box input::placeholder{color:var(--ink-3)}
+.finder-box{cursor:text}
+.finder-box .pill{cursor:pointer}
+.finder-box input:focus::placeholder{color:transparent}
+.finder-box .pill .fs-i{display:none}
 .finder-box .pill{flex:none;padding:10px 18px;font-size:15px}
 .finder-list{position:absolute;z-index:20;left:0;right:0;top:100%;margin:6px 0 0;padding:6px;list-style:none;background:var(--window);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);max-height:min(420px,60vh);overflow:auto}
 .finder-list li{display:flex;flex-direction:column;gap:5px;padding:10px 12px;border-radius:8px;cursor:pointer}
@@ -168,7 +172,9 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:16px;p
 @media (max-width:520px){
   .finder-box{padding-left:14px;gap:6px}
   .finder-box input,.finder-label{font-size:16px}
-  .finder-box .pill{padding:9px 13px;font-size:14px}
+  .finder-box .pill{padding:10px 12px;font-size:14px}
+  .finder-box .pill .fs-t{display:none}
+  .finder-box .pill .fs-i{display:block}
   .agrid{grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}
   .atile summary{padding:12px 6px 10px}
   .atile summary .mark{width:38px;height:38px}
@@ -390,7 +396,7 @@ html{scroll-behavior:smooth}
       <div class="finder-box">
         <label class="finder-label" for="finderInput">I want to</label>
         <input id="finderInput" name="q" type="text" placeholder="prototype my PRD" autocomplete="off" autocapitalize="off" spellcheck="false" enterkeyhint="go" size="10">
-        <button class="pill dark" type="submit">Find setup</button>
+        <button class="pill dark" type="submit" aria-label="Find setup"><span class="fs-t">Find setup</span><svg class="fs-i" width="18" height="18" viewBox="0 0 18 18" aria-hidden="true"><path d="M3.5 9h11M10 4.5L14.5 9 10 13.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
       </div>
       <ul class="finder-list" id="finderList" aria-label="Matching setups" hidden></ul>
       <p class="sr-only" id="finderLive" aria-live="polite"></p>
@@ -729,7 +735,7 @@ html{scroll-behavior:smooth}
   input.setAttribute("aria-expanded","false"); input.setAttribute("aria-controls","finderList");
   list.setAttribute("role","listbox");
 
-  var results = [], active = -1, liveT = null, missT = null, missSent = {};
+  var typing = false, results = [], active = -1, liveT = null, missT = null, missSent = {};
   function url(it){ return "/use-cases/" + encodeURIComponent(it.id) + "/"; }
   function setActive(i){
     active = i;
@@ -781,8 +787,16 @@ html{scroll-behavior:smooth}
   }
 
   input.addEventListener("input", function(){ render(); pauseExamples(); });
-  input.addEventListener("focus", function(){ if (input.value) render(); });
-  input.addEventListener("blur", function(){ setTimeout(close, 120); });
+  input.addEventListener("focus", function(){ typing = true; if (input.value) render(); });
+  // a click or tap anywhere in the pill (label, padding, edges) puts the caret in the field, ready to type
+  var box = form.querySelector(".finder-box");
+  if (box) box.addEventListener("mousedown", function(ev){
+    if (ev.target === input || (ev.target.closest && ev.target.closest("button"))) return;
+    ev.preventDefault();
+    input.focus();
+    try { var n = input.value.length; input.setSelectionRange(n, n); } catch(e){}
+  });
+  input.addEventListener("blur", function(){ typing = false; setTimeout(close, 120); });
   input.addEventListener("keydown", function(ev){
     var open = !list.hidden && results.length;
     if (ev.key === "ArrowDown"){ ev.preventDefault(); if (list.hidden && input.value) render(); else if (open) setActive((active + 1) % results.length); }
@@ -836,7 +850,7 @@ html{scroll-behavior:smooth}
     from.classList.add("out"); later(swap, 380);
   }
   function next(){
-    if (paused || hovering || document.hidden){ later(next, 1500); return; }
+    if (paused || hovering || typing || document.hidden){ later(next, 1500); return; }
     show((cur + 1) % flows.length);
   }
   if (flows.length && !still){
@@ -933,7 +947,7 @@ html{scroll-behavior:smooth}
   document.addEventListener("click", function(ev){ var a = ev.target.closest && ev.target.closest('a[href$="#subscribe"]'); if (a) load(); });
   if (!location.hash){
     var moved = false, done = false;
-    ["wheel","touchstart","keydown","mousedown"].forEach(function(t){ addEventListener(t, function(){ moved = true; }, {passive: true, once: true}); });
+    ["wheel","touchstart","keydown","mousedown","focusin"].forEach(function(t){ addEventListener(t, function(){ moved = true; }, {passive: true, once: true}); });
     addEventListener("scroll", function(){ if (!done && !moved && window.scrollY > 0) window.scrollTo(0, 0); }, {passive: true});
     setTimeout(function(){ done = true; }, 4000);
   }
