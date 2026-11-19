@@ -514,11 +514,11 @@ def faq_items(D):
          "product's own official website, and the link on each listing goes straight to that site." % fmt_date(D["updated"]))
     items.append(("How often is the directory updated, and how are tools checked?", "<p>%s</p>" % e(t), t))
 
-    t = "Yes. The directory is free to browse, and the weekly email with the best new agents and one workflow is free too."
-    items.append(("Is agentictools.design free?", '<p>%s <a href="#subscribe">Get the weekly email</a>.</p>' % e(t), t))
+    t = "Yes. The directory is free to browse, and the newsletter with the best new agents and one workflow is free too."
+    items.append(("Is agentictools.design free?", '<p>%s <a href="#subscribe">Get the newsletter</a>.</p>' % e(t), t))
 
     t = ("Yes. Tools can buy a Featured spot on a use-case page that fits them, or sponsor an issue of the "
-         "weekly email. Paid spots are always labeled and never change the editorial picks. "
+         "newsletter. Paid spots are always labeled and never change the editorial picks. "
          "Prices and how to book are on the sponsor page: %s/sponsor/" % SITE)
     items.append(("Can I sponsor a spot or get my AI tool featured?",
                   '<p>%s <a href="/sponsor/">See sponsor options</a>.</p>' % e(t.rsplit(" Prices", 1)[0]), t))
@@ -778,9 +778,9 @@ def footer(D):
 
 
 def cta_band():
-    return ('<section class="block"><div class="cta-band"><div><h2>New agents, once a week.</h2>'
+    return ('<section class="block"><div class="cta-band"><div><h2>New agents, in your inbox.</h2>'
             '</div>'
-            '<a class="pill dark big" href="/#subscribe">Get the weekly email</a></div></section>')
+            '<a class="pill dark big" href="/#subscribe">Get the newsletter</a></div></section>')
 
 
 def page_shell(D, head_meta, body):
@@ -1232,7 +1232,7 @@ def build_sponsor_page(D):
          "A tile tagged Sponsored next to the setup on one use-case page, seen by people deciding which tool to use for that job.",
          ["One sponsor per use case", "Your name, one line and a link", "Runs one month, renew any time"]),
         ("Newsletter sponsor", PRICES["issue"], "/ issue",
-         "The sponsor block at the top of one issue of the weekly email, plus a mention on the home page the week it goes out.",
+         "The sponsor block at the top of one issue of the newsletter, plus a mention on the home page the week it goes out.",
          ["One sponsor per issue", "Up to 60 words and a link", "Home page mention for 7 days"]),
         ("Every use case", PRICES["all"], "/ month",
          "The Featured spot on all %d use-case pages for a month. Only if your tool fits each one, so this is for broad tools." % n,
@@ -1261,7 +1261,7 @@ def build_sponsor_page(D):
             '<section class="block"><div class="sechead"><div><span class="eyebrow">The fine print</span>'
             '<h2>How it works</h2></div></div><div class="terms">'
             '<p><b>Audience.</b> Product designers and product managers looking for which AI tools to use for a specific job, '
-            'arriving from search, AI assistants and the weekly email. The site and the email list are new, so we don\'t publish '
+            'arriving from search, AI assistants and the newsletter. The site and the email list are new, so we don\'t publish '
             'traffic numbers yet. Ask and we\'ll share what our analytics show.</p>'
             '<p><b>Rules.</b> Every paid placement is labeled Featured or Sponsored. A sponsor has to fit the use case or the '
             'issue it appears in, and we can say no. The editorial picks, setups and directory listings stay independent: '

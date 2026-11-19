@@ -1,6 +1,6 @@
 /* Click events for Google Analytics (the gtag snippet is in each page's <head>).
    outbound_click        a click to another site; agent_name comes from data-agent
-   subscribe_click       a click on any "Subscribe" / "Get the weekly email" link
+   subscribe_click       a click on any "Subscribe" / "Get the newsletter" link
    newsletter_form_click a click into the Substack signup form (it's an iframe,
                          so this fires when it takes focus, once per page view)
    sponsor_email_copy    the "Copy email address" button in Sponsor a spot
