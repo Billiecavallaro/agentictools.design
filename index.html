@@ -453,7 +453,8 @@ html{scroll-behavior:smooth}
             <h2>New agents, in your inbox.</h2>
             <p>The best additions from the directory and one workflow worth stealing.</p>
             <!-- Substack signup embed (agentictools on Substack) -->
-            <iframe src="https://agentictools.substack.com/embed" title="Subscribe to agentictools.design on Substack" width="100%" height="320" style="display:block;width:100%;max-width:480px;border:0;background:white;border-radius:12px" frameborder="0" scrolling="no" loading="lazy"></iframe>
+            <iframe id="subFrame" data-src="https://agentictools.substack.com/embed" title="Subscribe to agentictools.design on Substack" width="100%" height="320" style="display:block;width:100%;max-width:480px;border:0;background:white;border-radius:12px" frameborder="0" scrolling="no"></iframe>
+            <noscript><iframe src="https://agentictools.substack.com/embed" title="Subscribe to agentictools.design on Substack" width="100%" height="320" style="display:block;width:100%;max-width:480px;border:0;background:white;border-radius:12px" frameborder="0" scrolling="no" loading="lazy"></iframe></noscript>
           </div>
         </div>
       </div>
@@ -915,6 +916,27 @@ html{scroll-behavior:smooth}
       done(legacyCopy());
     }
   });
+})();
+</script>
+<script>
+/* Substack's signup embed focuses its email box when it loads, which made the browser jump
+   down to it. Load it only once the signup section is about to be seen, and until then keep a
+   fresh visit (no #link) at the top unless the reader scrolls themselves. */
+(function(){
+  var f = document.getElementById("subFrame"); if (!f) return;
+  function load(){ if (!f.src) f.src = f.getAttribute("data-src"); }
+  if (location.hash === "#subscribe") load();
+  else if ("IntersectionObserver" in window){
+    var io = new IntersectionObserver(function(es){ es.forEach(function(e){ if (e.isIntersecting){ load(); io.disconnect(); } }); }, {rootMargin: "0px"});
+    io.observe(f);
+  } else load();
+  document.addEventListener("click", function(ev){ var a = ev.target.closest && ev.target.closest('a[href$="#subscribe"]'); if (a) load(); });
+  if (!location.hash){
+    var moved = false, done = false;
+    ["wheel","touchstart","keydown","mousedown"].forEach(function(t){ addEventListener(t, function(){ moved = true; }, {passive: true, once: true}); });
+    addEventListener("scroll", function(){ if (!done && !moved && window.scrollY > 0) window.scrollTo(0, 0); }, {passive: true});
+    setTimeout(function(){ done = true; }, 4000);
+  }
 })();
 </script>
 </body>
