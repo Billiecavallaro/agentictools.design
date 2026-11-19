@@ -118,6 +118,8 @@ nav.top{display:flex;align-items:center;justify-content:space-between;gap:16px;p
 .finder-list li b{font-weight:500;font-size:15px;line-height:1.3}
 .finder-list li mark{background:none;color:inherit;text-decoration:underline;text-decoration-color:color-mix(in srgb,var(--accent) 55%,transparent);text-underline-offset:3px}
 .finder-list .fl-none{cursor:default;color:var(--ink-2);font-size:14px}
+.finder-list .fl-head{cursor:default;padding:6px 12px 2px;font:400 11.5px/1.3 var(--font-mono);color:var(--ink-3);text-transform:uppercase;letter-spacing:.04em}
+.finder-list .fl-head:hover{background:none}
 .finder-list .fl-none:hover{background:none}
 .finder-list .fl-none a{color:var(--accent);text-decoration:none}
 .tchain{display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px;font-size:13.5px}
@@ -668,43 +670,115 @@ html{scroll-behavior:smooth}
     params = params || {}; params.page_path = location.pathname;
     window.gtag("event", name, params);
   }
-  var STOP = {"i":1,"want":1,"to":1,"a":1,"an":1,"the":1,"my":1,"our":1,"into":1,"from":1,"with":1,"of":1,"for":1,"and":1,"in":1,"on":1,"me":1,"do":1,"how":1,"can":1,"need":1,"help":1,"some":1,"using":1,"use":1,"ai":1,"get":1,"be":1,"we":1,"is":1,"it":1,"you":1,"your":1,"like":1,"just":1,"quickly":1,"fast":1};
+  // FINDER-SEARCH-START
+  // Forgiving match: filler words are ignored, word endings and typos are
+  // tolerated, and everyday synonyms count. search() never dead-ends: with no
+  // match it returns the closest popular setups, flagged by lastFallback.
+  var STOP = {};
+  ("i im want wanna to a an the my our into from with of for and or in on at me do does doing done how can could would should need needs help " +
+   "some using use ai get got be we is it its you your like just quickly quick fast faster fastest see seeing show learn find figure out " +
+   "easy easier easiest easily simple simplest best better good great way ways thing things something stuff tool tools setup setups " +
+   "make making create creating start try trying let lets please what which who where when that this there them they up all more most " +
+   "really very new go going am are was will not no so if then than about").split(" ").forEach(function(w){ STOP[w] = 1; });
+  // each group: words people type that mean the same thing for the finder
+  var SYN = [
+    "prototype prototypes prototyping mockup mockups mock wireframe wireframes demo clickable mvp",
+    "prd spec specs specification requirements brief doc docs document",
+    "research interview interviews researcher synthesis synthesize insights themes findings transcripts survey",
+    "feedback customer customers tickets reviews nps requests complaints",
+    "code coding developer dev frontend implement engineering engineer handoff ship react",
+    "design ui ux screen screens interface layout visual",
+    "test testing usability validate validation evidence",
+    "app apps website site product launch nocode",
+    "automate automation status update updates report reports recap summary weekly",
+    "competitor competitors competitive competition market landscape benchmark rival",
+    "sketch sketches whiteboard drawing napkin paper",
+    "qa bug bugs fix fixes polish issues backlog",
+    "notes meeting meetings",
+    "system components tokens library brand"
+  ].map(function(g){ return g.split(" "); });
+  var POPULAR = ["prd-to-prototype", "build-an-app-without-code", "synthesize-user-interviews", "figma-to-code", "write-a-prd"];
   function norm(s){ return String(s||"").toLowerCase().normalize("NFD").replace(/[̀-ͯ]/g,"").replace(/[^a-z0-9]+/g," ").trim(); }
-  function stem(w){ return w.replace(/(ings|ing|ed|es|s)$/,"").replace(/e$/,""); }
+  function stem(w){ return w.replace(/(ings|ing|ers|er|ed|es|s|ly)$/,"").replace(/e$/,""); }
   function words(s){ return norm(s).split(" ").filter(Boolean); }
-  items.forEach(function(it){
+  function near(a, b){                       // edit distance within 1 (2 for long words), cheap enough for a few words
+    var max = Math.max(a.length, b.length) >= 7 ? 2 : 1;
+    if (Math.abs(a.length - b.length) > max) return false;
+    var prev = [], cur, i, j;
+    for (j = 0; j <= b.length; j++) prev[j] = j;
+    for (i = 1; i <= a.length; i++){
+      cur = [i]; var low = i;
+      for (j = 1; j <= b.length; j++){
+        cur[j] = Math.min(prev[j] + 1, cur[j-1] + 1, prev[j-1] + (a[i-1] === b[j-1] ? 0 : 1));
+        if (a[i-1] === b[j-2] && a[i-2] === b[j-1]) cur[j] = Math.min(cur[j], prev[j-2] + 1); // swapped letters
+        if (cur[j] < low) low = cur[j];
+      }
+      if (low > max) return false;
+      prev = cur;
+    }
+    return prev[b.length] <= max;
+  }
+  var synOf = {};
+  SYN.forEach(function(g, gi){ g.forEach(function(w){ (synOf[stem(w)] = synOf[stem(w)] || []).push(gi); }); });
+  function groupsFor(tok){
+    var st = stem(tok), out = [];
+    Object.keys(synOf).forEach(function(k){
+      if (k === st || (st.length > 3 && k.length > 3 && (k.indexOf(st) === 0 || near(st, k)))) synOf[k].forEach(function(g){ if (out.indexOf(g) < 0) out.push(g); });
+    });
+    return out;
+  }
+  items.forEach(function(it, i){
     it.fields = [[words(it.t),5],[words(it.k),3],[words((it.n||[]).join(" ")),3],[words(it.f),1]];
+    it.rank = POPULAR.indexOf(it.id) < 0 ? 99 + i : POPULAR.indexOf(it.id);
   });
 
+  function wordScore(tok, st, word, isLast){
+    if (word === tok) return 1;
+    var sw = stem(word);
+    if (st.length > 2 && sw === st) return 0.95;
+    if (tok.length > 2 || isLast){
+      if (word.indexOf(tok) === 0) return 0.85;                 // partial word, still typing
+      if (st.length > 2 && sw.indexOf(st) === 0) return 0.8;
+    }
+    if (tok.length > 3 && word.length > 3 && (near(tok, word) || near(st, sw))) return 0.7;   // typo
+    return 0;
+  }
   function tokScore(tok, it, isLast){
-    var st = stem(tok), best = 0;
+    var st = stem(tok), best = 0, gs = groupsFor(tok);
     if (tok.length < 2 && !isLast) return 0;
     it.fields.forEach(function(f){
       var w = f[1];
       f[0].forEach(function(word){
-        var s = 0;
-        if (word === tok) s = w + 1;
-        else if (word.indexOf(tok) === 0 || (st.length > 2 && stem(word).indexOf(st) === 0)) s = (tok.length > 1 || isLast) ? w : 0;
+        var s = wordScore(tok, st, word, isLast) * w;
+        if (s < w * 0.6 && gs.length){                           // same meaning, different word
+          var wg = synOf[stem(word)] || [];
+          if (wg.some(function(g){ return gs.indexOf(g) >= 0; })) s = Math.max(s, w * 0.6);
+        }
         if (s > best) best = s;
       });
     });
     return best;
   }
+  var lastFallback = false;
+  function fallback(){
+    return items.slice().sort(function(a, b){ return a.rank - b.rank; }).slice(0, 3);
+  }
   function search(q){
+    lastFallback = false;
     var all = words(q), toks = all.filter(function(t){ return !STOP[t]; });
-    if (!toks.length) return [];
     var last = all[all.length-1], scored = [];
-    items.forEach(function(it, i){
+    if (toks.length) items.forEach(function(it){
       var hit = 0, score = 0;
       toks.forEach(function(t){ var s = tokScore(t, it, t === last && !/\s$/.test(q)); if (s){ hit++; score += s; } });
-      if (hit) scored.push({it:it, hit:hit, score:score, i:i});
+      if (hit) scored.push({it:it, hit:hit, score:score});
     });
-    if (!scored.length) return [];
-    var top = Math.max.apply(null, scored.map(function(x){ return x.hit; }));
-    return scored.filter(function(x){ return x.hit === top; })
-      .sort(function(a,b){ return b.score - a.score || a.i - b.i; })
+    if (!scored.length){ lastFallback = true; return fallback(); }
+    var top = scored.reduce(function(m, x){ return Math.max(m, x.score); }, 0);
+    return scored.filter(function(x){ return x.score >= top * 0.5; })
+      .sort(function(a,b){ return b.score - a.score || b.hit - a.hit || a.it.rank - b.it.rank; })
       .slice(0, 5).map(function(x){ return x.it; });
   }
+  // FINDER-SEARCH-END
 
   // highlight the words of the job that the query matched
   function titleNode(t, q){
@@ -753,17 +827,11 @@ html{scroll-behavior:smooth}
     list.textContent = "";
     clearTimeout(missT);
     if (!words(q).length){ close(); announce(""); return; }
-    if (!results.length){
-      var li = document.createElement("li"); li.className = "fl-none";
-      li.appendChild(document.createTextNode("No setup for that yet. "));
-      var a = document.createElement("a"); a.href = "#use-cases"; a.textContent = "See every use case";
-      a.addEventListener("click", close);
-      li.appendChild(a); list.appendChild(li);
-      list.hidden = false; input.setAttribute("aria-expanded","true"); setActive(-1);
-      announce("No setup matches yet.");
-      var term = norm(q).slice(0, 60);
-      missT = setTimeout(function(){ if (term.length > 2 && !missSent[term]){ missSent[term] = 1; send("setup_finder_no_match", {search_term: term}); } }, 1500);
-      return;
+    if (lastFallback){                                 // nothing close: offer the closest popular setups, never a dead end
+      var head = document.createElement("li"); head.className = "fl-head"; head.setAttribute("role","presentation");
+      head.textContent = "Closest setups"; list.appendChild(head);
+      var term = norm(q).slice(0, 60), real = words(q).some(function(w){ return !STOP[w]; });
+      missT = setTimeout(function(){ if (real && term.length > 2 && !missSent[term]){ missSent[term] = 1; send("setup_finder_no_match", {search_term: term}); } }, 1500);
     }
     results.forEach(function(it, i){
       var li = document.createElement("li");
@@ -776,7 +844,7 @@ html{scroll-behavior:smooth}
       list.appendChild(li);
     });
     list.hidden = false; input.setAttribute("aria-expanded","true"); setActive(0);
-    announce(results.length + (results.length === 1 ? " setup matches." : " setups match.") + " Use up and down arrows to choose, Enter to open.");
+    announce((lastFallback ? "No exact match. Here are the closest setups." : results.length + (results.length === 1 ? " setup matches." : " setups match.")) + " Use up and down arrows to choose, Enter to open.");
   }
   function go(i, method, newTab){
     var it = results[i]; if (!it) return;
