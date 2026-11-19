@@ -765,8 +765,8 @@ GA_HEAD = ("<!-- Google tag (gtag.js) -->\n"
 
 def nav():
     return ('<nav class="top" aria-label="Main"><a class="brand" href="/">%s%s</a>'
-            '<div class="navlinks"><a href="/use-cases/">Use cases</a><a href="/#directory">Directory</a>'
-            '<a href="/#all">All agents</a><a href="/#faq">FAQ</a></div>'
+            '<div class="navlinks"><a href="/use-cases/">Use cases</a><a href="/#all">Directory</a>'
+            '<a href="/#directory">All agents</a><a href="/#faq">FAQ</a></div>'
             '<a class="pill dark" href="/#subscribe">Subscribe</a></nav>' % (GLYPH, NAME))
 
 
