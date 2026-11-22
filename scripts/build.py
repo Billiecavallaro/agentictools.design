@@ -866,12 +866,55 @@ def build_agent_page(D, a):
     return page_shell(D, m, "\n".join(body))
 
 
+def walkthrough_html(wt):
+    """The full run behind a flagship workflow: what you need, the steps with their
+    handoffs and checkpoints, the merge bar and the failure modes. Data lives on the
+    workflow in agents.json; everything renders escaped and with existing classes."""
+    out = ['<section class="block" id="walkthrough"><div class="sechead"><div><span class="eyebrow">Run it yourself</span>'
+           '<h2>The full walkthrough</h2></div></div>']
+    if wt.get("intro"):
+        out.append('<div class="terms"><p>%s</p></div>' % e(wt["intro"]))
+    needs = wt.get("needs") or []
+    if needs:
+        out.append('<h3 class="ucx-sub">What you need before you start</h3><div class="terms">%s</div>'
+                   % "".join('<p><b>%s.</b> %s%s</p>' % (
+                       e(n.get("what", "")), e(n.get("why", "")),
+                       ' <a href="%s" rel="noopener" target="_blank">%s</a>' % (e(n["url"]), e(n.get("linkText") or "Source"))
+                       if safe_url(n.get("url")) else "")
+                       for n in needs))
+    steps = wt.get("stepsDetail") or []
+    if steps:
+        items = []
+        for s in steps:
+            tag = ' <span class="tag">%s</span>' % e(s["handoff"]) if s.get("handoff") else ""
+            parts = ['<p><b>%s.</b>%s %s</p>' % (e(s.get("title", "")), tag, e(s.get("body", "")))]
+            if s.get("prompt"):
+                parts.append('<p class="prompt"><span>Try: %s</span></p>' % e(s["prompt"]))
+            if s.get("check"):
+                parts.append('<p class="watch"><span class="eyebrow">Checkpoint</span>%s</p>' % e(s["check"]))
+            items.append('<li><div class="ucstep">%s</div></li>' % "".join(parts))
+        out.append('<h3 class="ucx-sub">The run, step by step</h3><ol class="ucsteps">%s</ol>' % "".join(items))
+    acceptance = wt.get("acceptance") or []
+    if acceptance:
+        out.append('<h3 class="ucx-sub">Before the PR merges</h3><div class="terms">%s</div>'
+                   % "".join('<p><b>%s.</b> %s</p>' % (e(a.get("what", "")), e(a.get("why", ""))) for a in acceptance))
+    risks = wt.get("watchOut") or []
+    if risks:
+        out.append('<h3 class="ucx-sub">Where this falls down</h3><div class="terms">%s</div>'
+                   % "".join('<p>%s</p>' % e(r) for r in risks))
+    if wt.get("sourceNote"):
+        out.append('<p class="checked">%s</p>' % e(wt["sourceNote"]))
+    out.append('</section>')
+    return "\n".join(out)
+
+
 def build_wf_page(D, w):
     names = tool_names(D, w)
     title = "%s: an AI workflow for designers and PMs | %s" % (w["title"], NAME)
     desc = clip("%s, using %s. Result: %s." % (w["title"], ", ".join(names), (w.get("outcome") or "").rstrip(".")), 300)
     url = wf_page(w)
-    m = common_meta(title, desc, url, og_type="article", modified=w.get("added"))
+    wt_meta = w.get("walkthrough") if isinstance(w.get("walkthrough"), dict) else {}
+    m = common_meta(title, desc, url, og_type="article", modified=wt_meta.get("updated") or w.get("added"))
     howto = {"@type": "HowTo", "@id": url + "#howto", "name": w["title"], "description": desc,
              "tool": [{"@type": "HowToTool", "name": n} for n in names],
              "step": [{"@type": "HowToStep", "position": i + 1, "text": s} for i, s in enumerate(w.get("steps") or [])]}
@@ -890,9 +933,12 @@ def build_wf_page(D, w):
             '<i></i><i></i><i></i></span><span class="t">agentictools.design · Workflow</span></div><div class="wfmain">'
             '<h2>The steps</h2><div class="ask">Uses %s</div><ol class="steps">%s</ol><p class="done"><b>Done</b><span>%s</span></p>'
             '</div></article></div></div>' % (e(", ".join(names)), "".join("<li><span>%s</span></li>" % e(s) for s in w.get("steps") or []),
-                                              e(w.get("outcome", ""))),
-            '<section class="block"><div class="sechead"><div><span class="eyebrow">In this workflow</span><h2>The tools</h2></div></div>'
-            '<div class="links">%s</div></section>' % "".join(row_link(a, D) for a in tools)]
+                                              e(w.get("outcome", "")))]
+    wt = w.get("walkthrough")
+    if isinstance(wt, dict):
+        body.append(walkthrough_html(wt))
+    body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">In this workflow</span><h2>The tools</h2></div></div>'
+                '<div class="links">%s</div></section>' % "".join(row_link(a, D) for a in tools))
     ucs = [u for u in D["usecases"] if w["id"] in u["workflows"]]
     if ucs:
         body.append('<section class="block"><div class="sechead"><div><span class="eyebrow">Use cases</span>'
