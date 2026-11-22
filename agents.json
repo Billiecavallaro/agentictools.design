@@ -537,6 +537,86 @@
     "claude-code"
    ],
    "outcome": "A reviewed preview built from your design system, ready to merge",
+   "walkthrough": {
+    "updated": "2026-11-22",
+    "intro": "The outline above is the shape of it. Below is the full run: the access you need before you start, the exact handoff between each tool, prompts to start from, and what has to be true before anything merges.",
+    "needs": [
+     {
+      "what": "A paid Figma plan",
+      "why": "Figma's agent is built into Figma Design and included on paid plans. It drafts from your published library, so the library has to be attached.",
+      "url": "https://www.figma.com/solutions/ai-design-agent/",
+      "linkText": "Figma"
+     },
+     {
+      "what": "Wonder",
+      "why": "The canvas where the design stays editable and meets the code. It runs in the browser or as a desktop app and adds no AI credits of its own; it drives the agent subscription you already pay for.",
+      "url": "https://wonder.design/",
+      "linkText": "Wonder"
+     },
+     {
+      "what": "Claude Code on a paid Claude plan",
+      "why": "Pro, Max or Team. Wonder connects to it over MCP and runs it on your subscription, not on credits.",
+      "url": "https://claude.com/product/claude-code",
+      "linkText": "Claude Code"
+     },
+     {
+      "what": "A GitHub repo with your real product code",
+      "why": "Wonder clones it to your machine, reads your actual components, tokens and styles, and opens the pull request there.",
+      "url": "https://wonder.design/",
+      "linkText": "How it works"
+     },
+     {
+      "what": "About an hour",
+      "why": "Less once the connections exist. The first run includes connecting the repo and the agent."
+     }
+    ],
+    "stepsDetail": [
+     {
+      "title": "Draft the screen in Figma",
+      "body": "Open Figma Design, add a frame and start the agent from the left navigation. Point it at your design library and describe the screen. Run two or three prompts in parallel threads and compare the results instead of refining the first one.",
+      "prompt": "Design a notification-settings screen for [product] using only components from [library]. Use our color and spacing tokens, and show the empty state.",
+      "check": "Every layer is a real library component or token: nothing detached, no placeholder UI. If the agent invented a component, send it back before you leave Figma."
+     },
+     {
+      "title": "Move the chosen frame into Wonder",
+      "handoff": "Manual handoff",
+      "body": "Copy the frame in Figma and paste it onto the Wonder canvas, where it becomes editable layers. That copy-paste is the transfer; no plugin carries the file over for you. Explore variations, pin comments, and ask @Wonder to turn the frame into a working React prototype so you can click through it before any code exists.",
+      "prompt": "@Wonder Turn this settings screen into an interactive React prototype I can click through.",
+      "check": "Type, spacing and tokens survived the paste. Fix drift here, on the canvas, while it is still just design."
+     },
+     {
+      "title": "Build it with Claude Code in its own worktree",
+      "handoff": "Integrated handoff",
+      "body": "Connect Wonder to your GitHub repository and connect Claude Code over MCP. Wonder clones the repo to your machine, reads your real components and styles, and runs the agent on your own subscription. Ask for the approved version as its own branch; Wonder opens the pull request only after you approve the plan.",
+      "prompt": "Implement the approved settings screen as a new route using the components already in this repo. Match the Wonder frame, add a test, and open a PR.",
+      "check": "The diff reuses existing components and tokens. New one-off styles or a rebuilt button mean the agent ignored your system; send it back."
+     }
+    ],
+    "acceptance": [
+     {
+      "what": "Tests",
+      "why": "The repo's suite passes, plus one new test for the added UI. The agent saying it works is not a test."
+     },
+     {
+      "what": "Accessibility",
+      "why": "Real labels, a sane keyboard focus order and passing contrast, checked with your own tooling, not the agent's say-so."
+     },
+     {
+      "what": "Visual pass",
+      "why": "The built screen side by side with the Wonder frame at desktop and mobile widths."
+     },
+     {
+      "what": "Human approval",
+      "why": "The agent wrote the code; a person owns the merge. Wonder holds the PR until you approve the plan for exactly this reason."
+     }
+    ],
+    "watchOut": [
+     "Complex auto-layout can drift in the Figma-to-Wonder paste; check spacing before any code is written.",
+     "Coding agents will happily invent a new component instead of reusing yours. The step 3 checkpoint is what catches it.",
+     "Exploration is cheap and code runs are not: parallel Figma threads and canvas variations cost little, while every full build spends agent usage."
+    ],
+    "sourceNote": "Access, pricing and handoff mechanics checked against Figma, Wonder and Anthropic's own pages on Nov 22, 2026."
+   },
    "added": "2026-11-12"
   },
   {
