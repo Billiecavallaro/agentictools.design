@@ -514,7 +514,7 @@ def faq_items(D):
          "product's own official website, and the link on each listing goes straight to that site." % fmt_date(D["updated"]))
     items.append(("How often is the directory updated, and how are tools checked?", "<p>%s</p>" % e(t), t))
 
-    t = "Yes. The directory is free to browse, and the newsletter with the best new agents and one workflow is free too."
+    t = "Yes. The directory is free to browse, and the weekly newsletter with the best new agents and one workflow is free too."
     items.append(("Is agentictools.design free?", '<p>%s <a href="#subscribe">Get the newsletter</a>.</p>' % e(t), t))
 
     t = ("Yes. Tools can buy a Featured spot on a use-case page that fits them, or sponsor an issue of the "
@@ -778,7 +778,7 @@ def footer(D):
 
 
 def cta_band():
-    return ('<section class="block"><div class="cta-band"><div><h2>New agents, in your inbox.</h2>'
+    return ('<section class="block"><div class="cta-band"><div><h2>New agents, once a week.</h2>'
             '</div>'
             '<a class="pill dark big" href="/#subscribe">Get the newsletter</a></div></section>')
 
