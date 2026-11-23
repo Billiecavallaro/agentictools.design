@@ -1,6 +1,6 @@
 # agentictools.design
 
-> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 28 agents, 6 categories, 6 workflows. Last updated 2026-11-15.
+> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 30 agents, 6 categories, 6 workflows. Last updated 2026-11-23.
 
 Machine-readable data: https://agentictools.design/agents.json (agents: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added; usecases: job, stage, for, answer, setup, alternatives, workflows, watchOut).
 
@@ -158,6 +158,7 @@ Index: https://agentictools.design/use-cases/
   3. GitHub Copilot (https://agentictools.design/agents/github-copilot/): Reviews the pull request before it's merged. Pricing: Free tier; Pro $10/user/mo
 - Alternative: Codex (https://agentictools.design/agents/openai-codex/), when: Your team is on ChatGPT. Codex runs the fixes in the cloud and checks them with browser tools.
 - Alternative: Claude Code (https://agentictools.design/agents/claude-code/), when: You want to kick fixes off from Slack or GitHub and get pull requests back.
+- Alternative: Mo (https://agentictools.design/agents/momentic-mo/), when: You want the running app checked before release, with each bug filed and reproduced for you.
 - Watch out: Write each issue like a tiny spec: the screen, what's wrong, what right looks like, and a screenshot. Vague tickets get vague fixes.
 
 ### What's the best AI setup to build a working app without writing code?
@@ -172,6 +173,7 @@ Index: https://agentictools.design/use-cases/
 - Alternative: Bolt (https://agentictools.design/agents/bolt/), when: You're starting from an existing Figma design or GitHub repo.
 - Alternative: v0 (https://agentictools.design/agents/v0/), when: It's a web app and you want to tweak the UI visually before you deploy.
 - Alternative: FlutterFlow (https://agentictools.design/agents/flutterflow/), when: Pick it when the app needs to be a native iPhone and Android app in the stores.
+- Alternative: Netlify AI App Builder (https://agentictools.design/agents/netlify-ai-app-builder/), when: Pick it when you want the app hosted, with logins and data, without a separate deploy step.
 - Watch out: These tools get you to a working app fast. Before real customers use it, have someone technical check security, data and costs.
 
 ### What's the best AI setup to automate status updates and stakeholder reports?
@@ -390,6 +392,26 @@ Index: https://agentictools.design/use-cases/
 
 
 ## Build
+
+### Mo (by Momentic)
+- Profile: https://agentictools.design/agents/momentic-mo/
+- Official site: https://momentic.ai/mo
+- What it does: An AI QA agent that tests your running web or mobile app from a plain-language prompt and files the bugs it finds.
+- For: Product teams shipping fast without a dedicated QA team
+- Best at: A second agent reproduces each suspected bug before it is reported, so the list stays free of false alarms.
+- Pricing: $50 of free usage a month, then pay for what you use
+- Tags: qa, testing, bug-bash
+- Checked on its own site: 2026-11-23
+
+### Netlify AI App Builder (by Netlify)
+- Profile: https://agentictools.design/agents/netlify-ai-app-builder/
+- Official site: https://www.netlify.com/ai-app-builder/
+- What it does: Describe an app in plain words and built-in agents code it, preview it and host it on Netlify.
+- For: Designers, PMs and teams shipping internal tools or apps
+- Best at: Pick Claude, Codex or Gemini inside one project, and nothing goes live until you approve the preview.
+- Pricing: Free plan with 300 credits; paid plans on site
+- Tags: app-builder, no-code, hosting
+- Checked on its own site: 2026-11-23
 
 ### FlutterFlow (by FlutterFlow)
 - Profile: https://agentictools.design/agents/flutterflow/

@@ -1,6 +1,6 @@
 # agentictools.design
 
-> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 28 agents, 6 categories, 6 workflows. Last updated 2026-11-15.
+> A free guide to which AI agents product designers and product managers should use for which job. 14 use cases, each with the recommended setup: which agents to use, in what order, and why. It also keeps a daily-updated directory where each listing says what the tool does in 30 seconds, who it is for, what it is best at and what it costs, checked against the product's own website. 30 agents, 6 categories, 6 workflows. Last updated 2026-11-23.
 
 Machine-readable data: https://agentictools.design/agents.json (agents: name, maker, category, url, oneLiner, forWho, standout, pricing, tags, verified, added; usecases: job, stage, for, answer, setup, alternatives, workflows, watchOut).
 
@@ -56,6 +56,8 @@ Index: https://agentictools.design/use-cases/
 
 ## Build
 
+- [Mo](https://agentictools.design/agents/momentic-mo/): An AI QA agent that tests your running web or mobile app from a plain-language prompt and files the bugs it finds. (by Momentic)
+- [Netlify AI App Builder](https://agentictools.design/agents/netlify-ai-app-builder/): Describe an app in plain words and built-in agents code it, preview it and host it on Netlify. (by Netlify)
 - [FlutterFlow](https://agentictools.design/agents/flutterflow/): Describe a phone app and its agent builds a native iOS and Android version, backend included. (by FlutterFlow)
 - [Claude Code](https://agentictools.design/agents/claude-code/): Agentic coding tool that reads your codebase, edits files and runs commands. (by Anthropic)
 - [Cursor](https://agentictools.design/agents/cursor/): AI code editor whose agents plan, build and test features. (by Cursor)

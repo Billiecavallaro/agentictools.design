@@ -1,7 +1,15 @@
 {
  "schema": 1,
- "updated": "2026-11-15",
+ "updated": "2026-11-23",
  "updates": [
+  {
+   "date": "2026-11-23",
+   "text": "Added Mo by Momentic, an AI QA agent that tests your app and files the bugs"
+  },
+  {
+   "date": "2026-11-23",
+   "text": "Added Netlify AI App Builder, prompt-to-app building with hosting built in"
+  },
   {
    "date": "2026-11-15",
    "text": "Added FlutterFlow, an AI agent that builds native mobile apps from a description"
@@ -40,6 +48,42 @@
   }
  ],
  "agents": [
+  {
+   "id": "momentic-mo",
+   "name": "Mo",
+   "maker": "Momentic",
+   "category": "build",
+   "url": "https://momentic.ai/mo",
+   "oneLiner": "An AI QA agent that tests your running web or mobile app from a plain-language prompt and files the bugs it finds.",
+   "forWho": "Product teams shipping fast without a dedicated QA team",
+   "standout": "A second agent reproduces each suspected bug before it is reported, so the list stays free of false alarms.",
+   "pricing": "$50 of free usage a month, then pay for what you use",
+   "tags": [
+    "qa",
+    "testing",
+    "bug-bash"
+   ],
+   "verified": "2026-11-23",
+   "added": "2026-11-23"
+  },
+  {
+   "id": "netlify-ai-app-builder",
+   "name": "Netlify AI App Builder",
+   "maker": "Netlify",
+   "category": "build",
+   "url": "https://www.netlify.com/ai-app-builder/",
+   "oneLiner": "Describe an app in plain words and built-in agents code it, preview it and host it on Netlify.",
+   "forWho": "Designers, PMs and teams shipping internal tools or apps",
+   "standout": "Pick Claude, Codex or Gemini inside one project, and nothing goes live until you approve the preview.",
+   "pricing": "Free plan with 300 credits; paid plans on site",
+   "tags": [
+    "app-builder",
+    "no-code",
+    "hosting"
+   ],
+   "verified": "2026-11-23",
+   "added": "2026-11-23"
+  },
   {
    "id": "flutterflow",
    "name": "FlutterFlow",
@@ -1025,6 +1069,10 @@
     {
      "tool": "claude-code",
      "when": "You want to kick fixes off from Slack or GitHub and get pull requests back."
+    },
+    {
+     "tool": "momentic-mo",
+     "when": "You want the running app checked before release, with each bug filed and reproduced for you."
     }
    ],
    "workflows": [
@@ -1065,6 +1113,10 @@
     {
      "tool": "flutterflow",
      "when": "Pick it when the app needs to be a native iPhone and Android app in the stores."
+    },
+    {
+     "tool": "netlify-ai-app-builder",
+     "when": "Pick it when you want the app hosted, with logins and data, without a separate deploy step."
     }
    ],
    "workflows": [],
